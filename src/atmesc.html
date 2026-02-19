@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>atmesc &mdash; VPLanet 2.5.31
+  <title>atmesc &mdash; VPLanet 2.5.32
  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
@@ -15,14 +15,14 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=79f125bc"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=4e09afd6"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="vplanet" href="vplanet.html" />
-    <link rel="prev" title="body" href="body.html" /> 
+    <link rel="next" title="evolve" href="evolve.html" />
+    <link rel="prev" title="C API" href="../src.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,9 +51,6 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">atmesc</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#atmesc-c">atmesc.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414BodyCopyAtmEscP4BODYP4BODYiii"><code class="docutils literal notranslate"><span class="pre">BodyCopyAtmEsc()</span></code></a></li>
@@ -147,6 +144,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417WriteHRefODragModP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteHRefODragMod()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv427WriteMolecOxygenMixingRatioP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteMolecOxygenMixingRatio()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv424WriteWaterAtmMixingRatioP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteWaterAtmMixingRatio()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426WriteRunawayGreenhouseFluxP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteRunawayGreenhouseFlux()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv422InitializeOutputAtmEscP6OUTPUTA_13fnWriteOutput"><code class="docutils literal notranslate"><span class="pre">InitializeOutputAtmEsc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416LogOptionsAtmEscP7CONTROLP4FILE"><code class="docutils literal notranslate"><span class="pre">LogOptionsAtmEsc()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49LogAtmEscP4BODYP7CONTROLP6OUTPUTP6SYSTEMP6UPDATEA_13fnWriteOutputP4FILE"><code class="docutils literal notranslate"><span class="pre">LogAtmEsc()</span></code></a></li>
@@ -220,26 +218,29 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -1989,6 +1990,11 @@ escape model.</p>
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426WriteRunawayGreenhouseFluxP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc">
+<span id="_CPPv326WriteRunawayGreenhouseFluxP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="_CPPv226WriteRunawayGreenhouseFluxP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="WriteRunawayGreenhouseFlux__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cPP"></span><span class="target" id="atmesc_8c_1a7545b99f84a6583c8b5b7eed8b2427c4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteRunawayGreenhouseFlux</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426WriteRunawayGreenhouseFluxP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv422InitializeOutputAtmEscP6OUTPUTA_13fnWriteOutput">
 <span id="_CPPv322InitializeOutputAtmEscP6OUTPUTA_13fnWriteOutput"></span><span id="_CPPv222InitializeOutputAtmEscP6OUTPUTA_13fnWriteOutput"></span><span id="InitializeOutputAtmEsc__OUTPUTP.fnWriteOutputA"></span><span class="target" id="atmesc_8c_1adf3236b55c30a1138d4efcde4f321e81"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeOutputAtmEsc</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv413fnWriteOutput" title="fnWriteOutput"><span class="n"><span class="pre">fnWriteOutput</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fnWrite</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">]</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422InitializeOutputAtmEscP6OUTPUTA_13fnWriteOutput" title="Link to this definition"></a><br /></dt>
 <dd><p>Set up stuff to be logged for atmesc.</p>
@@ -2479,7 +2485,7 @@ escape model.</p>
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.ATMESC_LS2016">
 <span class="target" id="atmesc_8h_1ac03054cee4e1a306c9c8134355b720da"></span><span class="sig-name descname"><span class="n"><span class="pre">ATMESC_LS2016</span></span></span><a class="headerlink" href="#c.ATMESC_LS2016" title="Link to this definition"></a><br /></dt>
-<dd><p>Schaefer et al (2016) atmospheric escape model </p>
+<dd><p>Schaefer et al (2016) atmospheric escape model \ </p>
 </dd></dl>
 
 <dl class="cpp macro">
@@ -2646,14 +2652,14 @@ escape model.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="body.html" class="btn btn-neutral float-left" title="body" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="vplanet.html" class="btn btn-neutral float-right" title="vplanet" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../src.html" class="btn btn-neutral float-left" title="C API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="evolve.html" class="btn btn-neutral float-right" title="evolve" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018-2025, The VPLanet Team.</p>
+    <p>&#169; Copyright 2018-2026, The VPLanet Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

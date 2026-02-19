@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Options and Outputs &mdash; VPLanet 2.5.31
+  <title>Options and Outputs &mdash; VPLanet 2.5.32
  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=d948c9a6" />
@@ -15,9 +15,9 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=79f125bc"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=4e09afd6"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -4672,54 +4672,6 @@ the same order as listed in saOutputOrder.</p>
 <tr class="row-odd"><td><p>Default value</p></td>
 <td><div class="line-block">
 <div class="line">Default is ADJUMPM2UM</div>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-<table class="docutils align-default">
-<tbody>
-<tr class="row-odd"><td colspan="2"><p><strong>dAge</strong></p></td>
-</tr>
-<tr class="row-even"><td><p>Description</p></td>
-<td><div class="line-block">
-<div class="line">System Age</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>Type</p></td>
-<td><div class="line-block">
-<div class="line">Double</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>Custom unit</p></td>
-<td><div class="line-block">
-<div class="line">Gyr</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>Dimension(s)</p></td>
-<td><div class="line-block">
-<div class="line">time</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>Modules</p></td>
-<td><div class="line-block">
-<div class="line">ALL</div>
-</div>
-</td>
-</tr>
-<tr class="row-odd"><td><p>Files</p></td>
-<td><div class="line-block">
-<div class="line">Any</div>
-</div>
-</td>
-</tr>
-<tr class="row-even"><td><p>Default value</p></td>
-<td><div class="line-block">
-<div class="line">0</div>
 </div>
 </td>
 </tr>
@@ -10151,6 +10103,54 @@ the same order as listed in saOutputOrder.</p>
 </table>
 <table class="docutils align-default">
 <tbody>
+<tr class="row-odd"><td colspan="2"><p><strong>dStopAge</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Age to stop integration</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><div class="line-block">
+<div class="line">Double</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Custom unit</p></td>
+<td><div class="line-block">
+<div class="line">Years</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Dimension(s)</p></td>
+<td><div class="line-block">
+<div class="line">time</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">ALL</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Files</p></td>
+<td><div class="line-block">
+<div class="line">Any</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Default value</p></td>
+<td><div class="line-block">
+<div class="line">10 Gigayears</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
 <tr class="row-odd"><td colspan="2"><p><strong>dStopTime</strong></p></td>
 </tr>
 <tr class="row-even"><td><p>Description</p></td>
@@ -10358,6 +10358,54 @@ the same order as listed in saOutputOrder.</p>
 </td>
 </tr>
 <tr class="row-odd"><td><p>Default value</p></td>
+<td><div class="line-block">
+<div class="line">0</div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td colspan="2"><p><strong>dSystemAge</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">System Age</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Type</p></td>
+<td><div class="line-block">
+<div class="line">Double</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Custom unit</p></td>
+<td><div class="line-block">
+<div class="line">1 Gyr</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Dimension(s)</p></td>
+<td><div class="line-block">
+<div class="line">time</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line">ALL</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Files</p></td>
+<td><div class="line-block">
+<div class="line">Any</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Default value</p></td>
 <td><div class="line-block">
 <div class="line">0</div>
 </div>
@@ -20492,6 +20540,33 @@ the same order as listed in saOutputOrder.</p>
 </table>
 <table class="docutils align-default">
 <thead>
+<tr class="row-odd"><th class="head" colspan="2"><p><strong>RunawayGreenhouseFlux</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Description</p></td>
+<td><div class="line-block">
+<div class="line">Incident radiative flux necessary to trigger runaway greenhouse</div>
+<div class="line">(Kopparapu et al. 2014).</div>
+</div>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Custom unit</p></td>
+<td><div class="line-block">
+<div class="line">W/m^2</div>
+</div>
+</td>
+</tr>
+<tr class="row-even"><td><p>Modules</p></td>
+<td><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<table class="docutils align-default">
+<thead>
 <tr class="row-odd"><th class="head" colspan="2"><p><strong>ScaleHeight</strong></p></th>
 </tr>
 </thead>
@@ -22125,7 +22200,7 @@ the same order as listed in saOutputOrder.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018-2025, The VPLanet Team.</p>
+    <p>&#169; Copyright 2018-2026, The VPLanet Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

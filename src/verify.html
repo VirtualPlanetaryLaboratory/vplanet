@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>verify &mdash; VPLanet 2.5.31
+  <title>verify &mdash; VPLanet 2.5.32
  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
@@ -15,13 +15,13 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=79f125bc"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=4e09afd6"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="galhabit" href="galhabit.html" />
+    <link rel="next" title="VPLOT" href="../vplot.html" />
     <link rel="prev" title="module" href="module.html" /> 
 </head>
 
@@ -51,13 +51,28 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
 <li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">verify</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#verify-c">verify.c</a><ul>
@@ -74,6 +89,19 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411VerifyNamesP4BODYP7CONTROLP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">VerifyNames()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411VerifyOrbitP4BODYP7CONTROL5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyOrbit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418IntegrationWarningA_cA_cA_cA_cii"><code class="docutils literal notranslate"><span class="pre">IntegrationWarning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426AssignIntegrationDirectionP7CONTROL"><code class="docutils literal notranslate"><span class="pre">AssignIntegrationDirection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv422VerifyOneDirectionOnlyP7CONTROLP5FILESP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">VerifyOneDirectionOnly()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426VerifyIntegrationDirectionP7CONTROLP5FILESP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">VerifyIntegrationDirection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415SetBackwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"><code class="docutils literal notranslate"><span class="pre">SetBackwardFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv414SetForwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"><code class="docutils literal notranslate"><span class="pre">SetForwardFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv429CheckIntegrationFileExistenceP7CONTROLP5FILESP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">CheckIntegrationFileExistence()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv426InitializeIntegrationFilesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"><code class="docutils literal notranslate"><span class="pre">InitializeIntegrationFiles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv424PrintIntegrationWarningsP7CONTROLP5FILESP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">PrintIntegrationWarnings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv423AssignIntegrationMethodP7CONTROLP7OPTIONSP11fnIntegrate"><code class="docutils literal notranslate"><span class="pre">AssignIntegrationMethod()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv416VerifyOutputTimeP7CONTROLP5FILESP7OPTIONS"><code class="docutils literal notranslate"><span class="pre">VerifyOutputTime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415StopTimeFromAgeP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">StopTimeFromAge()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv414AssignStopTimeP7CONTROLP5FILESP7OPTIONSP6SYSTEM"><code class="docutils literal notranslate"><span class="pre">AssignStopTime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv414AssignBodyAgesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"><code class="docutils literal notranslate"><span class="pre">AssignBodyAges()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417VerifyIntegrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMP11fnIntegrate"><code class="docutils literal notranslate"><span class="pre">VerifyIntegration()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413VerifyMassRadP4BODYP7CONTROLP7OPTIONSA_ci"><code class="docutils literal notranslate"><span class="pre">VerifyMassRad()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415VerifyObliquityP4BODYP7OPTIONSii"><code class="docutils literal notranslate"><span class="pre">VerifyObliquity()</span></code></a></li>
@@ -95,21 +123,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#verify-h">verify.h</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -237,6 +250,71 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426AssignIntegrationDirectionP7CONTROL">
+<span id="_CPPv326AssignIntegrationDirectionP7CONTROL"></span><span id="_CPPv226AssignIntegrationDirectionP7CONTROL"></span><span id="AssignIntegrationDirection__CONTROLP"></span><span class="target" id="verify_8c_1ac8365d2d4c928aca6b4da85778ac5c43"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AssignIntegrationDirection</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426AssignIntegrationDirectionP7CONTROL" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422VerifyOneDirectionOnlyP7CONTROLP5FILESP7OPTIONS">
+<span id="_CPPv322VerifyOneDirectionOnlyP7CONTROLP5FILESP7OPTIONS"></span><span id="_CPPv222VerifyOneDirectionOnlyP7CONTROLP5FILESP7OPTIONS"></span><span id="VerifyOneDirectionOnly__CONTROLP.FILESP.OPTIONSP"></span><span class="target" id="verify_8c_1a7523841ecb14db0f1150baa06c88cc42"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyOneDirectionOnly</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422VerifyOneDirectionOnlyP7CONTROLP5FILESP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426VerifyIntegrationDirectionP7CONTROLP5FILESP7OPTIONS">
+<span id="_CPPv326VerifyIntegrationDirectionP7CONTROLP5FILESP7OPTIONS"></span><span id="_CPPv226VerifyIntegrationDirectionP7CONTROLP5FILESP7OPTIONS"></span><span id="VerifyIntegrationDirection__CONTROLP.FILESP.OPTIONSP"></span><span class="target" id="verify_8c_1a301104767c681d131e14ca2465cf2341"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyIntegrationDirection</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426VerifyIntegrationDirectionP7CONTROLP5FILESP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415SetBackwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM">
+<span id="_CPPv315SetBackwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="_CPPv215SetBackwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="SetBackwardFile__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP"></span><span class="target" id="verify_8c_1af38b7f4147f39b9c6fe5047fed9e684c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetBackwardFile</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415SetBackwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414SetForwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM">
+<span id="_CPPv314SetForwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="_CPPv214SetForwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="SetForwardFile__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP"></span><span class="target" id="verify_8c_1ae312584ef5a81f838e927bc9bd5bbb1a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetForwardFile</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414SetForwardFileP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429CheckIntegrationFileExistenceP7CONTROLP5FILESP7OPTIONS">
+<span id="_CPPv329CheckIntegrationFileExistenceP7CONTROLP5FILESP7OPTIONS"></span><span id="_CPPv229CheckIntegrationFileExistenceP7CONTROLP5FILESP7OPTIONS"></span><span id="CheckIntegrationFileExistence__CONTROLP.FILESP.OPTIONSP"></span><span class="target" id="verify_8c_1a15962d067f4cdfb095d2c02ae825d4f9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CheckIntegrationFileExistence</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429CheckIntegrationFileExistenceP7CONTROLP5FILESP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426InitializeIntegrationFilesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM">
+<span id="_CPPv326InitializeIntegrationFilesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="_CPPv226InitializeIntegrationFilesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="InitializeIntegrationFiles__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP"></span><span class="target" id="verify_8c_1a268f5878c20c57708aab4652f64d8bc8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InitializeIntegrationFiles</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426InitializeIntegrationFilesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424PrintIntegrationWarningsP7CONTROLP5FILESP7OPTIONS">
+<span id="_CPPv324PrintIntegrationWarningsP7CONTROLP5FILESP7OPTIONS"></span><span id="_CPPv224PrintIntegrationWarningsP7CONTROLP5FILESP7OPTIONS"></span><span id="PrintIntegrationWarnings__CONTROLP.FILESP.OPTIONSP"></span><span class="target" id="verify_8c_1ab9d8fa55da945f1bdcb69a8dd825cfd5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PrintIntegrationWarnings</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424PrintIntegrationWarningsP7CONTROLP5FILESP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423AssignIntegrationMethodP7CONTROLP7OPTIONSP11fnIntegrate">
+<span id="_CPPv323AssignIntegrationMethodP7CONTROLP7OPTIONSP11fnIntegrate"></span><span id="_CPPv223AssignIntegrationMethodP7CONTROLP7OPTIONSP11fnIntegrate"></span><span id="AssignIntegrationMethod__CONTROLP.OPTIONSP.fnIntegrateP"></span><span class="target" id="verify_8c_1aeaf9568f1f4c982a00608c7514f5afa0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AssignIntegrationMethod</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv411fnIntegrate" title="fnIntegrate"><span class="n"><span class="pre">fnIntegrate</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnOneStep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423AssignIntegrationMethodP7CONTROLP7OPTIONSP11fnIntegrate" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416VerifyOutputTimeP7CONTROLP5FILESP7OPTIONS">
+<span id="_CPPv316VerifyOutputTimeP7CONTROLP5FILESP7OPTIONS"></span><span id="_CPPv216VerifyOutputTimeP7CONTROLP5FILESP7OPTIONS"></span><span id="VerifyOutputTime__CONTROLP.FILESP.OPTIONSP"></span><span class="target" id="verify_8c_1aed8afe8e20f92cff22b59527012fdf46"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyOutputTime</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416VerifyOutputTimeP7CONTROLP5FILESP7OPTIONS" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415StopTimeFromAgeP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315StopTimeFromAgeP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215StopTimeFromAgeP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="StopTimeFromAge__CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="verify_8c_1a400e3db43e138bc9397cefb60faee76c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StopTimeFromAge</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFileStopAge</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415StopTimeFromAgeP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414AssignStopTimeP7CONTROLP5FILESP7OPTIONSP6SYSTEM">
+<span id="_CPPv314AssignStopTimeP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="_CPPv214AssignStopTimeP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="AssignStopTime__CONTROLP.FILESP.OPTIONSP.SYSTEMP"></span><span class="target" id="verify_8c_1ac5a11697072cea3d94104585306fb938"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AssignStopTime</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414AssignStopTimeP7CONTROLP5FILESP7OPTIONSP6SYSTEM" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414AssignBodyAgesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM">
+<span id="_CPPv314AssignBodyAgesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="_CPPv214AssignBodyAgesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM"></span><span id="AssignBodyAges__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP"></span><span class="target" id="verify_8c_1a1de5fc6811bcbd480b8624bfbd22925d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AssignBodyAges</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414AssignBodyAgesP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEM" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv417VerifyIntegrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMP11fnIntegrate">
 <span id="_CPPv317VerifyIntegrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMP11fnIntegrate"></span><span id="_CPPv217VerifyIntegrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMP11fnIntegrate"></span><span id="VerifyIntegration__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.fnIntegrateP"></span><span class="target" id="verify_8c_1a26386a18cd60f4e97ec27f0a59185757"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyIntegration</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv411fnIntegrate" title="fnIntegrate"><span class="n"><span class="pre">fnIntegrate</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">fnOneStep</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417VerifyIntegrationP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMP11fnIntegrate" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -340,13 +418,13 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="module.html" class="btn btn-neutral float-left" title="module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="galhabit.html" class="btn btn-neutral float-right" title="galhabit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../vplot.html" class="btn btn-neutral float-right" title="VPLOT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018-2025, The VPLanet Team.</p>
+    <p>&#169; Copyright 2018-2026, The VPLanet Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

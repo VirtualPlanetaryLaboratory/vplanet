@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>options &mdash; VPLanet 2.5.31
+  <title>options &mdash; VPLanet 2.5.32
  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=d948c9a6" />
@@ -15,14 +15,14 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=79f125bc"></script>
-      <script src="../_static/doctools.js?v=9a2dae69"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=4e09afd6"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="system" href="system.html" />
-    <link rel="prev" title="evolve" href="evolve.html" /> 
+    <link rel="next" title="update" href="update.html" />
+    <link rel="prev" title="magmoc" href="magmoc.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,26 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
 <li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">options</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#options-c">options.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415NotPrimaryInputiA_cA_cii"><code class="docutils literal notranslate"><span class="pre">NotPrimaryInput()</span></code></a></li>
@@ -107,6 +91,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415iAssignTempUnitA_ciA_cA_ci"><code class="docutils literal notranslate"><span class="pre">iAssignTempUnit()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412ReadUnitTempP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">ReadUnitTemp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414ReadSystemNameP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadSystemName()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv413ReadSystemAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadSystemAge()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417ReadBodyFileNamesPP4BODYP7CONTROLP5FILESP7OPTIONSPcPPPcPiPi"><code class="docutils literal notranslate"><span class="pre">ReadBodyFileNames()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418ReadInitialOptionsPP4BODYP7CONTROLP5FILESP6MODULEP7OPTIONSP6OUTPUTP6SYSTEMPc"><code class="docutils literal notranslate"><span class="pre">ReadInitialOptions()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv419AssignDefaultDoubleP7OPTIONSPdi"><code class="docutils literal notranslate"><span class="pre">AssignDefaultDouble()</span></code></a></li>
@@ -121,6 +106,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv47ReadEtaP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadEta()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414ReadOutputTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadOutputTime()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadStopTime()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv411ReadStopAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadStopAge()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412ReadTimeStepP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadTimeStep()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49ReadVarDtP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadVarDt()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv412ReadBodyNameP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadBodyName()</span></code></a></li>
@@ -215,12 +201,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_UNITTEMP"><code class="docutils literal notranslate"><span class="pre">OPT_UNITTEMP</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_VERBOSE"><code class="docutils literal notranslate"><span class="pre">OPT_VERBOSE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_AGE"><code class="docutils literal notranslate"><span class="pre">OPT_AGE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_SYSTEMAGE"><code class="docutils literal notranslate"><span class="pre">OPT_SYSTEMAGE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_ALBEDOGLOBAL"><code class="docutils literal notranslate"><span class="pre">OPT_ALBEDOGLOBAL</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_BACK"><code class="docutils literal notranslate"><span class="pre">OPT_BACK</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_OUTFILE"><code class="docutils literal notranslate"><span class="pre">OPT_OUTFILE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_ETA"><code class="docutils literal notranslate"><span class="pre">OPT_ETA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_OUTPUTTIME"><code class="docutils literal notranslate"><span class="pre">OPT_OUTPUTTIME</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_STOPTIME"><code class="docutils literal notranslate"><span class="pre">OPT_STOPTIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_STOPAGE"><code class="docutils literal notranslate"><span class="pre">OPT_STOPAGE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_TIMESTEP"><code class="docutils literal notranslate"><span class="pre">OPT_TIMESTEP</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_VARDT"><code class="docutils literal notranslate"><span class="pre">OPT_VARDT</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_BODYNAME"><code class="docutils literal notranslate"><span class="pre">OPT_BODYNAME</span></code></a></li>
@@ -285,9 +273,25 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -517,6 +521,11 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413ReadSystemAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv313ReadSystemAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv213ReadSystemAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadSystemAge__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1ae0ff5642dbfc075ae48baa3c7e2b01b9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadSystemAge</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413ReadSystemAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv417ReadBodyFileNamesPP4BODYP7CONTROLP5FILESP7OPTIONSPcPPPcPiPi">
 <span id="_CPPv317ReadBodyFileNamesPP4BODYP7CONTROLP5FILESP7OPTIONSPcPPPcPiPi"></span><span id="_CPPv217ReadBodyFileNamesPP4BODYP7CONTROLP5FILESP7OPTIONSPcPPPcPiPi"></span><span id="ReadBodyFileNames__BODYPP.CONTROLP.FILESP.OPTIONSP.cP.cPPP.iP.iP"></span><span class="target" id="options_8c_1af4a8a03a56ec206005617e9c957e4e5c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadBodyFileNames</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cFile</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">saBodyFiles</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iNumLines</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">iaLines</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417ReadBodyFileNamesPP4BODYP7CONTROLP5FILESP7OPTIONSPcPPPcPiPi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -584,6 +593,11 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv412ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
 <span id="_CPPv312ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv212ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadStopTime__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a1151be50a0f2bb1935726f7a0da88a75"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadStopTime</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv412ReadStopTimeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv411ReadStopAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv311ReadStopAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv211ReadStopAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadStopAge__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="options_8c_1a8363fe72facb0c8071154307728e3482"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadStopAge</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411ReadStopAgeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -1122,6 +1136,11 @@ To add a new option: 1) Add integer definition here 2) Add new option properties
 <dd></dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_SYSTEMAGE">
+<span class="target" id="options_8h_1ace5f8a8fca4908ff5dfbc5cf3a56728b"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_SYSTEMAGE</span></span></span><a class="headerlink" href="#c.OPT_SYSTEMAGE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.OPT_ALBEDOGLOBAL">
 <span class="target" id="options_8h_1a1069b7ff39adde0f25f423818b06dd8d"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_ALBEDOGLOBAL</span></span></span><a class="headerlink" href="#c.OPT_ALBEDOGLOBAL" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -1149,6 +1168,11 @@ To add a new option: 1) Add integer definition here 2) Add new option properties
 <dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.OPT_STOPTIME">
 <span class="target" id="options_8h_1af35c20eac001a08ce526a75aff0e9348"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_STOPTIME</span></span></span><a class="headerlink" href="#c.OPT_STOPTIME" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_STOPAGE">
+<span class="target" id="options_8h_1ae1bbedfa88e114909ea5e33573df06f5"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_STOPAGE</span></span></span><a class="headerlink" href="#c.OPT_STOPAGE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp macro">
@@ -1465,14 +1489,14 @@ To add a new option: 1) Add integer definition here 2) Add new option properties
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="evolve.html" class="btn btn-neutral float-left" title="evolve" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="system.html" class="btn btn-neutral float-right" title="system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="magmoc.html" class="btn btn-neutral float-left" title="magmoc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="update.html" class="btn btn-neutral float-right" title="update" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2018-2025, The VPLanet Team.</p>
+    <p>&#169; Copyright 2018-2026, The VPLanet Team.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

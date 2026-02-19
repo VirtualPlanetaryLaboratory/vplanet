@@ -12,47 +12,47 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/STEEP
-   examples/BinaryTides
-   examples/ParameterSweep
-   examples/FfdProxCen
-   examples/AtmEscFlareProxCen
-   examples/DiffLimWaterEscape
-   examples/SS_NBody
-   examples/RadHeat
-   examples/VenusApproxInterior
-   examples/MiniNeptuneEvap
-   examples/StellarEvol
+   examples/EarthClimate
    examples/MagneticBraking
-   examples/HLossTides
-   examples/SSDistOrbDistRot
-   examples/IceBelts
-   examples/NBodyAtmEsc
-   examples/CosmicShoreline
+   examples/ApseLock
+   examples/STEEP
+   examples/StellarEvol
+   examples/RadHeat
+   examples/HabitableZone
+   examples/AtmEscKepler-36
+   examples/CassiniMulti
    examples/CircumbinaryOrbit
+   examples/VenusApproxInterior
+   examples/BinaryTides
+   examples/LuminosityCycle
+   examples/AtmEscRegimes
+   examples/EarthInterior
+   examples/HLossTides
+   examples/DampedCBP
+   examples/DiffLimWaterEscape
+   examples/AbioticO2
+   examples/MagmOc_GJ1132b
+   examples/SSDistOrbDistRot
    examples/ChaoticResonances
+   examples/ParameterSweep
+   examples/VenusWaterLoss
+   examples/IceBelts
+   examples/HabEvapCore
+   examples/AtmEscFlareProxCen
+   examples/FfdProxCen
+   examples/IoHeat
+   examples/GalaxyEffects
+   examples/CosmicShoreline
+   examples/CassiniStates
+   examples/MagmOc_Trappist1g
+   examples/MagmOc_Earth
+   examples/SS_NBody
+   examples/MiniNeptuneEvap
+   examples/NBodyAtmEsc
    examples/MDwarfLuminosity
    examples/TidalEarth
-   examples/EarthClimate
-   examples/TideLock
-   examples/AbioticO2
-   examples/VenusWaterLoss
-   examples/MagmOc_GJ1132b
-   examples/DampedCBP
-   examples/AtmEscRegimes
-   examples/CassiniStates
-   examples/CassiniMulti
-   examples/AtmEscKepler-36
-   examples/EarthInterior
-   examples/HabitableZone
-   examples/MagmOc_Earth
-   examples/LuminosityCycle
-   examples/ApseLock
    examples/WaterLossTides
-   examples/GalaxyEffects
-   examples/IoHeat
-   examples/MagmOc_Trappist1g
-   examples/HabEvapCore
+   examples/TideLock
 
 
 Broken

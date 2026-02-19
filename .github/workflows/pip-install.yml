@@ -1,78 +1,23 @@
 name: pip-install
+
 on:
   release:
-    types: [published]
+    types:
+      - published
 
 jobs:
-  build_wheels:
-    name: Building wheel for ${{ matrix.os }}:Python-${{ matrix.python-version }}
+
+  build:
+    name: 'py${{ matrix.python }} on ${{ matrix.os }}'
     runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
-        exclude:
-          - os: ubuntu-22.04
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.7'
       fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, macos-15-intel, macos-26]
+        python: ['3.9', '3.10', '3.11', '3.12', '3.13', '3.14']
 
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python
-        id: setup_python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install packages
-        run: |
-          python -m pip install -U pip
-          python -m pip install setuptools
-          python -m pip install cibuildwheel
-
-      - name: Build wheel on Linux
-        if: runner.os == 'Linux'
-        run: |
-          python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_BUILD: 'cp3?-*'
-          CIBW_SKIP: '*-manylinux_i686'
-          CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
-
-      - name: Build wheel on macOS
-        if: runner.os == 'macOS'
-        run: |
-          python -m cibuildwheel --output-dir wheelhouse
-
-      - name: Upload wheel artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: wheel-${{ matrix.os }}-${{ matrix.python-version }}
-          path: ./wheelhouse/
-
-  build_sdist:
-    name: Building source for ${{ matrix.os }}:Python-${{ matrix.python-version }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-20.04, ubuntu-22.04, macos-12, macos-13, macos-14]
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
-        exclude:
-          - os: ubuntu-22.04
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.6'
-          - os: macos-14
-            python-version: '3.7'
-      fail-fast: false
-
-    steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
           fetch-depth: 0
@@ -80,92 +25,43 @@ jobs:
       - uses: actions/setup-python@v5
         name: Install Python
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python }}
+          allow-prereleases: true
 
-      - name: Install packages
+      - name: Build
         run: |
-          python -m pip install -U pip
-          python -m pip install setuptools
+          python -m pip install -U pip build twine setuptools setuptools_scm wheel
+          python -m build
 
-      - name: Build sdist
-        run: python setup.py sdist
+      - name: Test the sdist
+        run: |
+          python -m venv venv-sdist
+          venv-sdist/bin/python -m pip install dist/vplanet*.tar.gz
+          venv-sdist/bin/python -c "import vplanet; print(vplanet.__version__)"
 
-      - name: Upload sdist artifact
-        uses: actions/upload-artifact@v4
+      - name: Test the wheel
+        run: |
+          python -m venv venv-wheel
+          venv-wheel/bin/python -m pip install dist/vplanet*.whl
+          venv-wheel/bin/python -c "import vplanet; print(vplanet.__version__)"
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: sdist-${{ matrix.os }}-${{ matrix.python-version }}
-          path: dist/
+          name: dist-${{ matrix.os }}-${{ matrix.python }}
+          path: dist/*
 
   upload_pypi:
-    needs: [build_wheels, build_sdist]
-    runs-on: ubuntu-22.04
+    needs: [build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
+    permissions:
+      id-token: write
 
     steps:
-     - uses: actions/download-artifact@v4
-       with:
-          name: wheel-ubuntu-20.04-3.6.whl
-          path: wheelhouse
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: wheel-ubuntu-22.04-*
-          path: wheelhouse
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: wheel-macos-12-*
-          path: wheelhouse
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: wheel-macos-13-*
-          path: wheelhouse
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: wheel-macos-14-*
-          path: wheelhouse
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: sdist-ubuntu-20.04-*
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: dist-*
           path: dist
+          merge-multiple: true
 
-     - uses: actions/download-artifact@v4
-       with:
-          name: sdist-ubuntu-22.04-*
-          path: dist
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: sdist-macos-12-*
-          path: dist
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: sdist-macos-13-*
-          path: dist
-
-     - uses: actions/download-artifact@v4
-       with:
-          name: sdist-macos-14-*
-          path: dist
-
-     - name: Install dependencies
-       run: |
-         python -m pip install --upgrade pip
-         python -m pip install twine
-
-     - name: Upload to PyPI
-       if: github.repository == 'VirtualPlanetaryLaboratory/vplanet'
-       run: python -m twine upload dist/* wheelhouse/*
-       env:
-         TWINE_USERNAME: __token__
-         TWINE_PASSWORD: ${{ secrets.pypi_password }}
-
-      # Only push to PyPI if we're on the public repo!
-    #  - uses: pypa/gh-action-pypi-publish@release/v1
-    #    if: (!github.event.release.prerelease) && github.event_name == 'release' && github.event.action == 'published' && github.repository == 'VirtualPlanetaryLaboratory/vplanet'
-    #    with:
-    #       user: __token__
-    #       password: ${{ secrets.pypi_password }}
+      - uses: pypa/gh-action-pypi-publish@release/v1

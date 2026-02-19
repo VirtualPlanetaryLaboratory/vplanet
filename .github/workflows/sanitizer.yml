@@ -8,27 +8,28 @@ on:
 jobs:
   sanitizer:
     name: Run address-sanitizer on macOS
-    runs-on: macos-13
+    runs-on: macos-15
     strategy:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        id: setup_python
-        uses: conda-incubator/setup-miniconda@v3
+        uses: actions/setup-python@v5
         with:
-          activate-environment: vplanet
-          environment-file: environment.yml
-          python-version: 3.9
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: setup.py
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -U pip
+          python -m pip install -e .
 
       - name: Run sanitizer
-        if: steps.setup_python.outcome == 'success'
-        shell: bash -l {0}
         run: |
-          make sanitize
           cd tests/
           python sanitizer.py

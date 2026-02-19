@@ -37,13 +37,13 @@ jobs:
         run: |
           python -m venv venv-sdist
           venv-sdist/bin/python -m pip install dist/vplanet*.tar.gz
-          venv-sdist/bin/python -c "import vplanet; print(vplanet.__version__)"
+          cd /tmp && "$GITHUB_WORKSPACE/venv-sdist/bin/python" -c "import vplanet; print(vplanet.__version__)"
 
       - name: Test the wheel
         run: |
           python -m venv venv-wheel
           venv-wheel/bin/python -m pip install dist/vplanet*.whl
-          venv-wheel/bin/python -c "import vplanet; print(vplanet.__version__)"
+          cd /tmp && "$GITHUB_WORKSPACE/venv-wheel/bin/python" -c "import vplanet; print(vplanet.__version__)"
 
       - uses: actions/upload-artifact@v4
         with:

@@ -12,29 +12,24 @@ jobs:
       fail-fast: false
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Set up Python
-        id: setup_python
-        uses: conda-incubator/setup-miniconda@v3
+        uses: actions/setup-python@v5
         with:
-          activate-environment: vplanet
-          environment-file: environment.yml
-          python-version: 3.8
+          python-version: '3.11'
+          cache: 'pip'
 
-      - name: Install valgrind
-        id: install
-        if: steps.setup_python.outcome == 'success'
-        shell: bash -l {0}
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install valgrind
+          sudo apt-get install -y valgrind
+          python -m pip install -U pip
+          python -m pip install -e .
 
       - name: Run valgrind test
-        if: steps.install.outcome == 'success'
-        shell: bash -l {0}
         run: |
           cd tests/
           python valgrind.py

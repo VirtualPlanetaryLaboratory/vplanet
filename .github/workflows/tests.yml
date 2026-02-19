@@ -1,0 +1,76 @@
+name: tests
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    name: 'py${{ matrix.python-version }} on ${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-22.04, ubuntu-24.04, macos-15-intel, macos-26]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python ${{ matrix.python-version }}
+        id: setup_python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+          python -m pip install pytest pytest-cov pytest-timeout
+
+      - name: Install lcov (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
+
+      - name: Build vplanet
+        run: make opt
+
+      - name: Run tests
+        timeout-minutes: 20
+        run: |
+          python -m pytest tests/ --tb=short -v --timeout=300 --junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml
+
+      - name: Generate coverage
+        if: matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9'
+        run: make coverage
+
+      - name: Upload coverage to Codecov
+        if: matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9'
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./.coverage
+          flags: ${{ matrix.os }}-py${{ matrix.python-version }}
+          name: ${{ matrix.os }}-py${{ matrix.python-version }}
+          fail_ci_if_error: false
+
+      - name: Publish test results (Linux)
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always() && runner.os == 'Linux'
+        with:
+          files: junit/test-*.xml
+          check_name: Test Results (py${{ matrix.python-version }} on ${{ matrix.os }})
+
+      - name: Publish test results (macOS)
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        if: always() && runner.os == 'macOS'
+        with:
+          files: junit/test-*.xml
+          check_name: Test Results (py${{ matrix.python-version }} on ${{ matrix.os }})

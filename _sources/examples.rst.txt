@@ -12,47 +12,47 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/STEEP
-   examples/HabEvapCore
-   examples/LuminosityCycle
-   examples/MDwarfLuminosity
-   examples/MagneticBraking
-   examples/EarthInterior
    examples/EarthClimate
-   examples/VenusApproxInterior
-   examples/AtmEscRegimes
-   examples/AtmEscKepler-36
-   examples/CircumbinaryOrbit
-   examples/SS_NBody
+   examples/MagneticBraking
    examples/ApseLock
-   examples/WaterLossTides
-   examples/MagmOc_GJ1132b
-   examples/ParameterSweep
+   examples/STEEP
    examples/StellarEvol
-   examples/AbioticO2
-   examples/MiniNeptuneEvap
    examples/RadHeat
    examples/HabitableZone
+   examples/AtmEscKepler-36
    examples/CassiniMulti
-   examples/SSDistOrbDistRot
-   examples/DampedCBP
-   examples/TideLock
-   examples/ChaoticResonances
-   examples/IceBelts
-   examples/HLossTides
-   examples/MagmOc_Earth
+   examples/CircumbinaryOrbit
+   examples/VenusApproxInterior
    examples/BinaryTides
+   examples/LuminosityCycle
+   examples/AtmEscRegimes
+   examples/EarthInterior
+   examples/HLossTides
+   examples/DampedCBP
+   examples/DiffLimWaterEscape
+   examples/AbioticO2
+   examples/MagmOc_GJ1132b
+   examples/SSDistOrbDistRot
+   examples/ChaoticResonances
+   examples/ParameterSweep
+   examples/VenusWaterLoss
+   examples/IceBelts
+   examples/HabEvapCore
    examples/AtmEscFlareProxCen
    examples/FfdProxCen
+   examples/IoHeat
    examples/GalaxyEffects
    examples/CosmicShoreline
-   examples/VenusWaterLoss
-   examples/TidalEarth
-   examples/NBodyAtmEsc
-   examples/DiffLimWaterEscape
    examples/CassiniStates
    examples/MagmOc_Trappist1g
-   examples/IoHeat
+   examples/MagmOc_Earth
+   examples/SS_NBody
+   examples/MiniNeptuneEvap
+   examples/NBodyAtmEsc
+   examples/MDwarfLuminosity
+   examples/TidalEarth
+   examples/WaterLossTides
+   examples/TideLock
 
 
 Broken

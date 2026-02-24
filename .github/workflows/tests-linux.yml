@@ -1,4 +1,4 @@
-name: tests
+name: tests-linux
 
 on:
   pull_request:
@@ -7,12 +7,12 @@ on:
 
 jobs:
   tests:
-    name: 'py${{ matrix.python-version }} on ${{ matrix.os }}'
+    name: '${{ matrix.os }}:python-${{ matrix.python-version }}'
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-22.04, ubuntu-24.04, macos-15-intel, macos-26]
+        os: [ubuntu-22.04, ubuntu-24.04]
         python-version: ["3.9", "3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
@@ -30,15 +30,11 @@ jobs:
 
       - name: Install dependencies
         run: |
+          sudo apt-get update
+          sudo apt-get install -y lcov
           python -m pip install --upgrade pip
           python -m pip install -e .
           python -m pip install pytest pytest-cov pytest-timeout
-
-      - name: Install lcov (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
 
       - name: Build vplanet
         run: make opt
@@ -46,7 +42,14 @@ jobs:
       - name: Run tests
         timeout-minutes: 20
         run: |
-          python -m pytest tests/ --tb=short -v --timeout=300 --junitxml=junit/test-results-${{ matrix.os }}-${{ matrix.python-version }}.xml
+          python -m pytest tests/ --tb=short -v --timeout=300 --junitxml=junit/test-results.xml
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: junit/test-*.xml
+          check_name: Test Results (${{ matrix.os }} py${{ matrix.python-version }})
 
       - name: Generate coverage
         if: matrix.os == 'ubuntu-22.04' && matrix.python-version == '3.9'
@@ -61,10 +64,3 @@ jobs:
           flags: ${{ matrix.os }}-py${{ matrix.python-version }}
           name: ${{ matrix.os }}-py${{ matrix.python-version }}
           fail_ci_if_error: false
-
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always() && runner.os == 'Linux'
-        with:
-          files: junit/test-*.xml
-          check_name: Test Results (py${{ matrix.python-version }} on ${{ matrix.os }})

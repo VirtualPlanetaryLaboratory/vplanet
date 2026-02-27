@@ -1,4 +1,4 @@
-FlareBrust TRAPPIST-1e Comparison
+flarebrust trappist-1e comparison
 =================================
 
 This directory contains a minimal TRAPPIST-1e atmospheric escape setup for
@@ -6,14 +6,14 @@ comparing baseline stellar XUV evolution against coarse bursty variability that
 preserves the same long-time mean XUV energy. The module keyword used in
 ``saModules`` is ``flarebrust``.
 
-Configurations
+configurations
 --------------
 
 - ``baseline/``: STELLAR only (modulation OFF).
 - ``periodic/``: STELLAR + FLAREBRUST with ``sFlareVarModel PERIODIC``.
 - ``random_bin/``: STELLAR + FLAREBRUST with ``sFlareVarModel RANDOM_BIN``.
 
-Run
+run
 ---
 
 From each subdirectory:
@@ -28,7 +28,30 @@ Key star outputs are:
 - ``LXUVBase``: pre-modulation stellar XUV luminosity
 - ``LXUVTotal``: post-modulation stellar XUV luminosity
 
-Simple checks
+figures
+-------
+
+The plotting script uses LaTeX text rendering (MacTeX) and is configured for
+publication-style axis labels, titles, and units.
+
+.. code-block:: bash
+
+   conda activate vpl
+   python makeplot.py pdf --rerun
+   python makeplot.py png
+
+Generated files are written to ``figures/``:
+
+- ``flarebrust_trappist1e_response.pdf`` (or ``.png``)
+- ``flarebrust_trappist1e_diagnostics.pdf`` (or ``.png``)
+
+*Short reading guide:*
+
+- The response figure compares the same baseline mean XUV history against periodic and random-bin flarebrust forcing.
+- Differences in surface water evolution isolate nonlinear escape responses because the time-averaged XUV forcing is preserved.
+- The diagnostics figure shows instantaneous multiplier states and the running mean convergence toward unity.
+
+simple checks
 -------------
 
 From ``periodic/`` (after the run):

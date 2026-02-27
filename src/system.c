@@ -328,6 +328,13 @@ double fdInstellation(BODY *body, int iBody) {
   return dInstell;
 }
 
+static double fdLXUVStellarEffective(BODY *body, int iBody) {
+  if (body[iBody].bFlareVar) {
+    return body[iBody].dLXUVTotal;
+  }
+  return body[iBody].dLXUV;
+}
+
 /**
 Compute the XUV Flux.
 
@@ -342,18 +349,19 @@ double fdXUVFlux(BODY *body, int iBody) {
 
   // Body orbits two stars
   if (body[iBody].bBinary && body[iBody].iBodyType == 0) {
-    flux = fndFluxExactBinary(body, iBody, body[0].dLXUV, body[1].dLXUV);
+    flux = fndFluxExactBinary(body, iBody, fdLXUVStellarEffective(body, 0),
+                            fdLXUVStellarEffective(body, 1));
   } else {
     // Body orbits one star
     if (iBody > 0) {
       // The star have produces XUV by flares and quiescent state.
       if (body[0].bFlare && body[0].bStellar) {
-        dLXUVTot = body[0].dLXUVFlare + body[0].dLXUV;
+        dLXUVTot = body[0].dLXUVFlare + fdLXUVStellarEffective(body, 0);
       }
       // The star doesn't have flares, only XUV from quiescent state is emitted
       // by the star.
       else if (body[0].bStellar) {
-        dLXUVTot = body[0].dLXUV;
+        dLXUVTot = fdLXUVStellarEffective(body, 0);
       }
       // Only flares incoming the planet and produce the XUV flux. Weird, but
       // could happen. "The user walk by strange ways".

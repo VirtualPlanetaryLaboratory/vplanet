@@ -4842,4 +4842,5 @@ void InitializeOptions(OPTIONS *options, fnReadOption *fnRead) {
   InitializeOptionsSpiNBody(options, fnRead);
   InitializeOptionsMagmOc(options, fnRead);
   InitializeOptionsFlare(options, fnRead);
+  InitializeOptionsFlareVar(options, fnRead);
 }

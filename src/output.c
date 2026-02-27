@@ -553,22 +553,19 @@ void WriteBodyArgP(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 void WriteLXUVTot(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
                   char **cUnit) {
-  /* Multiple modules can contribute to this output */
-  int iModule;
+  double dLXUVStellar = body[iBody].dLXUV;
+
+  if (body[iBody].bFlareVar) {
+    dLXUVStellar = body[iBody].dLXUVTotal;
+  }
 
   if (body[iBody].bFlare && body[iBody].bStellar) {
-    *dTmp = body[iBody].dLXUVFlare + body[iBody].dLXUV;
-  }
-
-  else if (body[iBody].bStellar) {
-    *dTmp = body[iBody].dLXUV;
-  }
-
-  else if (body[iBody].bFlare) {
+    *dTmp = body[iBody].dLXUVFlare + dLXUVStellar;
+  } else if (body[iBody].bStellar) {
+    *dTmp = dLXUVStellar;
+  } else if (body[iBody].bFlare) {
     *dTmp = body[iBody].dLXUVFlare;
-  }
-
-  else if (!body[iBody].bFlare && !body[iBody].bStellar) {
+  } else {
     *dTmp = -1;
   }
 
@@ -2583,6 +2580,7 @@ void InitializeOutput(FILES *files, OUTPUT *output, fnWriteOutput fnWrite[]) {
   InitializeOutputGalHabit(output, fnWrite);
   InitializeOutputSpiNBody(output, fnWrite);
   InitializeOutputMagmOc(output, fnWrite);
+  InitializeOutputFlareVar(output, fnWrite);
 
   /* Why doesn't that code look like this?
   for (iBody=0;iBody<control->Evolve.iNumBodies;iBody++) {

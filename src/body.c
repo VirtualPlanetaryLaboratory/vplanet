@@ -468,6 +468,7 @@ void BodyCopy(BODY *dest, BODY *src, EVOLVE *evolve) {
     dest[iBody].bDistRot  = src[iBody].bDistRot;
     dest[iBody].bEqtide   = src[iBody].bEqtide;
     dest[iBody].bFlare    = src[iBody].bFlare;
+    dest[iBody].bFlareVar = src[iBody].bFlareVar;
     dest[iBody].bGalHabit = src[iBody].bGalHabit;
     dest[iBody].bPoise    = src[iBody].bPoise;
     dest[iBody].bStellar  = src[iBody].bStellar;

@@ -52,6 +52,7 @@
 #define SPINBODY 4096
 #define DISTRES 8192
 #define MAGMOC 16384
+#define FLAREVAR 32768
 
 /* Fundamental constants; Some of these are taken from the IAU working
  group on Fundamental constants, as described in Prsa et al. 2016. */
@@ -609,6 +610,8 @@ struct BODY {
   int iWindModel;
   int iXUVModel;
   double dLXUV; // Not really a STELLAR parameter
+  double dLXUVBase;  /**< Baseline stellar XUV luminosity before modulation */
+  double dLXUVTotal; /**< Effective stellar XUV luminosity after modulation */
   double iHZModel;
   double dLostAngMom; /**< Angular momemntum lost to space via magnetic braking
                        */
@@ -897,6 +900,16 @@ struct BODY {
   double *daLogEnerXUV;
   double *daFFD;
   double *daLXUVFlare;
+
+  // FLAREVAR
+  int bFlareVar;
+  int iFlareVarModel;
+  double dFlareVarDuty;
+  double dFlareVarAmpHigh;
+  double dFlareVarDtBin;
+  int iFlareVarSeed;
+  double dFlareVarT0;
+  double dFlareVarMult;
 
 
   // GALHABIT
@@ -1897,6 +1910,7 @@ depends on the total number of modules available. */
  * BINARY: 2100 - 2200
  * GALHABIT: 2200 - 2300
  * MAGMOC: 2300 - 2400
+ * FLAREVAR: 2340 - 2400
  */
 // These need to be set to the largest previous limit
 #define MODULEOPTEND 2400
@@ -2185,6 +2199,7 @@ struct MODULE {
   int *iaPoise;
   int *iaBinary;
   int *iaFlare;
+  int *iaFlareVar;
   int *iaGalHabit;
   int *iaSpiNBody;
   int *iaMagmOc;
@@ -2393,6 +2408,7 @@ typedef void (*fnIntegrate)(BODY *, CONTROL *, SYSTEM *, UPDATE *,
 #include "distrot.h"
 #include "eqtide.h"
 #include "flare.h"
+#include "flarevar.h"
 #include "galhabit.h"
 #include "magmoc.h"
 #include "poise.h"

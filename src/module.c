@@ -75,6 +75,7 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
   module->iaPoise         = malloc(iNumBodies * sizeof(int));
   module->iaBinary        = malloc(iNumBodies * sizeof(int));
   module->iaFlare         = malloc(iNumBodies * sizeof(int));
+  module->iaFlareVar      = malloc(iNumBodies * sizeof(int));
   module->iaGalHabit      = malloc(iNumBodies * sizeof(int));
   module->iaSpiNBody      = malloc(iNumBodies * sizeof(int));
   module->iaMagmOc        = malloc(iNumBodies * sizeof(int));
@@ -97,6 +98,7 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
     module->iaPoise[iBody]         = -1;
     module->iaBinary[iBody]        = -1;
     module->iaFlare[iBody]         = -1;
+    module->iaFlareVar[iBody]      = -1;
     module->iaGalHabit[iBody]      = -1;
     module->iaSpiNBody[iBody]      = -1;
     module->iaMagmOc[iBody]        = -1;
@@ -315,6 +317,9 @@ void FinalizeModule(BODY *body, CONTROL *control, MODULE *module, int iBody) {
     iNumModules++;
   }
   if (body[iBody].bFlare) {
+    iNumModules++;
+  }
+  if (body[iBody].bFlareVar) {
     iNumModules++;
   }
   if (body[iBody].bGalHabit) {
@@ -650,6 +655,11 @@ void AddModules(BODY *body, CONTROL *control, MODULE *module) {
       module->iaStellar[iBody]           = iModule;
       module->iaModule[iBody][iModule++] = STELLAR;
     }
+    if (body[iBody].bFlareVar) {
+      AddModuleFlareVar(control, module, iBody, iModule);
+      module->iaFlareVar[iBody]          = iModule;
+      module->iaModule[iBody][iModule++] = FLAREVAR;
+    }
     if (body[iBody].bPoise) {
       AddModulePoise(control, module, iBody, iModule);
       module->iaPoise[iBody]             = iModule;
@@ -761,6 +771,9 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       } else if (strcmp(sLower(saTmp[iModule]), "flare") == 0) {
         body[iFile - 1].bFlare = 1;
         module->iBitSum[iFile - 1] += FLARE;
+      } else if (strcmp(sLower(saTmp[iModule]), "flarebrust") == 0) {
+        body[iFile - 1].bFlareVar = 1;
+        module->iBitSum[iFile - 1] += FLAREVAR;
       // } else if (memcmp(sLower(saTmp[iModule]), "galhabit", iModuleLength) == 0) {
       } else if (strcmp(sLower(saTmp[iModule]), "galhabit") == 0) {
         body[iFile - 1].bGalHabit = 1;
@@ -849,6 +862,14 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
     fprintf(file, "FLARE");
     nspaces -= strlen("FLARE");
   }
+  if (iBitSum & FLAREVAR) {
+    if (space) {
+      fprintf(file, " ");
+    }
+    space++;
+    fprintf(file, "FLAREBRUST");
+    nspaces -= strlen("FLAREBRUST");
+  }
   if (iBitSum & GALHABIT) {
     if (space) {
       fprintf(file, " ");
@@ -924,6 +945,7 @@ void InitializeBodyModules(BODY **body, int iNumBodies) {
     (*body)[iBody].bDistRot  = 0;
     (*body)[iBody].bEqtide   = 0;
     (*body)[iBody].bFlare    = 0;
+    (*body)[iBody].bFlareVar = 0;
     (*body)[iBody].bGalHabit = 0;
     (*body)[iBody].bPoise    = 0;
     (*body)[iBody].bRadheat  = 0;

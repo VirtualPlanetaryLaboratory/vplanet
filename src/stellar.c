@@ -27,6 +27,8 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].iXUVModel            = src[iBody].iXUVModel;
   dest[iBody].iMagBrakingModel     = src[iBody].iMagBrakingModel;
   dest[iBody].dLXUV                = src[iBody].dLXUV;
+  dest[iBody].dLXUVBase            = src[iBody].dLXUVBase;
+  dest[iBody].dLXUVTotal           = src[iBody].dLXUVTotal;
   dest[iBody].bRossbyCut           = src[iBody].bRossbyCut;
   dest[iBody].bEvolveRG            = src[iBody].bEvolveRG;
   dest[iBody].dLuminosityInitial   = src[iBody].dLuminosityInitial;
@@ -1017,7 +1019,12 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     // Constant XUV fraction
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
   }
+
+  body[iBody].dLXUVBase     = body[iBody].dLXUV;
+  body[iBody].dLXUVTotal    = body[iBody].dLXUV;
+  body[iBody].dFlareVarMult = 1.0;
 }
+
 
 void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                             SYSTEM *system, UPDATE *update,
@@ -1025,6 +1032,11 @@ void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                             int iModule) {
   if (body[iBody].iStellarModel == STELLAR_MODEL_SINEWAVE) {
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+    body[iBody].dLXUVBase = body[iBody].dLXUV;
+    if (!body[iBody].bFlareVar) {
+      body[iBody].dLXUVTotal = body[iBody].dLXUV;
+      body[iBody].dFlareVarMult = 1.0;
+    }
   }
 }
 

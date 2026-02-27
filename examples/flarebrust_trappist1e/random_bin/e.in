@@ -1,0 +1,14 @@
+sName                 e
+saModules             atmesc
+dMass                 -0.693
+dRadius               -0.922
+dXFrac                1.0
+dSurfWaterMass        -10
+dEnvelopeMass         0.0
+sWaterLossModel       ls16
+bInstantO2Sink        0
+sAtmXAbsEffH2OModel   bolmont16
+dJeansTime            -10
+dEcc                  0.00637
+dOrbPeriod            -6.101013
+saOutputOrder         Time -SurfWaterMass -OxygenMass -FXUV WaterEscapeRegime

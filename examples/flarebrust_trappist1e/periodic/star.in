@@ -1,0 +1,14 @@
+sName           star
+saModules       stellar flarebrust
+dMass           0.09
+dAge            1e6
+sStellarModel   baraffe
+dSatXUVFrac     1.e-3.03
+dSatXUVTime     -3.146
+dXUVBeta        1.172
+sFlareVarModel  PERIODIC
+dFlareVarDuty   0.2
+dFlareVarAmpHigh 1.0
+dFlareVarDtBin  1e5
+dFlareVarT0     0.0
+saOutputOrder   Time -Luminosity -LXUVStellar -LXUVBase -LXUVTotal FlareVarMult -LXUVTot DeltaTime

@@ -49,6 +49,7 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].iWaterEscapeRegime   = src[iBody].iWaterEscapeRegime;
   dest[iBody].iHEscapeRegime       = src[iBody].iHEscapeRegime;
   dest[iBody].dFHDiffLim           = src[iBody].dFHDiffLim;
+  dest[iBody].dDiffLimFirstTime    = src[iBody].dDiffLimFirstTime;
   dest[iBody].iPlanetRadiusModel   = src[iBody].iPlanetRadiusModel;
   dest[iBody].bInstantO2Sink       = src[iBody].bInstantO2Sink;
   dest[iBody].dRGDuration          = src[iBody].dRGDuration;
@@ -2020,6 +2021,11 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     }
   }
 
+  if ((body[iBody].iWaterEscapeRegime == ATMESC_DIFFLIM) &&
+      (body[iBody].dDiffLimFirstTime < 0)) {
+    body[iBody].dDiffLimFirstTime = body[iBody].dAge;
+  }
+
   // Compute current H envelope mass loss (if the envelope exists)
   if (body[iBody].dEnvelopeMass >= body[iBody].dMinEnvelopeMass) {
     body[iBody].dEnvMassDt = *(update[iBody].pdDEnvelopeMassDtAtmesc);
@@ -2126,7 +2132,8 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   body[iBody].iHEscapeRegime =
         ATMESC_NONE; // Default to no H escape - updated if envelope is present
   body[iBody].bEnvelopeLostMessage = 0;
-  body[iBody].dEnvMassDt = 0.0; // Assume no H envelope mass loss at first
+  body[iBody].dEnvMassDt           = 0.0; // Assume no H envelope mass loss at first
+  body[iBody].dDiffLimFirstTime    = -1.;
 
   // Is FXUV specified in input file?
   if (options[OPT_FXUV].iLine[iBody + 1] > -1) {
@@ -3274,6 +3281,55 @@ void WriteBondiRadius(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+void WriteOxygenDragActive(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  double BDIFF = 4.8e19 * pow(body[iBody].dFlowTemp, 0.75);
+  double XO    = fdAtomicOxygenMixingRatio(body[iBody].dSurfaceWaterMass,
+                                           body[iBody].dOxygenMass);
+  double GPotential =
+        (BIGG * body[iBody].dMass * PROTONMASS) / (body[iBody].dRadius);
+  double dFXUVCritDrag = -1;
+
+  if (body[iBody].dAtmXAbsEffH2O > 0 && body[iBody].dFlowTemp > 0 &&
+      body[iBody].dRadius > 0) {
+    dFXUVCritDrag =
+          ((4 * BDIFF * pow(GPotential, 2)) /
+           (body[iBody].dAtmXAbsEffH2O * KBOLTZ * body[iBody].dFlowTemp *
+            body[iBody].dRadius)) *
+          (QOH - 1) * (1 - XO);
+  }
+
+  *dTmp = (dFXUVCritDrag > 0 && body[iBody].dFXUV > dFXUVCritDrag) ? 1 : 0;
+  fvFormattedString(cUnit, "");
+}
+
+void WriteDiffLimActive(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update,
+                        int iBody, double *dTmp, char **cUnit) {
+  *dTmp = (body[iBody].iWaterEscapeRegime == ATMESC_DIFFLIM) ? 1 : 0;
+  fvFormattedString(cUnit, "");
+}
+
+void WriteDiffLimFirstAge(BODY *body, CONTROL *control, OUTPUT *output,
+                          SYSTEM *system, UNITS *units, UPDATE *update,
+                          int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dDiffLimFirstTime;
+
+  if (*dTmp < 0) {
+    fvFormattedString(cUnit, "");
+    return;
+  }
+
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsTime(units->iTime);
+    fsUnitsTime(units->iTime, cUnit);
+  }
+}
+
 /**
 Logs the XUV flux received by the planet.
 
@@ -3805,6 +3861,32 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_FXUVCRITDRAG].iNum       = 1;
   output[OUT_FXUVCRITDRAG].iModuleBit = ATMESC;
   fnWrite[OUT_FXUVCRITDRAG]           = &WriteFXUVCRITDRAG;
+
+  fvFormattedString(&output[OUT_OXYGENDRAGACTIVE].cName, "OxygenDragActive");
+  fvFormattedString(&output[OUT_OXYGENDRAGACTIVE].cDescr,
+                    "1 if FXUV exceeds drag threshold for oxygen entrainment");
+  output[OUT_OXYGENDRAGACTIVE].bNeg       = 0;
+  output[OUT_OXYGENDRAGACTIVE].iNum       = 1;
+  output[OUT_OXYGENDRAGACTIVE].iModuleBit = ATMESC;
+  fnWrite[OUT_OXYGENDRAGACTIVE]           = &WriteOxygenDragActive;
+
+  fvFormattedString(&output[OUT_DIFFLIMACTIVE].cName, "DiffLimActive");
+  fvFormattedString(&output[OUT_DIFFLIMACTIVE].cDescr,
+                    "1 if water escape is currently diffusion-limited");
+  output[OUT_DIFFLIMACTIVE].bNeg       = 0;
+  output[OUT_DIFFLIMACTIVE].iNum       = 1;
+  output[OUT_DIFFLIMACTIVE].iModuleBit = ATMESC;
+  fnWrite[OUT_DIFFLIMACTIVE]           = &WriteDiffLimActive;
+
+  fvFormattedString(&output[OUT_DIFFLIMFIRSTAGE].cName, "DiffLimFirstAge");
+  fvFormattedString(&output[OUT_DIFFLIMFIRSTAGE].cDescr,
+                    "First age when water escape enters diffusion-limited regime");
+  fvFormattedString(&output[OUT_DIFFLIMFIRSTAGE].cNeg, "Myr");
+  output[OUT_DIFFLIMFIRSTAGE].bNeg       = 1;
+  output[OUT_DIFFLIMFIRSTAGE].dNeg       = 1. / (1e6 * YEARSEC);
+  output[OUT_DIFFLIMFIRSTAGE].iNum       = 1;
+  output[OUT_DIFFLIMFIRSTAGE].iModuleBit = ATMESC;
+  fnWrite[OUT_DIFFLIMFIRSTAGE]           = &WriteDiffLimFirstAge;
 
   fvFormattedString(&output[OUT_HREFFLUX].cName, "HREFFLUX");
   fvFormattedString(&output[OUT_HREFFLUX].cDescr,

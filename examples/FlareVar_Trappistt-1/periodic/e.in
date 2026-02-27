@@ -11,4 +11,4 @@ sAtmXAbsEffH2OModel   bolmont16
 dJeansTime            -10
 dEcc                  0.00637
 dOrbPeriod            -6.101013
-saOutputOrder         Time -SurfWaterMass -OxygenMass -FXUV WaterEscapeRegime
+saOutputOrder         Time -SurfWaterMass -OxygenMass -FXUV -FXUVCRITDRAG WaterEscapeRegime OxygenDragActive DiffLimActive -DiffLimFirstAge

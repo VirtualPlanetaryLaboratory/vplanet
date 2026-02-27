@@ -1,0 +1,4 @@
+run,final_water_to,total_water_lost_to,final_o2_bar,diffusion_switch_age_myr,fraction_time_fxuv_gt_fxuv_crit
+baseline,8.34784800,1.65215200,163.99274143,,1.00000000
+periodic,8.36982254,1.63017746,164.21399244,,1.00000000
+random_bin,8.38041820,1.61958180,164.21484209,,1.00000000

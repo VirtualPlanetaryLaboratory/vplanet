@@ -1,0 +1,17 @@
+sSystemName   trappist1e_flarevar_periodic_dt5
+iVerbose      5
+bOverwrite    1
+saBodyFiles   star.in e.in
+sUnitMass     solar
+sUnitLength   AU
+sUnitTime     YEARS
+sUnitAngle    d
+bDoLog        1
+iDigits       8
+dMinValue     1e-10
+bDoForward    1
+bVarDt        0
+dEta          0.1
+dTimeStep     2e3
+dStopTime     5e7
+dOutputTime   1e4

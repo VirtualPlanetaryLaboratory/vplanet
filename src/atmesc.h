@@ -183,6 +183,12 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_HREFODRAGMOD                                                       \
   1239 /**< Multiply by H ref flux to get H flux with drag of oxgyen */
 #define OUT_KTIDE 1240 /**< Gravitational enhancement of mass loss */
+#define OUT_OXYGENDRAGACTIVE                                                   \
+  1241 /**< 1 if oxygen drag condition is met (FXUV > FXUVCRITDRAG), else 0 */
+#define OUT_DIFFLIMACTIVE                                                      \
+  1242 /**< 1 if water escape is in diffusion-limited regime, else 0 */
+#define OUT_DIFFLIMFIRSTAGE                                                    \
+  1243 /**< First system age at which water escape enters diffusion-limited */
 #define OUT_CUMULATIVEFXUV 1250
 #define OUT_RGFLUX                                                             \
   1260 /**< Incident bolometric flux to trigger a runaway greenhouse */
@@ -216,6 +222,12 @@ void WriteRRCriticalFlux(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
 void WriteHEscapeRegime(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                         UPDATE *, int, double *, char **);
 
+void WriteOxygenDragActive(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char **);
+void WriteDiffLimActive(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                        UPDATE *, int, double *, char **);
+void WriteDiffLimFirstAge(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char **);
 /* Logging Functions */
 void LogOptionsAtmEsc(CONTROL *, FILE *);
 void LogAtmEsc(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *, fnWriteOutput[],

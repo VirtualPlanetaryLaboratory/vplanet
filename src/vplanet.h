@@ -265,6 +265,7 @@ struct BODY {
   double dFXUV;        /**< XUV Flux at planet's atmosphere */
   double dFXUVLast;    /**< XUV at planet during last time step */
   double dFXUVCumulative;
+  double dDiffLimFirstTime; /**< First age when water escape becomes diffusion-limited */
   double dJeansTime;   /**< Jeans timescale for atmospheric escape */
   double dFlowTemp;    /**< Temperature of the hydrodynamic flow */
   double dRocheRadius; /**< Radius of the Roche lobe */

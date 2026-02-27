@@ -1,7 +1,7 @@
 """
 This script generates publication-style figures for the flarevar TRAPPIST-1e example.
 It reads baseline, periodic, and random-bin VPLanet outputs and compares forcing and atmospheric response.
-The layout prioritizes clean typography, explicit units, and low-noise visual styling suitable for manuscripts.
+It also visualizes escape-regime diagnostics, oxygen buildup, and diffusion-limited transition timing.
 """
 
 from __future__ import annotations
@@ -20,6 +20,15 @@ import matplotlib.pyplot as plt
 path = pathlib.Path(__file__).parents[0].absolute()
 sys.path.insert(1, str(path.parents[0]))
 from get_args import get_args
+
+COL_TIME = 0
+COL_O2_BAR = 2
+COL_FXUV = 3
+COL_FXUV_CRIT_DRAG = 4
+COL_OXYGEN_DRAG_ACTIVE = 6
+COL_DIFFLIM_ACTIVE = 7
+COL_DIFFLIM_FIRST_AGE = 8
+MIN_PLANET_COLS = 9
 
 mpl.rcParams.update(
     {
@@ -49,13 +58,13 @@ RUNS = {
     },
     "periodic": {
         "system": "trappist1e_flarevar_periodic",
-        "label": "Flarebrust periodic",
+        "label": "Flarevar periodic",
         "color": "#1d4ed8",
         "linestyle": "-",
     },
     "random_bin": {
         "system": "trappist1e_flarevar_random",
-        "label": "Flarebrust random-bin",
+        "label": "Flarevar random-bin",
         "color": "#c2410c",
         "linestyle": "-",
     },
@@ -99,14 +108,32 @@ def load_run(case_name: str, system_name: str) -> dict[str, np.ndarray]:
     star = np.loadtxt(star_file)
     planet = np.loadtxt(planet_file)
 
+    if planet.ndim == 1:
+        planet = planet.reshape(1, -1)
+
+    if planet.shape[1] < MIN_PLANET_COLS:
+        raise ValueError(
+            f"{planet_file} has {planet.shape[1]} columns, expected at least {MIN_PLANET_COLS}. "
+            "Rerun simulations with updated e.in output order."
+        )
+
+    diff_first_col = planet[:, COL_DIFFLIM_FIRST_AGE]
+    valid = diff_first_col >= 0.0
+    first_diff_myr = diff_first_col[valid][0] if np.any(valid) else np.nan
+
     return {
         "time_yr": star[:, 0],
         "time_myr": star[:, 0] / 1.0e6,
         "lxuv_base_lsun": star[:, 3],
         "lxuv_total_lsun": star[:, 4],
         "mult": star[:, 5],
-        "fxuv_wm2": planet[:, 3],
+        "fxuv_wm2": planet[:, COL_FXUV],
+        "fxuv_crit_drag_wm2": planet[:, COL_FXUV_CRIT_DRAG],
+        "o2_bar": planet[:, COL_O2_BAR],
+        "drag_active": (planet[:, COL_OXYGEN_DRAG_ACTIVE] > 0.5).astype(float),
+        "diff_active": (planet[:, COL_DIFFLIM_ACTIVE] > 0.5).astype(float),
         "surf_water_to": planet[:, 1],
+        "diff_first_age_myr": np.array([first_diff_myr]),
     }
 
 
@@ -274,7 +301,7 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     for ax in axes:
         style_axes(ax)
 
-    fig.suptitle("Flarebrust mean-preservation diagnostics", y=0.985, fontsize=13)
+    fig.suptitle("Flarevar mean-preservation diagnostics", y=0.985, fontsize=13)
     fig.text(
         0.5,
         0.012,
@@ -293,6 +320,87 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     )
 
 
+def make_regime_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_ext: str) -> None:
+    fig, axes = plt.subplots(3, 1, figsize=(7.4, 9.0), sharex=True)
+
+    transition_lines: list[str] = []
+    for case_name, meta in RUNS.items():
+        data = data_by_case[case_name]
+        time_myr = data["time_myr"]
+
+        axes[0].plot(
+            time_myr,
+            data["o2_bar"],
+            color=meta["color"],
+            linewidth=1.7,
+            linestyle=meta["linestyle"],
+            label=meta["label"],
+        )
+        axes[1].step(
+            time_myr,
+            data["drag_active"],
+            where="post",
+            color=meta["color"],
+            linewidth=1.3,
+            linestyle=meta["linestyle"],
+        )
+        axes[2].step(
+            time_myr,
+            data["diff_active"],
+            where="post",
+            color=meta["color"],
+            linewidth=1.3,
+            linestyle=meta["linestyle"],
+        )
+
+        first_diff = float(data["diff_first_age_myr"][0])
+        if np.isfinite(first_diff):
+            axes[0].axvline(
+                first_diff,
+                color=meta["color"],
+                linewidth=1.0,
+                alpha=0.5,
+                linestyle=":",
+            )
+            transition_lines.append(f"{meta['label']}: {first_diff:.3f} Myr")
+        else:
+            transition_lines.append(f"{meta['label']}: NA")
+
+    axes[0].set_ylabel(r"$P_{\mathrm{O_2}}$ [bar]")
+    axes[1].set_ylabel("Oxygen drag active [0/1]")
+    axes[2].set_ylabel("Diffusion-limited [0/1]")
+    axes[2].set_xlabel("System age [Myr]")
+
+    axes[0].set_title(r"Atmospheric oxygen buildup $P_{\mathrm{O_2}}(t)$")
+    axes[1].set_title(r"Oxygen drag indicator: $F_{\mathrm{XUV}} > F_{\mathrm{XUV,crit}}$")
+    axes[2].set_title("Diffusion-limited regime indicator")
+
+    axes[1].set_ylim(-0.05, 1.05)
+    axes[2].set_ylim(-0.05, 1.05)
+    axes[1].set_yticks([0, 1])
+    axes[2].set_yticks([0, 1])
+
+    axes[0].legend(loc="upper left", frameon=False)
+
+    for ax in axes:
+        style_axes(ax)
+
+    fig.suptitle("TRAPPIST-1e escape-regime diagnostics", y=0.985, fontsize=13)
+    fig.text(
+        0.5,
+        0.012,
+        "First diffusion-limited age by run: " + " | ".join(transition_lines),
+        ha="center",
+        va="bottom",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0.0, 0.045, 1.0, 0.96))
+
+    outdir = path / "figures"
+    outdir.mkdir(exist_ok=True)
+    fig.savefig(outdir / f"flarevar_trappist1e_regimes.{output_ext}", bbox_inches="tight")
+
+
 def main() -> None:
     args = get_args()
     ensure_outputs(args)
@@ -303,6 +411,7 @@ def main() -> None:
 
     make_response_figure(data_by_case, args.ext)
     make_diagnostics_figure(data_by_case, args.ext)
+    make_regime_figure(data_by_case, args.ext)
 
     if not args.quiet:
         print("Saved figures to", path / "figures")

@@ -771,7 +771,7 @@ void ReadModules(BODY *body, CONTROL *control, FILES *files, MODULE *module,
       } else if (strcmp(sLower(saTmp[iModule]), "flare") == 0) {
         body[iFile - 1].bFlare = 1;
         module->iBitSum[iFile - 1] += FLARE;
-      } else if (strcmp(sLower(saTmp[iModule]), "flarebrust") == 0) {
+      } else if (strcmp(sLower(saTmp[iModule]), "flarevar") == 0) {
         body[iFile - 1].bFlareVar = 1;
         module->iBitSum[iFile - 1] += FLAREVAR;
       // } else if (memcmp(sLower(saTmp[iModule]), "galhabit", iModuleLength) == 0) {
@@ -867,8 +867,8 @@ void PrintModuleList(FILE *file, int iBitSum, int bPadString) {
       fprintf(file, " ");
     }
     space++;
-    fprintf(file, "FLAREBRUST");
-    nspaces -= strlen("FLAREBRUST");
+    fprintf(file, "FLAREVAR");
+    nspaces -= strlen("FLAREVAR");
   }
   if (iBitSum & GALHABIT) {
     if (space) {

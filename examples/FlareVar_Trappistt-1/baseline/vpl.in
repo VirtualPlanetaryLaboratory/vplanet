@@ -1,4 +1,4 @@
-sSystemName   trappist1e_flarebrust_random
+sSystemName   trappist1e_flarevar_baseline
 iVerbose      5
 bOverwrite    1
 saBodyFiles   star.in e.in

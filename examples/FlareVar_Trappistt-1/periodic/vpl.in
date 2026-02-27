@@ -1,4 +1,4 @@
-sSystemName   trappist1e_flarebrust_periodic
+sSystemName   trappist1e_flarevar_periodic
 iVerbose      5
 bOverwrite    1
 saBodyFiles   star.in e.in

@@ -1,17 +1,17 @@
-flarebrust trappist-1e comparison
+flarevar trappist-1e comparison
 =================================
 
 This directory contains a minimal TRAPPIST-1e atmospheric escape setup for
 comparing baseline stellar XUV evolution against coarse bursty variability that
 preserves the same long-time mean XUV energy. The module keyword used in
-``saModules`` is ``flarebrust``.
+``saModules`` is ``flarevar``.
 
 configurations
 --------------
 
 - ``baseline/``: STELLAR only (modulation OFF).
-- ``periodic/``: STELLAR + FLAREBRUST with ``sFlareVarModel PERIODIC``.
-- ``random_bin/``: STELLAR + FLAREBRUST with ``sFlareVarModel RANDOM_BIN``.
+- ``periodic/``: STELLAR + FLAREVAR with ``sFlareVarModel PERIODIC``.
+- ``random_bin/``: STELLAR + FLAREVAR with ``sFlareVarModel RANDOM_BIN``.
 
 run
 ---
@@ -42,12 +42,12 @@ publication-style axis labels, titles, and units.
 
 Generated files are written to ``figures/``:
 
-- ``flarebrust_trappist1e_response.pdf`` (or ``.png``)
-- ``flarebrust_trappist1e_diagnostics.pdf`` (or ``.png``)
+- ``flarevar_trappist1e_response.pdf`` (or ``.png``)
+- ``flarevar_trappist1e_diagnostics.pdf`` (or ``.png``)
 
 *Short reading guide:*
 
-- The response figure compares the same baseline mean XUV history against periodic and random-bin flarebrust forcing.
+- The response figure compares the same baseline mean XUV history against periodic and random-bin flarevar forcing.
 - Differences in surface water evolution isolate nonlinear escape responses because the time-averaged XUV forcing is preserved.
 - The diagnostics figure shows instantaneous multiplier states and the running mean convergence toward unity.
 
@@ -58,7 +58,7 @@ From ``periodic/`` (after the run):
 
 .. code-block:: bash
 
-   awk 'NR>=1{sum+=$6;n++;if(NR==2||$5<min)min=$5}END{printf("mean(M)=%.8f\\nmin(LXUVTotal)=%.8e\\n",sum/n,min)}' trappist1e_flarebrust_periodic.star.forward
+   awk 'NR>=1{sum+=$6;n++;if(NR==2||$5<min)min=$5}END{printf("mean(M)=%.8f\\nmin(LXUVTotal)=%.8e\\n",sum/n,min)}' trappist1e_flarevar_periodic.star.forward
 
 Expected:
 
@@ -69,7 +69,7 @@ From ``random_bin/`` (after the run):
 
 .. code-block:: bash
 
-   awk 'NR>=1{sum+=$6;n++;if(NR==2||$5<min)min=$5}END{printf("mean(M)=%.8f\\nmin(LXUVTotal)=%.8e\\n",sum/n,min)}' trappist1e_flarebrust_random.star.forward
+   awk 'NR>=1{sum+=$6;n++;if(NR==2||$5<min)min=$5}END{printf("mean(M)=%.8f\\nmin(LXUVTotal)=%.8e\\n",sum/n,min)}' trappist1e_flarevar_random.star.forward
 
 Expected:
 

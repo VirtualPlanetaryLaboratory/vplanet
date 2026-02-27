@@ -2,7 +2,7 @@
   @file flarevar.c
   @brief Coarse, mean-preserving stellar XUV variability module.
 
-  FLAREBRUST applies a two-state multiplier to stellar XUV luminosity using
+  FLAREVAR applies a two-state multiplier to stellar XUV luminosity using
   absolute simulation time so behavior is independent of adaptive timesteps.
   The HIGH/LOW multipliers are constrained to preserve the long-time mean.
 */
@@ -311,7 +311,7 @@ void VerifyFlareVar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options
   if (!body[iBody].bStellar) {
     if (control->Io.iVerbose >= VERBERR) {
       fprintf(stderr,
-              "ERROR: Must include module STELLAR to run module FLAREBRUST.\n");
+              "ERROR: Must include module STELLAR to run module FLAREVAR.\n");
     }
     LineExit(files->Infile[iBody + 1].cIn, options[OPT_MODULES].iLine[iBody + 1]);
   }
@@ -467,7 +467,7 @@ void WriteLXUVTotalFlareVar(BODY *body, CONTROL *control, OUTPUT *output,
 void InitializeOutputFlareVar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fvFormattedString(&output[OUT_FLAREVARMULT].cName, "FlareVarMult");
   fvFormattedString(&output[OUT_FLAREVARMULT].cDescr,
-                    "Instantaneous FLAREBRUST XUV multiplier");
+                    "Instantaneous FLAREVAR XUV multiplier");
   output[OUT_FLAREVARMULT].bNeg       = 0;
   output[OUT_FLAREVARMULT].iNum       = 1;
   output[OUT_FLAREVARMULT].iModuleBit = STELLAR + FLAREVAR;
@@ -475,7 +475,7 @@ void InitializeOutputFlareVar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_LXUVBASE].cName, "LXUVBase");
   fvFormattedString(&output[OUT_LXUVBASE].cDescr,
-                    "Baseline stellar XUV luminosity before FLAREBRUST");
+                    "Baseline stellar XUV luminosity before FLAREVAR");
   fvFormattedString(&output[OUT_LXUVBASE].cNeg, "LSUN");
   output[OUT_LXUVBASE].bNeg       = 1;
   output[OUT_LXUVBASE].dNeg       = 1. / LSUN;
@@ -485,7 +485,7 @@ void InitializeOutputFlareVar(OUTPUT *output, fnWriteOutput fnWrite[]) {
 
   fvFormattedString(&output[OUT_LXUVTOTAL].cName, "LXUVTotal");
   fvFormattedString(&output[OUT_LXUVTOTAL].cDescr,
-                    "Effective stellar XUV luminosity after FLAREBRUST");
+                    "Effective stellar XUV luminosity after FLAREVAR");
   fvFormattedString(&output[OUT_LXUVTOTAL].cNeg, "LSUN");
   output[OUT_LXUVTOTAL].bNeg       = 1;
   output[OUT_LXUVTOTAL].dNeg       = 1. / LSUN;
@@ -503,7 +503,7 @@ void LogBodyFlareVar(BODY *body, CONTROL *control, OUTPUT *output,
                      FILE *fp, int iBody) {
   int iOut;
 
-  fprintf(fp, "----- FLAREBRUST PARAMETERS (%s)------\n", body[iBody].cName);
+  fprintf(fp, "----- FLAREVAR PARAMETERS (%s)------\n", body[iBody].cName);
   for (iOut = OUTSTARTFLAREVAR; iOut < OUTENDFLAREVAR; iOut++) {
     if (output[iOut].iNum > 0) {
       WriteLogEntry(body, control, &output[iOut], system, update,

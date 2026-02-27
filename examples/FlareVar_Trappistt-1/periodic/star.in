@@ -1,5 +1,5 @@
 sName           star
-saModules       stellar flarebrust
+saModules       stellar flarevar
 dMass           0.09
 dAge            1e6
 sStellarModel   baraffe

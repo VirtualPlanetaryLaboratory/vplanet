@@ -1,5 +1,5 @@
 """
-This script generates publication-style figures for the flarebrust TRAPPIST-1e example.
+This script generates publication-style figures for the flarevar TRAPPIST-1e example.
 It reads baseline, periodic, and random-bin VPLanet outputs and compares forcing and atmospheric response.
 The layout prioritizes clean typography, explicit units, and low-noise visual styling suitable for manuscripts.
 """
@@ -42,19 +42,19 @@ mpl.rcParams.update(
 
 RUNS = {
     "baseline": {
-        "system": "trappist1e_flarebrust_baseline",
+        "system": "trappist1e_flarevar_baseline",
         "label": "Baseline (smooth)",
         "color": "#111827",
         "linestyle": "-",
     },
     "periodic": {
-        "system": "trappist1e_flarebrust_periodic",
+        "system": "trappist1e_flarevar_periodic",
         "label": "Flarebrust periodic",
         "color": "#1d4ed8",
         "linestyle": "-",
     },
     "random_bin": {
-        "system": "trappist1e_flarebrust_random",
+        "system": "trappist1e_flarevar_random",
         "label": "Flarebrust random-bin",
         "color": "#c2410c",
         "linestyle": "-",
@@ -182,7 +182,7 @@ def make_response_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_
         style_axes(ax)
 
     fig.suptitle(
-        "TRAPPIST-1e coarse flarebrust variability: forcing and response",
+        "TRAPPIST-1e coarse flarevar variability: forcing and response",
         y=0.985,
         fontsize=13,
     )
@@ -198,7 +198,7 @@ def make_response_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_
 
     outdir = path / "figures"
     outdir.mkdir(exist_ok=True)
-    fig.savefig(outdir / f"flarebrust_trappist1e_response.{output_ext}", bbox_inches="tight")
+    fig.savefig(outdir / f"flarevar_trappist1e_response.{output_ext}", bbox_inches="tight")
 
 
 def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_ext: str) -> None:
@@ -240,7 +240,7 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     )
     axes[0].set_xlim(0.0, zoom_max_myr)
     axes[0].set_ylabel(r"$M(t)$ [1]")
-    axes[0].set_title("Instantaneous flarebrust multiplier (first 2 Myr)")
+    axes[0].set_title("Instantaneous flarevar multiplier (first 2 Myr)")
     axes[0].legend(
         loc="upper left",
         bbox_to_anchor=(1.01, 1.0),
@@ -288,7 +288,7 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     outdir = path / "figures"
     outdir.mkdir(exist_ok=True)
     fig.savefig(
-        outdir / f"flarebrust_trappist1e_diagnostics.{output_ext}",
+        outdir / f"flarevar_trappist1e_diagnostics.{output_ext}",
         bbox_inches="tight",
     )
 

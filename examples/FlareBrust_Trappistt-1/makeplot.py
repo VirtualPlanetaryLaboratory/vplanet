@@ -131,7 +131,7 @@ def style_axes(ax: plt.Axes, x_nbins: int = 6) -> None:
 
 
 def make_response_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_ext: str) -> None:
-    fig, axes = plt.subplots(3, 1, figsize=(7.4, 9.2), sharex=True, constrained_layout=True)
+    fig, axes = plt.subplots(3, 1, figsize=(7.4, 9.2), sharex=True)
 
     for case_name, meta in RUNS.items():
         data = data_by_case[case_name]
@@ -183,9 +183,18 @@ def make_response_figure(data_by_case: dict[str, dict[str, np.ndarray]], output_
 
     fig.suptitle(
         "TRAPPIST-1e coarse flarebrust variability: forcing and response",
-        y=1.01,
+        y=0.985,
         fontsize=13,
     )
+    fig.text(
+        0.5,
+        0.012,
+        "All runs share the same time-averaged stellar XUV energy. Small separations in water loss trace nonlinear escape response to episodic forcing.",
+        ha="center",
+        va="bottom",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0.0, 0.045, 1.0, 0.96))
 
     outdir = path / "figures"
     outdir.mkdir(exist_ok=True)
@@ -197,7 +206,7 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     periodic = data_by_case["periodic"]
     random_bin = data_by_case["random_bin"]
 
-    fig, axes = plt.subplots(2, 1, figsize=(7.4, 6.8), sharex=False, constrained_layout=True)
+    fig, axes = plt.subplots(2, 1, figsize=(7.4, 6.8), sharex=False)
 
     zoom_max_myr = 2.0
     periodic_mask = periodic["time_myr"] <= zoom_max_myr
@@ -232,7 +241,12 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     axes[0].set_xlim(0.0, zoom_max_myr)
     axes[0].set_ylabel(r"$M(t)$ [1]")
     axes[0].set_title("Instantaneous flarebrust multiplier (first 2 Myr)")
-    axes[0].legend(loc="upper right", frameon=False)
+    axes[0].legend(
+        loc="upper left",
+        bbox_to_anchor=(1.01, 1.0),
+        borderaxespad=0.0,
+        frameon=False,
+    )
 
     periodic_avg = running_time_average(periodic["time_yr"], periodic["mult"])
     random_avg = running_time_average(random_bin["time_yr"], random_bin["mult"])
@@ -260,7 +274,16 @@ def make_diagnostics_figure(data_by_case: dict[str, dict[str, np.ndarray]], outp
     for ax in axes:
         style_axes(ax)
 
-    fig.suptitle("Flarebrust mean-preservation diagnostics", y=1.02, fontsize=13)
+    fig.suptitle("Flarebrust mean-preservation diagnostics", y=0.985, fontsize=13)
+    fig.text(
+        0.5,
+        0.012,
+        "The top panel shows the imposed two-state scheduling in time. The lower panel confirms convergence of the running mean multiplier toward unity.",
+        ha="center",
+        va="bottom",
+        fontsize=9,
+    )
+    fig.tight_layout(rect=(0.0, 0.05, 0.83, 0.96))
 
     outdir = path / "figures"
     outdir.mkdir(exist_ok=True)

@@ -21,6 +21,9 @@ custom_units = [
     u.def_unit("Earthradii", u.Rearth),
     u.def_unit("Earth Masses", u.Mearth),
     u.def_unit("Degrees", u.deg),
+    u.def_unit("Earth Masses/Myr", u.Mearth / u.Myr),
+    u.def_unit("EarthMasses/Myr", u.Mearth / u.Myr),
+    u.def_unit("Mearth/Myr", u.Mearth / u.Myr),
     #
     # Non-standard quantities we'll interpret as unitless:
     #

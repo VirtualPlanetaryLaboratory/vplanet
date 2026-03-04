@@ -92,15 +92,16 @@ def clim_evol(plname, xrange=False, show=True):
 
     esinv = ecc * np.sin(longp) * np.sin(obl * np.pi / 180.0)
 
-    lats = np.unique(body.Latitude)
+    lats = np.unique(body.Latitude.value)
     nlats = len(lats)
     ntimes = len(body.Time)
+    time = body.Time.value
 
     # plot temperature
-    temp = np.reshape(body.TempLat, (ntimes, nlats))
+    temp = np.reshape(body.TempLat.value, (ntimes, nlats))
     ax1 = plt.subplot(5, 1, 1)
 
-    c = plt.contourf(body.Time, lats, temp.T, cmap="plasma")
+    c = plt.contourf(time, lats, temp.T, cmap="plasma")
     plt.ylabel(r"Latitude [$^\circ$]", fontsize=10)
     plt.title(r"Surface Temp [$^{\circ}$C]", fontsize=12)
     plt.ylim(-90, 90)
@@ -116,9 +117,9 @@ def clim_evol(plname, xrange=False, show=True):
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize=9)
 
     # plot albedo
-    alb = np.reshape(body.AlbedoLat, (ntimes, nlats))
+    alb = np.reshape(body.AlbedoLat.value, (ntimes, nlats))
     ax2 = plt.subplot(5, 1, 3)
-    c = plt.contourf(body.Time, lats, alb.T, cmap="Blues_r")
+    c = plt.contourf(time, lats, alb.T, cmap="Blues_r")
     plt.ylabel(r"Latitude [$^\circ$]", fontsize=10)
     plt.title("Albedo [TOA]", fontsize=12)
     plt.ylim(-90, 90)
@@ -130,9 +131,9 @@ def clim_evol(plname, xrange=False, show=True):
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize=9)
 
     # plot ice height
-    ice = np.reshape(body.IceHeight, (ntimes, nlats))
+    ice = np.reshape(body.IceHeight.value, (ntimes, nlats))
     ax3 = plt.subplot(5, 1, 4)
-    c = plt.contourf(body.Time, lats, ice.T, cmap="Blues_r")
+    c = plt.contourf(time, lats, ice.T, cmap="Blues_r")
     plt.ylabel(r"Latitude [$^\circ$]", fontsize=10)
     plt.title("Ice sheet height [m]", fontsize=12)
     plt.ylim(-90, 90)
@@ -144,9 +145,9 @@ def clim_evol(plname, xrange=False, show=True):
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize=9)
 
     # plot bedrock
-    brock = np.reshape(body.BedrockH, (ntimes, nlats))
+    brock = np.reshape(body.BedrockH.value, (ntimes, nlats))
     ax4 = plt.subplot(5, 1, 5)
-    c = plt.contourf(body.Time, lats, brock.T, cmap="Reds_r")
+    c = plt.contourf(time, lats, brock.T, cmap="Reds_r")
     plt.ylabel(r"Latitude [$^\circ$]", fontsize=10)
     plt.title("Bedrock height [m]", fontsize=12)
     plt.ylim(-90, 90)
@@ -159,9 +160,9 @@ def clim_evol(plname, xrange=False, show=True):
     plt.setp(cbar.ax.yaxis.get_ticklabels(), fontsize=9)
 
     # plot insolation
-    insol = np.reshape(body.AnnInsol, (ntimes, nlats))
+    insol = np.reshape(body.AnnInsol.value, (ntimes, nlats))
     ax5 = plt.subplot(5, 1, 2)
-    c = plt.contourf(body.Time, lats, insol.T, cmap="plasma")
+    c = plt.contourf(time, lats, insol.T, cmap="plasma")
     plt.ylabel(r"Latitude [$^\circ$]", fontsize=10)
     plt.title(r"Annual average insolation [W/m$^2$]", fontsize=12)
     plt.ylim(-90, 90)
@@ -201,7 +202,6 @@ def seasonal_maps(time, show=True):
 
     check = 0
     for f in glob.glob(str(path / "SeasonalClimateFiles" / "*.DailyInsol.*")):
-
         f1 = f.split(".")
 
         if len(f1) == 4:
@@ -249,7 +249,7 @@ def seasonal_maps(time, show=True):
             if p == len(output.bodies) - 1 and ctmp == 0:
                 raise Exception("Planet %s not found" % plname)
 
-    lats = np.unique(body.Latitude)
+    lats = np.unique(body.Latitude.value)
     try:
         obl = body.Obliquity[np.where(body.Time == time)[0]]
     except:

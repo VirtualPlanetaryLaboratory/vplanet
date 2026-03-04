@@ -91,22 +91,25 @@ def comp2huybers(plname, xrange=False, show=True):
                 pco2 = float(lines[i].split()[1])
 
     try:
-        longp = (body.ArgP + body.LongA + body.PrecA + 180)
+        longp = body.ArgP + body.LongA + body.PrecA + 180
     except:
         longp = body.PrecA
 
     esinv = ecc * np.sin(longp)
 
-    lats = np.unique(body.Latitude)
+    obl = np.array(obl)
+    ecc = np.array(ecc)
+    esinv = np.array(esinv)
+
+    lats = np.unique(body.Latitude.value)
     nlats = len(lats)
     ntimes = len(body.Time)
+    time = body.Time.value
 
     # plot temperature
-    temp = np.reshape(body.TempLandLat, (ntimes, nlats))
+    temp = np.reshape(body.TempLandLat.value, (ntimes, nlats))
     ax1 = plt.subplot(7, 1, 5)
-    c = plt.contourf(
-        body.Time / 1e6, lats[lats > 58 * u.deg], temp.T[lats > 58 * u.deg], 20
-    )
+    c = plt.contourf(time / 1e6, lats[lats > 58], temp.T[lats > 58], 20)
     plt.ylabel("Latitude")
 
     plt.ylim(60, 83)
@@ -128,13 +131,11 @@ def comp2huybers(plname, xrange=False, show=True):
     clb.set_label("Surface Temp.\n($^{\circ}$C)", fontsize=12)
 
     # plot ice height
-    ice = np.reshape(body.IceHeight + body.BedrockH, (ntimes, nlats))
+    ice = np.reshape((body.IceHeight + body.BedrockH).value, (ntimes, nlats))
 
     ax3 = plt.subplot(7, 1, 4)
 
-    c = plt.contourf(
-        body.Time / 1e6, lats[lats > 58 * u.deg], ice.T[lats > 58 * u.deg, :], 20
-    )
+    c = plt.contourf(time / 1e6, lats[lats > 58], ice.T[lats > 58, :], 20)
     plt.ylabel("Latitude")
     plt.ylim(60, 83)
 
@@ -146,10 +147,8 @@ def comp2huybers(plname, xrange=False, show=True):
     clb.set_label("Ice sheet\nheight (m)", fontsize=12)
 
     ax4 = plt.subplot(7, 1, 6)
-    acc = np.reshape(body.IceAccum, (ntimes, nlats))
-    c = plt.contourf(
-        body.Time / 1e6, lats[lats > 58 * u.deg], acc.T[lats > 58 * u.deg], 20
-    )
+    acc = np.reshape(body.IceAccum.value, (ntimes, nlats))
+    c = plt.contourf(time / 1e6, lats[lats > 58], acc.T[lats > 58], 20)
     plt.ylabel("Latitude")
     plt.ylim(60, 83)
     plt.yticks([60, 70, 80])
@@ -171,10 +170,8 @@ def comp2huybers(plname, xrange=False, show=True):
     clb.set_label("Ice Accum.\n(m year$^{-1}$)", fontsize=12)
 
     ax5 = plt.subplot(7, 1, 7)
-    abl = np.reshape(body.IceAblate, (ntimes, nlats))
-    c = plt.contourf(
-        body.Time / 1e6, lats[lats > 58 * u.deg], -abl.T[lats > 58 * u.deg], 20
-    )
+    abl = np.reshape(body.IceAblate.value, (ntimes, nlats))
+    c = plt.contourf(time / 1e6, lats[lats > 58], -abl.T[lats > 58], 20)
     plt.ylabel("Latitude")
     plt.ylim(60, 83)
     plt.yticks([60, 70, 80])
@@ -194,7 +191,7 @@ def comp2huybers(plname, xrange=False, show=True):
 
     plt.subplot(7, 1, 1)
     plt.plot(
-        body.Time / 1e6,
+        time / 1e6,
         obl,
         linestyle="solid",
         marker="None",
@@ -213,7 +210,7 @@ def comp2huybers(plname, xrange=False, show=True):
 
     plt.subplot(7, 1, 2)
     plt.plot(
-        body.Time / 1e6,
+        time / 1e6,
         ecc,
         linestyle="solid",
         marker="None",
@@ -232,7 +229,7 @@ def comp2huybers(plname, xrange=False, show=True):
 
     plt.subplot(7, 1, 3)
     plt.plot(
-        body.Time / 1e6,
+        time / 1e6,
         esinv,
         linestyle="solid",
         marker="None",
@@ -329,7 +326,7 @@ def seasonal_maps(time, show=True):
             if p == len(output.bodies) - 1 and ctmp == 0:
                 raise Exception("Planet %s not found." % plname)
 
-    lats = np.unique(body.Latitude)
+    lats = np.unique(body.Latitude.value)
     try:
         obl = body.Obliquity[np.where(body.Time == time)[0]]
     except:

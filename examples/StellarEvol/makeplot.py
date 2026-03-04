@@ -18,6 +18,9 @@ from get_args import get_args
 # Colormap
 cmap = plt.get_cmap("inferno")
 
+# Rearth per Rsun (output is in Rearth, plot in Rsun)
+dRearthPerRsun = 6.957e8 / 6.3781e6
+
 # Star input file template
 star = """#
 sName	                  s%02d
@@ -90,7 +93,9 @@ time, radius, lum, lxuv, temp, prot, rg = run(masses)
 # Plot stars that survived
 for n, m in enumerate(masses):
     # Top row: radius, legend
-    ax[0, 0].plot(time, radius[n], label="%.2f" % m, color=cmap(0.7 * m))
+    ax[0, 0].plot(
+        time, radius[n] / dRearthPerRsun, label="%.2f" % m, color=cmap(0.7 * m)
+    )
     # Dummy data for legend
     ax[0, 1].plot([101], [100], label="%.2f" % m, color=cmap(0.7 * m))
 
@@ -109,7 +114,7 @@ dead = np.genfromtxt(path / "M1.3" / "system.a.forward", delimiter=" ")
 # Top row: radius, legend
 m = 1.3
 time = dead[:, 0]
-ax[0, 0].plot(time, dead[:, 4], label="%.2f" % m, color=cmap(0.7 * m))
+ax[0, 0].plot(time, dead[:, 4] / dRearthPerRsun, label="%.2f" % m, color=cmap(0.7 * m))
 
 # Dummy data for legend
 ax[0, 1].plot([101], [100], label="%.2f" % m, color=cmap(0.7 * m))

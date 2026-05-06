@@ -3073,9 +3073,13 @@ its implicit unit treatment from the source.
 */
 double fdDriscollMagLimitedRate(BODY *body, int iBody, double dRadMP) {
   double dRadExo = body[iBody].dRadius + 396000.0;
-  double dHExo   = (KBOLTZ * body[iBody].dExobaseTemperature * dRadExo *
+  // Notebook uses m_H = 3.34e-27 kg (molecular H2 mass) here, matching the
+  // pickup formula's exobase scale length. The factor of 2 must not be
+  // dropped: at low magnetic moment the value of (-r_exo/h_exo) drives an
+  // exponential, so a 2x error in h_exo causes ~10^19 error in the rate.
+  double dHExo = (KBOLTZ * body[iBody].dExobaseTemperature * dRadExo *
                   dRadExo) /
-                 (BIGG * body[iBody].dMass * MAG_PROTON_MASS);
+                 (BIGG * body[iBody].dMass * 2.0 * MAG_PROTON_MASS);
   double dNExo    = 1.0 / (dHExo * MAG_DRISCOLL_SIGMA_COLL);
   double dShield  = 1.0 - (dRadExo / dRadMP);
   double dNL      = dNExo * exp((-dRadExo / dHExo) * dShield);

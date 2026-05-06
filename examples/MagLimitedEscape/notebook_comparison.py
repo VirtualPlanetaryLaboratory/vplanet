@@ -82,8 +82,9 @@ def fdaSweepRates(daFieldsEarthUnits):
 
 def fdaConvertToAtmPerGyr(daRatesParticlesPerSec):
     """Convert particles/s into Earth atmospheres per Gyr (notebook units).
-    The notebook always multiplies by proton mass for the H -> kg conversion."""
-    daKgPerSec = np.abs(daRatesParticlesPerSec) * PROTON_MASS_KG
+    The notebook always multiplies by proton mass for the H -> kg conversion.
+    NaN inputs (used to mask sign flips for log plots) propagate."""
+    daKgPerSec = daRatesParticlesPerSec * PROTON_MASS_KG
     return daKgPerSec * GYR_SECONDS / EARTH_ATM_KG
 
 
@@ -97,8 +98,8 @@ def fnPlotComparison(daFields, daRates, sOutputPath):
     listHMechanisms = ["Pickup", "CrossField", "PolarCap", "Cusp"]
     daTotalParticles = np.zeros(len(daFields))
     for sMechanism in listHMechanisms:
-        daTotalParticles = daTotalParticles + np.abs(
-            daRates[:, list(COLUMNS.keys()).index(sMechanism)])
+        daRaw = daRates[:, list(COLUMNS.keys()).index(sMechanism)]
+        daTotalParticles = daTotalParticles + np.where(daRaw > 0, daRaw, 0)
 
     fig, ax = plt.subplots(figsize=(9, 6))
     dictColors = {"Pickup": "orange", "CrossField": "blue",
@@ -109,7 +110,12 @@ def fnPlotComparison(daFields, daRates, sOutputPath):
     for sMechanism in ["Pickup", "CrossField", "PolarCap", "Cusp",
                        "Driscoll"]:
         iIndex = list(COLUMNS.keys()).index(sMechanism)
-        daYAtmGyr = fdaConvertToAtmPerGyr(daRates[:, iIndex])
+        daRaw = daRates[:, iIndex]
+        # Match the notebook's plotting choice: mask negatives so loglog
+        # doesn't mirror them through abs(). Driscoll's (n_L - n_sw) flips
+        # sign at high magnetic moment.
+        daSigned = np.where(daRaw > 0, daRaw, np.nan)
+        daYAtmGyr = fdaConvertToAtmPerGyr(daSigned)
         ax.loglog(daFields, daYAtmGyr,
                   color=dictColors[sMechanism],
                   linestyle=dictStyles[sMechanism],

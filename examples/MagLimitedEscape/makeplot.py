@@ -136,13 +136,16 @@ def fnSaveEarthFigure(sOutputPath):
     print(f"Wrote {sOutputPath}")
 
 
-def fnRegenerateT1eFigure(sOutputPath):
-    """Run the T1e magnetic-moment reproduction script."""
-    sScript = os.path.join(THIS_DIR, "notebook_comparison.py")
+def fnRegenerateSweepFigure(sScriptName, sOutputPath):
+    """Run a magnetic-moment sweep script and write its figure."""
+    sScript = os.path.join(THIS_DIR, sScriptName)
     subprocess.run([sys.executable, sScript, sOutputPath],
                    check=True, cwd=THIS_DIR)
 
 
 if __name__ == "__main__":
     fnSaveEarthFigure(os.path.join(THIS_DIR, "Earth_4Panel.png"))
-    fnRegenerateT1eFigure(os.path.join(THIS_DIR, "T1e_Reproduction.png"))
+    fnRegenerateSweepFigure("notebook_comparison.py",
+                            os.path.join(THIS_DIR, "T1e_Reproduction.png"))
+    fnRegenerateSweepFigure("earth_comparison.py",
+                            os.path.join(THIS_DIR, "Earth_Reproduction.png"))

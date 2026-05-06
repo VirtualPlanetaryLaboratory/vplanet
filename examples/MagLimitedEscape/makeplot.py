@@ -34,12 +34,14 @@ COLS_THERMINT = {
     "TMan": 14, "TCore": 15, "RIC": 16,
 }
 
-# Panel (a) shows only PolarCap and Cusp; the other three mechanisms are
-# many orders of magnitude smaller for Earth at modern conditions and
-# would force a 50-decade y-axis range that hides the visible action.
-MECHANISMS = ["PolarCap", "Cusp"]
+# Panel (a) shows PolarCap, CrossField, and Cusp - the three mechanisms
+# that contribute meaningfully to Earth's bulk loss. Pickup and Driscoll
+# are 20+ orders of magnitude smaller at modern conditions and would
+# force a useless 50-decade y-axis range.
+MECHANISMS = ["PolarCap", "CrossField", "Cusp"]
 MECHANISM_COLORS = {
     "PolarCap": vp.purple,
+    "CrossField": vp.dark_blue,
     "Cusp": vp.red,
 }
 

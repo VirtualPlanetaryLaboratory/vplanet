@@ -74,6 +74,19 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dEnvMassDt           = src[iBody].dEnvMassDt;
   dest[iBody].bAutoThermTemp       = src[iBody].bAutoThermTemp;
   dest[iBody].bStopWaterLossInHZ   = src[iBody].bStopWaterLossInHZ;
+  dest[iBody].bMagLimitedEscape    = src[iBody].bMagLimitedEscape;
+  dest[iBody].dMagField            = src[iBody].dMagField;
+  dest[iBody].dStellarWindDensity  = src[iBody].dStellarWindDensity;
+  dest[iBody].dStellarWindVelocity = src[iBody].dStellarWindVelocity;
+  dest[iBody].dExobaseTemperature  = src[iBody].dExobaseTemperature;
+  dest[iBody].dCO2Mass             = src[iBody].dCO2Mass;
+  dest[iBody].dMagPickupRate       = src[iBody].dMagPickupRate;
+  dest[iBody].dCrossFieldRate      = src[iBody].dCrossFieldRate;
+  dest[iBody].dPolarCapRate        = src[iBody].dPolarCapRate;
+  dest[iBody].dCuspRate            = src[iBody].dCuspRate;
+  dest[iBody].dDriscollRate        = src[iBody].dDriscollRate;
+  dest[iBody].dMagTotalLossRate    = src[iBody].dMagTotalLossRate;
+  dest[iBody].dMagPauseRadAtmEsc   = src[iBody].dMagPauseRadAtmEsc;
 }
 
 /**************** ATMESC options ********************/
@@ -897,6 +910,154 @@ void ReadHaltMinEnvelopeMass(BODY *body, CONTROL *control, FILES *files,
 // envelope
 
 /**
+Read whether to enable the Gunell+2018 magnetic-limited escape mode.
+*/
+void ReadMagLimitedEscape(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].bMagLimitedEscape = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    AssignDefaultInt(options, &body[iFile - 1].bMagLimitedEscape,
+                     files->iNumInputs);
+  }
+}
+
+/**
+Read the planet's magnetic dipole moment. Negative values are interpreted as
+multiples of the modern-Earth dipole moment (8e22 A m^2).
+*/
+void ReadMagField(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                  SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dMagField = -dTmp * MAG_EARTH_DIPOLE;
+    } else {
+      body[iFile - 1].dMagField = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dMagField = MAG_EARTH_DIPOLE;
+  }
+}
+
+/**
+Read the solar-wind proton density at the planet. Negative values are
+interpreted as multiples of the modern-Earth reference value (10/cm^3).
+*/
+void ReadStellarWindDensity(BODY *body, CONTROL *control, FILES *files,
+                            OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dStellarWindDensity = -dTmp * MAG_NSW_DEFAULT;
+    } else {
+      body[iFile - 1].dStellarWindDensity = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dStellarWindDensity = MAG_NSW_DEFAULT;
+  }
+}
+
+/**
+Read the solar-wind speed at the planet. Negative values are interpreted as
+multiples of the modern-Earth reference value (470 km/s).
+*/
+void ReadStellarWindVelocity(BODY *body, CONTROL *control, FILES *files,
+                             OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      body[iFile - 1].dStellarWindVelocity = -dTmp * MAG_VSW_DEFAULT;
+    } else {
+      body[iFile - 1].dStellarWindVelocity = dTmp;
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dStellarWindVelocity = MAG_VSW_DEFAULT;
+  }
+}
+
+/**
+Read the exobase temperature used by the Gunell magnetic-limited escape model.
+*/
+void ReadExobaseTemperature(BODY *body, CONTROL *control, FILES *files,
+                            OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be positive.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dExobaseTemperature = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dExobaseTemperature = MAG_TEXO_DEFAULT;
+  }
+}
+
+/**
+Read the initial atmospheric CO2 reservoir mass (kg).
+*/
+void ReadCO2Mass(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                 SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dCO2Mass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dCO2Mass = options->dDefault;
+  }
+}
+
+/**
 Initialize the user options for the atmospheric escape model.
 
 @param options A pointer to the OPTIONS instance
@@ -1227,6 +1388,90 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_MINKTIDE].dDefault   = 0.1;
   options[OPT_MINKTIDE].bMultiFile = 1;
   fnRead[OPT_MINKTIDE]             = &ReadMinKTide;
+
+  /* Gunell+2018 magnetic-limited escape options */
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPE].cName, "bMagLimitedEscape");
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPE].cDescr,
+                    "Use Gunell+2018 magnetic-limited escape model?");
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPE].cDefault, "0");
+  options[OPT_MAGLIMITEDESCAPE].iType      = 0;
+  options[OPT_MAGLIMITEDESCAPE].bMultiFile = 1;
+  fnRead[OPT_MAGLIMITEDESCAPE]             = &ReadMagLimitedEscape;
+  fvFormattedString(
+        &options[OPT_MAGLIMITEDESCAPE].cLongDescr,
+        "Activate the Gunell et al. (2018) magnetic-limited atmospheric escape\n"
+        "model. When enabled, hydrogen escape proceeds via five mechanisms\n"
+        "(pickup, cross-field, polar cap, cusp, Driscoll magnetic limit) and\n"
+        "the bulk atmosphere is removed assuming a well-mixed reservoir of\n"
+        "water, oxygen, CO2, and hydrogen in equal mass fractions.\n");
+
+  fvFormattedString(&options[OPT_MAGFIELD].cName, "dMagField");
+  fvFormattedString(&options[OPT_MAGFIELD].cDescr,
+                    "Planet magnetic dipole moment");
+  fvFormattedString(&options[OPT_MAGFIELD].cDefault, "1 Earth dipole");
+  fvFormattedString(&options[OPT_MAGFIELD].cDimension, "magneticmoment");
+  options[OPT_MAGFIELD].dDefault   = MAG_EARTH_DIPOLE;
+  options[OPT_MAGFIELD].iType      = 2;
+  options[OPT_MAGFIELD].bMultiFile = 1;
+  options[OPT_MAGFIELD].dNeg       = MAG_EARTH_DIPOLE;
+  fvFormattedString(&options[OPT_MAGFIELD].cNeg, "Earth dipoles");
+  fnRead[OPT_MAGFIELD]             = &ReadMagField;
+  fvFormattedString(
+        &options[OPT_MAGFIELD].cLongDescr,
+        "The planet's magnetic dipole moment in A m^2. A negative value is\n"
+        "interpreted as a multiple of the modern-Earth dipole moment\n"
+        "(8e22 A m^2). Ignored when ATMESC is coupled to THERMINT, in which\n"
+        "case the geodynamo-predicted moment is used instead.\n");
+
+  fvFormattedString(&options[OPT_STELLARWINDDENSITY].cName,
+                    "dStellarWindDensity");
+  fvFormattedString(&options[OPT_STELLARWINDDENSITY].cDescr,
+                    "Stellar wind proton density at the planet");
+  fvFormattedString(&options[OPT_STELLARWINDDENSITY].cDefault,
+                    "1 Earth (10/cm^3)");
+  fvFormattedString(&options[OPT_STELLARWINDDENSITY].cDimension,
+                    "1/length^3");
+  options[OPT_STELLARWINDDENSITY].dDefault   = MAG_NSW_DEFAULT;
+  options[OPT_STELLARWINDDENSITY].iType      = 2;
+  options[OPT_STELLARWINDDENSITY].bMultiFile = 1;
+  options[OPT_STELLARWINDDENSITY].dNeg       = MAG_NSW_DEFAULT;
+  fvFormattedString(&options[OPT_STELLARWINDDENSITY].cNeg, "Earth values");
+  fnRead[OPT_STELLARWINDDENSITY]             = &ReadStellarWindDensity;
+
+  fvFormattedString(&options[OPT_STELLARWINDVELOCITY].cName,
+                    "dStellarWindVelocity");
+  fvFormattedString(&options[OPT_STELLARWINDVELOCITY].cDescr,
+                    "Stellar wind velocity at the planet");
+  fvFormattedString(&options[OPT_STELLARWINDVELOCITY].cDefault,
+                    "1 Earth (470 km/s)");
+  fvFormattedString(&options[OPT_STELLARWINDVELOCITY].cDimension,
+                    "length/time");
+  options[OPT_STELLARWINDVELOCITY].dDefault   = MAG_VSW_DEFAULT;
+  options[OPT_STELLARWINDVELOCITY].iType      = 2;
+  options[OPT_STELLARWINDVELOCITY].bMultiFile = 1;
+  options[OPT_STELLARWINDVELOCITY].dNeg       = MAG_VSW_DEFAULT;
+  fvFormattedString(&options[OPT_STELLARWINDVELOCITY].cNeg, "Earth values");
+  fnRead[OPT_STELLARWINDVELOCITY]             = &ReadStellarWindVelocity;
+
+  fvFormattedString(&options[OPT_EXOBASETEMP].cName, "dExobaseTemperature");
+  fvFormattedString(&options[OPT_EXOBASETEMP].cDescr,
+                    "Exobase temperature (Gunell magnetic-limited escape)");
+  fvFormattedString(&options[OPT_EXOBASETEMP].cDefault, "900");
+  fvFormattedString(&options[OPT_EXOBASETEMP].cDimension, "temperature");
+  options[OPT_EXOBASETEMP].dDefault   = MAG_TEXO_DEFAULT;
+  options[OPT_EXOBASETEMP].iType      = 2;
+  options[OPT_EXOBASETEMP].bMultiFile = 1;
+  fnRead[OPT_EXOBASETEMP]             = &ReadExobaseTemperature;
+
+  fvFormattedString(&options[OPT_CO2MASS].cName, "dCO2Mass");
+  fvFormattedString(&options[OPT_CO2MASS].cDescr,
+                    "Initial atmospheric CO2 mass (Gunell escape)");
+  fvFormattedString(&options[OPT_CO2MASS].cDefault, "0");
+  fvFormattedString(&options[OPT_CO2MASS].cDimension, "mass");
+  options[OPT_CO2MASS].dDefault   = 0.0;
+  options[OPT_CO2MASS].iType      = 2;
+  options[OPT_CO2MASS].bMultiFile = 1;
+  fnRead[OPT_CO2MASS]             = &ReadCO2Mass;
 }
 
 /**
@@ -1707,6 +1952,17 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            fnUpdateVariable ***fnUpdate, int iBody,
                            int iModule) {
 
+  // Drain CO2 reservoir under Gunell magnetic-limited escape. CO2 is not a
+  // formal state variable, so we evolve it in lockstep with the integrator
+  // using the accepted timestep dDt. Floor at zero.
+  if (body[iBody].bMagLimitedEscape && body[iBody].dCO2Mass > 0) {
+    body[iBody].dCO2Mass -=
+          0.25 * body[iBody].dMagTotalLossRate * evolve->dCurrentDt;
+    if (body[iBody].dCO2Mass < 0) {
+      body[iBody].dCO2Mass = 0;
+    }
+  }
+
   if (body[iBody].dEnvelopeMass > 0) {
     ForceBehaviorEnvelopeEscape(body, module, evolve, io, system, update,
                                 fnUpdate, iBody, iModule);
@@ -1756,6 +2012,12 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dRocheRadius = fdRocheRadius(body, evolve->iNumBodies, iBody);
   body[iBody].dAtmEscXi    = fdAtmEscXi(body, iBody);
   body[iBody].dKTide       = fdKTide(body, io, evolve->iNumBodies, iBody);
+
+  // Gunell+2018 magnetic-limited escape: precompute rates so derivatives
+  // can read them without recomputing five times per step.
+  if (body[iBody].bMagLimitedEscape) {
+    fnMagLimitedRates(body, iBody);
+  }
 
   // The XUV flux
   if (body[iBody].bCalcFXUV) {
@@ -2038,6 +2300,28 @@ to the magical matrix of function pointers.
 */
 void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
+  // Gunell+2018 magnetic-limited escape replaces the standard photolysis-
+  // driven derivatives with a well-mixed bulk loss split equally across
+  // water, oxygen, CO2, and the H envelope. CO2 is decremented manually in
+  // fnForceBehaviorAtmEsc because it is not coupled to other modules.
+  if (body[iBody].bMagLimitedEscape) {
+    if (body[iBody].dSurfaceWaterMass > 0) {
+      fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
+            &fdDSurfaceWaterMassDtMagLim;
+      fnUpdate[iBody][update[iBody].iOxygenMass][0] = &fdDOxygenMassDtMagLim;
+      fnUpdate[iBody][update[iBody].iOxygenMantleMass][0] =
+            &fndUpdateFunctionTiny;
+    }
+    if (body[iBody].dEnvelopeMass > 0) {
+      body[iBody].iHEscapeRegime                      = ATMESC_ELIM;
+      fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
+            &fdDEnvelopeMassDtMagLim;
+      fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtMagLim;
+    }
+    fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;
+    return;
+  }
+
   if (body[iBody].dSurfaceWaterMass > 0) {
     fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
           &fdDSurfaceWaterMassDt;
@@ -2663,6 +2947,193 @@ void VerifyHaltAtmEsc(BODY *body, CONTROL *control, OPTIONS *options, int iBody,
   if (control->Halt[iBody].bEnvelopeGone) {
     control->fnHalt[iBody][(*iHalt)++] = &fbHaltEnvelopeGone;
   }
+}
+
+/************* Gunell+2018 magnetic-limited escape **************/
+
+/**
+Magnetopause stand-off radius (Chapman-Ferraro, with optional obstacle form
+factor for the polar-cap geometry). Returns the Chapman-Ferraro radius in m.
+*/
+double fdMagnetopauseStandoff(double dMagMoment, double dStellarWindDensity,
+                              double dStellarWindVelocity, double dFormFactor) {
+  double dNumerator = MAG_VACUUM_PERMEABILITY * dFormFactor * dFormFactor *
+                      dMagMoment * dMagMoment;
+  double dDenominator = 8.0 * PI * PI * dStellarWindDensity *
+                        dStellarWindVelocity * dStellarWindVelocity *
+                        MAG_PROTON_MASS;
+  return pow(dNumerator / dDenominator, 1.0 / 6.0);
+}
+
+/**
+Helper: exobase scale length used in the Gunell pickup formula.
+h = k_B T r_exo^2 / (G M m_H), with m_H the H atom mass per the notebook.
+Note: the notebook uses m_H = 3.34e-27 kg here (H2 mass) but uses proton mass
+for the particle->mass conversion later. Faithful to source.
+*/
+double fdGunellExobaseScale(BODY *body, int iBody) {
+  double dRadExo = body[iBody].dRadius + 396000.0;
+  return (KBOLTZ * body[iBody].dExobaseTemperature * dRadExo * dRadExo) /
+         (BIGG * body[iBody].dMass * 2.0 * MAG_PROTON_MASS);
+}
+
+/**
+Gunell pickup escape rate (particles/s). When the magnetopause is inside the
+exobase the rate saturates to Q0; otherwise the magnetopause shields the
+exobase and the escape rate decays exponentially.
+*/
+double fdGunellPickupRate(BODY *body, int iBody, double dRadMP) {
+  double dRadExo = body[iBody].dRadius + 396000.0;
+  double dScale  = fdGunellExobaseScale(body, iBody);
+  double dRMP    = dRadMP;
+
+  if (dRMP <= dRadExo) {
+    return MAG_Q0_PICKUP;
+  }
+  double dNum = 2.0 * dScale * dScale * dScale +
+                2.0 * dScale * dScale * dRMP + dScale * dRMP * dRMP;
+  double dDen = 2.0 * dScale * dScale * dScale +
+                2.0 * dScale * dScale * dRadExo +
+                dScale * dRadExo * dRadExo;
+  return MAG_Q0_PICKUP * (dNum / dDen) * exp((dRadExo - dRMP) / dScale);
+}
+
+/**
+Helper: polar-cap solid angle (steradians) at the magnetopause boundary.
+Notebook uses Earth's exobase radius MAG_R_EXO_E in this scaling.
+*/
+double fdPolarCapSolidAngle(double dRadMP) {
+  double dTemp = 1.0 - (MAG_R_EXO_E / dRadMP);
+  if (dTemp < 0.0) {
+    return 0.0;
+  }
+  return 4.0 * PI * (1.0 - sqrt(dTemp));
+}
+
+/**
+Cross-field ion escape rate (particles/s). Active when the magnetopause is
+larger than Earth's induced-magnetosphere boundary.
+*/
+double fdGunellCrossFieldRate(BODY *body, int iBody, double dRadMP) {
+  double dOmegaPC = 0.0;
+  if (dRadMP >= MAG_R_IMB_E) {
+    double dRadExoPlanet = body[iBody].dRadius + 396000.0;
+    double dTemp         = 1.0 - (dRadExoPlanet / dRadMP);
+    if (dTemp >= 0.0) {
+      dOmegaPC = 4.0 * PI * (1.0 - sqrt(dTemp));
+    }
+  }
+  double dRatio = (1.0 - dOmegaPC / (4.0 * PI)) /
+                  (1.0 - MAG_OMEGA_PC_E / (4.0 * PI));
+  return MAG_Q0_CROSSFIELD * dRatio;
+}
+
+/**
+Polar-cap escape rate (particles/s). Uses the form-factor-augmented
+magnetopause radius and Earth-referenced scaling for the solid angle.
+*/
+double fdGunellPolarCapRate(BODY *body, int iBody) {
+  double dRadMP =
+        fdMagnetopauseStandoff(body[iBody].dMagField,
+                               body[iBody].dStellarWindDensity,
+                               body[iBody].dStellarWindVelocity,
+                               MAG_FORMFACT_O);
+  double dOmegaPC = 0.0;
+  if (dRadMP > MAG_R_IMB_E) {
+    dOmegaPC = fdPolarCapSolidAngle(dRadMP);
+  }
+  double dRadExoPlanet = body[iBody].dRadius + 396000.0;
+  double dGeometry     = (dRadExoPlanet / MAG_R_EXO_E);
+  return MAG_Q0_POLARCAP * (dOmegaPC / MAG_OMEGA_PC_E) * dGeometry * dGeometry;
+}
+
+/**
+Cusp escape rate (particles/s) - Earth-referenced cusp size scaling.
+*/
+double fdGunellCuspRate(BODY *body, int iBody, double dRadMP) {
+  double dRadCuspE = fdMagnetopauseStandoff(MAG_EARTH_DIPOLE, MAG_NSW_E,
+                                            MAG_VSW_E, 1.0);
+  double dOmegaPC  = 0.0;
+  if (dRadMP > MAG_R_IMB_E) {
+    dOmegaPC = fdPolarCapSolidAngle(dRadMP);
+  }
+  double dRatio        = (dRadMP / dRadCuspE);
+  double dCuspScaled   = MAG_Q0_CUSP * dRatio * dRatio;
+  double dCuspBase     = (dCuspScaled < MAG_QMAX_CUSP) ? dCuspScaled
+                                                       : MAG_QMAX_CUSP;
+  double dRadExoPlanet = body[iBody].dRadius + 396000.0;
+  double dGeometry     = (dRadExoPlanet / MAG_R_EXO_E);
+  return dCuspBase * (dOmegaPC / MAG_OMEGA_PC_E) * dGeometry * dGeometry;
+}
+
+/**
+Driscoll magnetic-limited rate (particles/s) - faithful reproduction of the
+notebook formula. The energy_eff = 1/(10.6e44) coefficient is preserved with
+its implicit unit treatment from the source.
+*/
+double fdDriscollMagLimitedRate(BODY *body, int iBody, double dRadMP) {
+  double dRadExo = body[iBody].dRadius + 396000.0;
+  double dHExo   = (KBOLTZ * body[iBody].dExobaseTemperature * dRadExo *
+                  dRadExo) /
+                 (BIGG * body[iBody].dMass * MAG_PROTON_MASS);
+  double dNExo    = 1.0 / (dHExo * MAG_DRISCOLL_SIGMA_COLL);
+  double dShield  = 1.0 - (dRadExo / dRadMP);
+  double dNL      = dNExo * exp((-dRadExo / dHExo) * dShield);
+  double dSurface = 4.0 * PI * dRadMP * dRadMP;
+  double dFlux =
+        MAG_DRISCOLL_ENERGY_EFF * dHExo * dSurface *
+        (dNL - body[iBody].dStellarWindDensity) / MAG_DRISCOLL_TIME;
+  return dFlux * MAG_DRISCOLL_MASSWATER;
+}
+
+/**
+Compute and store all five Gunell+2018 escape rates plus the bulk
+atmospheric loss rate. Each species (water, oxygen, CO2, hydrogen) loses
+mass at rate (Q_total * m_proton) so that the bulk loss is well-mixed across
+four equal-mass reservoirs (notebook + user specification).
+*/
+void fnMagLimitedRates(BODY *body, int iBody) {
+  double dRadMP = fdMagnetopauseStandoff(body[iBody].dMagField,
+                                         body[iBody].dStellarWindDensity,
+                                         body[iBody].dStellarWindVelocity,
+                                         1.0);
+  body[iBody].dMagPauseRadAtmEsc = dRadMP;
+  body[iBody].dMagPickupRate     = fdGunellPickupRate(body, iBody, dRadMP);
+  body[iBody].dCrossFieldRate    = fdGunellCrossFieldRate(body, iBody, dRadMP);
+  body[iBody].dPolarCapRate      = fdGunellPolarCapRate(body, iBody);
+  body[iBody].dCuspRate          = fdGunellCuspRate(body, iBody, dRadMP);
+  body[iBody].dDriscollRate = fdDriscollMagLimitedRate(body, iBody, dRadMP);
+
+  double dTotalParticles = body[iBody].dMagPickupRate +
+                           body[iBody].dCrossFieldRate +
+                           body[iBody].dPolarCapRate + body[iBody].dCuspRate +
+                           body[iBody].dDriscollRate;
+  double dPerSpeciesKgPerSec = dTotalParticles * MAG_PROTON_MASS;
+  body[iBody].dMagTotalLossRate = 4.0 * dPerSpeciesKgPerSec;
+}
+
+/**
+Surface-water derivative under Gunell magnetic-limited escape: 1/4 of the
+total bulk loss rate. fnMagLimitedRates is called once per step in
+fnPropsAuxAtmEsc, so derivatives just read the cached rate.
+*/
+double fdDSurfaceWaterMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  return -0.25 * body[iaBody[0]].dMagTotalLossRate;
+}
+
+/**
+Atmospheric oxygen derivative under Gunell magnetic-limited escape.
+*/
+double fdDOxygenMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  return -0.25 * body[iaBody[0]].dMagTotalLossRate;
+}
+
+/**
+Envelope-mass (hydrogen) derivative under Gunell magnetic-limited escape.
+*/
+double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  body[iaBody[0]].dEnvMassDt = -0.25 * body[iaBody[0]].dMagTotalLossRate;
+  return body[iaBody[0]].dEnvMassDt;
 }
 
 /************* ATMESC Outputs ******************/
@@ -3548,6 +4019,87 @@ void WriteRunawayGreenhouseFlux(BODY *body, CONTROL *control, OUTPUT *output,
   }
 }
 
+/******* Output writers for Gunell+2018 magnetic-limited escape ******/
+
+void WriteMagPickupRate(BODY *body, CONTROL *control, OUTPUT *output,
+                        SYSTEM *system, UNITS *units, UPDATE *update,
+                        int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dMagPickupRate;
+  fvFormattedString(cUnit, "/sec");
+}
+
+void WriteCrossFieldRate(BODY *body, CONTROL *control, OUTPUT *output,
+                         SYSTEM *system, UNITS *units, UPDATE *update,
+                         int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dCrossFieldRate;
+  fvFormattedString(cUnit, "/sec");
+}
+
+void WritePolarCapRate(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update,
+                       int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dPolarCapRate;
+  fvFormattedString(cUnit, "/sec");
+}
+
+void WriteCuspRate(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                   char **cUnit) {
+  *dTmp = body[iBody].dCuspRate;
+  fvFormattedString(cUnit, "/sec");
+}
+
+void WriteDriscollRate(BODY *body, CONTROL *control, OUTPUT *output,
+                       SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
+                       double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dDriscollRate;
+  fvFormattedString(cUnit, "/sec");
+}
+
+void WriteMagTotalLossRate(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dMagTotalLossRate;
+  fvFormattedString(cUnit, "kg/s");
+}
+
+void WriteMagPauseRadAtmEsc(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
+  *dTmp = body[iBody].dMagPauseRadAtmEsc;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength, cUnit);
+  }
+}
+
+void WriteMagField(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                   UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                   char **cUnit) {
+  *dTmp = body[iBody].dMagField;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+  }
+}
+
+void WriteCO2Mass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                  UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                  char **cUnit) {
+  *dTmp = body[iBody].dCO2Mass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass, cUnit);
+  }
+}
+
 /**
 Set up stuff to be logged for atmesc.
 
@@ -3852,6 +4404,98 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   fvFormattedString(&output[iOut].cLongDescr,
                     "Incident radiative flux necessary to trigger runaway "
                     "greenhouse (Kopparapu et al. 2014).");
+
+  /* Gunell+2018 magnetic-limited escape outputs */
+  fvFormattedString(&output[OUT_MAGPICKUPRATE].cName, "MagPickupRate");
+  fvFormattedString(&output[OUT_MAGPICKUPRATE].cDescr,
+                    "Pickup escape rate (Gunell+2018)");
+  fvFormattedString(&output[OUT_MAGPICKUPRATE].cNeg, "/sec");
+  output[OUT_MAGPICKUPRATE].bNeg       = 1;
+  output[OUT_MAGPICKUPRATE].dNeg       = 1;
+  output[OUT_MAGPICKUPRATE].iNum       = 1;
+  output[OUT_MAGPICKUPRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_MAGPICKUPRATE]           = &WriteMagPickupRate;
+
+  fvFormattedString(&output[OUT_CROSSFIELDRATE].cName, "CrossFieldRate");
+  fvFormattedString(&output[OUT_CROSSFIELDRATE].cDescr,
+                    "Cross-field ion escape rate (Gunell+2018)");
+  fvFormattedString(&output[OUT_CROSSFIELDRATE].cNeg, "/sec");
+  output[OUT_CROSSFIELDRATE].bNeg       = 1;
+  output[OUT_CROSSFIELDRATE].dNeg       = 1;
+  output[OUT_CROSSFIELDRATE].iNum       = 1;
+  output[OUT_CROSSFIELDRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_CROSSFIELDRATE]           = &WriteCrossFieldRate;
+
+  fvFormattedString(&output[OUT_POLARCAPRATE].cName, "PolarCapRate");
+  fvFormattedString(&output[OUT_POLARCAPRATE].cDescr,
+                    "Polar-cap escape rate (Gunell+2018)");
+  fvFormattedString(&output[OUT_POLARCAPRATE].cNeg, "/sec");
+  output[OUT_POLARCAPRATE].bNeg       = 1;
+  output[OUT_POLARCAPRATE].dNeg       = 1;
+  output[OUT_POLARCAPRATE].iNum       = 1;
+  output[OUT_POLARCAPRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_POLARCAPRATE]           = &WritePolarCapRate;
+
+  fvFormattedString(&output[OUT_CUSPRATE].cName, "CuspRate");
+  fvFormattedString(&output[OUT_CUSPRATE].cDescr,
+                    "Cusp escape rate (Gunell+2018)");
+  fvFormattedString(&output[OUT_CUSPRATE].cNeg, "/sec");
+  output[OUT_CUSPRATE].bNeg       = 1;
+  output[OUT_CUSPRATE].dNeg       = 1;
+  output[OUT_CUSPRATE].iNum       = 1;
+  output[OUT_CUSPRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_CUSPRATE]           = &WriteCuspRate;
+
+  fvFormattedString(&output[OUT_DRISCOLLRATE].cName, "DriscollRate");
+  fvFormattedString(&output[OUT_DRISCOLLRATE].cDescr,
+                    "Driscoll magnetic-limited rate (notebook formula)");
+  fvFormattedString(&output[OUT_DRISCOLLRATE].cNeg, "/sec");
+  output[OUT_DRISCOLLRATE].bNeg       = 1;
+  output[OUT_DRISCOLLRATE].dNeg       = 1;
+  output[OUT_DRISCOLLRATE].iNum       = 1;
+  output[OUT_DRISCOLLRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_DRISCOLLRATE]           = &WriteDriscollRate;
+
+  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cName, "MagTotalLossRate");
+  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cDescr,
+                    "Total bulk atmospheric mass loss rate (Gunell+2018)");
+  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cNeg, "kg/s");
+  output[OUT_MAGTOTALLOSSRATE].bNeg       = 1;
+  output[OUT_MAGTOTALLOSSRATE].dNeg       = 1;
+  output[OUT_MAGTOTALLOSSRATE].iNum       = 1;
+  output[OUT_MAGTOTALLOSSRATE].iModuleBit = ATMESC;
+  fnWrite[OUT_MAGTOTALLOSSRATE]           = &WriteMagTotalLossRate;
+
+  fvFormattedString(&output[OUT_MAGPAUSERADATMESC].cName,
+                    "MagPauseRadAtmEsc");
+  fvFormattedString(&output[OUT_MAGPAUSERADATMESC].cDescr,
+                    "Magnetopause stand-off radius (Gunell+2018)");
+  fvFormattedString(&output[OUT_MAGPAUSERADATMESC].cNeg, "Rearth");
+  output[OUT_MAGPAUSERADATMESC].bNeg       = 1;
+  output[OUT_MAGPAUSERADATMESC].dNeg       = 1.0 / REARTH;
+  output[OUT_MAGPAUSERADATMESC].iNum       = 1;
+  output[OUT_MAGPAUSERADATMESC].iModuleBit = ATMESC;
+  fnWrite[OUT_MAGPAUSERADATMESC]           = &WriteMagPauseRadAtmEsc;
+
+  fvFormattedString(&output[OUT_MAGFIELD].cName, "MagField");
+  fvFormattedString(&output[OUT_MAGFIELD].cDescr,
+                    "Planet dipole moment used by Gunell escape");
+  fvFormattedString(&output[OUT_MAGFIELD].cNeg, "EMAGMOM");
+  output[OUT_MAGFIELD].bNeg       = 1;
+  output[OUT_MAGFIELD].dNeg       = 1.0 / MAG_EARTH_DIPOLE;
+  output[OUT_MAGFIELD].iNum       = 1;
+  output[OUT_MAGFIELD].iModuleBit = ATMESC;
+  fnWrite[OUT_MAGFIELD]           = &WriteMagField;
+
+  fvFormattedString(&output[OUT_CO2MASS].cName, "CO2Mass");
+  fvFormattedString(&output[OUT_CO2MASS].cDescr,
+                    "Atmospheric CO2 reservoir (Gunell escape)");
+  fvFormattedString(&output[OUT_CO2MASS].cNeg, "kg");
+  output[OUT_CO2MASS].bNeg       = 1;
+  output[OUT_CO2MASS].dNeg       = 1;
+  output[OUT_CO2MASS].iNum       = 1;
+  output[OUT_CO2MASS].iModuleBit = ATMESC;
+  fnWrite[OUT_CO2MASS]           = &WriteCO2Mass;
 }
 
 /************ ATMESC Logging Functions **************/

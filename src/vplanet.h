@@ -270,6 +270,21 @@ struct BODY {
   double dBondiRadius; /**< Bondi (Sonic) Radius */
   double dEnvMassDt;   /**< Time derivative of H envelope mass */
 
+  /* ATMESC: Gunell+2018 magnetic-limited escape (atmesc.c) */
+  int bMagLimitedEscape;          /**< Enable Gunell+2018 magnetic escape */
+  double dMagField;               /**< Planet dipole moment (A m^2) */
+  double dStellarWindDensity;     /**< Solar-wind proton density at planet (1/m^3) */
+  double dStellarWindVelocity;    /**< Solar-wind speed at planet (m/s) */
+  double dExobaseTemperature;     /**< Exobase temperature (K) */
+  double dCO2Mass;                /**< Atmospheric CO2 reservoir (kg) */
+  double dMagPickupRate;          /**< Gunell pickup escape rate (particles/s) */
+  double dCrossFieldRate;         /**< Cross-field ion escape rate (particles/s) */
+  double dPolarCapRate;           /**< Polar-cap escape rate (particles/s) */
+  double dCuspRate;               /**< Cusp escape rate (particles/s) */
+  double dDriscollRate;           /**< Driscoll magnetic-limited rate (particles/s) */
+  double dMagTotalLossRate;       /**< Total bulk atmospheric loss rate (kg/s) */
+  double dMagPauseRadAtmEsc;      /**< Magnetopause stand-off radius (m) */
+
   /* BINARY parameters */
   int bBinary;       /**< Apply BINARY module? */
   double dR0;        /**< Guiding Radius,initially equal to dSemi */

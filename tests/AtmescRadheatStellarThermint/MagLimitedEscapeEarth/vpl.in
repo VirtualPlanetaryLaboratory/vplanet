@@ -1,0 +1,22 @@
+sSystemName     earth_thermint
+iVerbose        2
+bOverwrite      1
+
+saBodyFiles     sun.in $
+                earth.in
+
+sUnitMass       solar
+sUnitLength     AU
+sUnitTime       YEARS
+sUnitAngle      d
+sUnitTemp       K
+
+bDoLog          1
+iDigits         6
+dMinValue       1e-10
+
+bDoForward      1
+bVarDt          1
+dEta            0.01
+dStopTime       4.5e9
+dOutputTime     5e7

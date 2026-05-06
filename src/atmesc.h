@@ -76,6 +76,39 @@
   1235                    /**< Stop water loss once planet reaches HZ? */
 #define OPT_MINKTIDE 1240 /**< Minimum KTide value */
 
+/* Gunell+2018 magnetic-limited escape options (atmesc.c) */
+#define OPT_MAGLIMITEDESCAPE 1241   /**< Enable Gunell+2018 magnetic escape */
+#define OPT_MAGFIELD 1242           /**< Planet dipole moment (A m^2) */
+#define OPT_STELLARWINDDENSITY 1243 /**< Solar-wind proton density at planet */
+#define OPT_STELLARWINDVELOCITY 1244 /**< Solar-wind speed at planet (m/s) */
+#define OPT_EXOBASETEMP 1245        /**< Exobase temperature (K) */
+#define OPT_CO2MASS 1246            /**< Initial atmospheric CO2 mass (kg) */
+
+/* Hard-coded reference constants for the Gunell+2018 formulas. These are the
+   values used in the source notebook (Combined for Paper); they appear as
+   fixed scalings in the polar-cap and cusp models. */
+#define MAG_OMEGA_PC_E    0.63       /**< Earth polar-cap solid angle (sr) */
+#define MAG_R_EXO_E       6.871e6    /**< Earth exobase radius (m) */
+#define MAG_R_IMB_E       7.647e6    /**< Earth induced magnetosphere boundary (m) */
+#define MAG_FORMFACT_O    1.16       /**< Polar-cap obstacle form factor */
+#define MAG_EARTH_DIPOLE  8.0e22     /**< Modern Earth dipole moment (A m^2) */
+#define MAG_NSW_E         1.0e7      /**< Earth solar-wind reference density (1/m^3) */
+#define MAG_VSW_E         6.04e5     /**< Earth solar-wind reference velocity (m/s) */
+#define MAG_NSW_DEFAULT   1.0e7      /**< Default solar-wind density at planet */
+#define MAG_VSW_DEFAULT   4.7e5      /**< Default solar-wind velocity at planet */
+#define MAG_TEXO_DEFAULT  900.0      /**< Default exobase temperature (K) */
+#define MAG_Q0_PICKUP     5.0e26     /**< Pickup escape coefficient (1/s) */
+#define MAG_Q0_CROSSFIELD 7.7e25     /**< Cross-field escape coefficient (1/s) */
+#define MAG_Q0_POLARCAP   7.8e25     /**< Polar cap escape coefficient (1/s) */
+#define MAG_Q0_CUSP       5.0e24     /**< Cusp escape coefficient (1/s) */
+#define MAG_QMAX_CUSP     5.0e25     /**< Maximum cusp escape rate (1/s) */
+#define MAG_DRISCOLL_TIME       10.0    /**< Driscoll formula timescale (s) */
+#define MAG_DRISCOLL_MASSWATER  1.0e21  /**< Driscoll water reservoir (kg) */
+#define MAG_DRISCOLL_SIGMA_COLL 1.0e-17 /**< Collisional cross-section (m^2) */
+#define MAG_DRISCOLL_ENERGY_EFF (1.0/10.6e44) /**< Driscoll efficiency (notebook) */
+#define MAG_PROTON_MASS         1.67e-27 /**< Proton mass used in notebook (kg) */
+#define MAG_VACUUM_PERMEABILITY (4.0 * PI * 1.0e-7) /**< mu_0 (H/m) */
+
 /* @cond DOXYGEN_OVERRIDE */
 
 void AddModuleAtmEsc(CONTROL *control, MODULE *, int, int);
@@ -187,6 +220,17 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_RGFLUX                                                             \
   1260 /**< Incident bolometric flux to trigger a runaway greenhouse */
 
+/* Gunell+2018 magnetic-limited escape outputs */
+#define OUT_MAGPICKUPRATE     1270 /**< Pickup escape rate (particles/s) */
+#define OUT_CROSSFIELDRATE    1271 /**< Cross-field ion escape rate (particles/s) */
+#define OUT_POLARCAPRATE      1272 /**< Polar-cap escape rate (particles/s) */
+#define OUT_CUSPRATE          1273 /**< Cusp escape rate (particles/s) */
+#define OUT_DRISCOLLRATE      1274 /**< Driscoll mag-limited rate (particles/s) */
+#define OUT_MAGTOTALLOSSRATE  1275 /**< Total bulk loss rate (kg/s) */
+#define OUT_MAGPAUSERADATMESC 1276 /**< Magnetopause stand-off radius (m) */
+#define OUT_MAGFIELD          1277 /**< Planet dipole moment (A m^2) */
+#define OUT_CO2MASS           1278 /**< Atmospheric CO2 mass (kg) */
+
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
 void FinalizeOutputFunctionAtmEsc(OUTPUT *, int, int);
@@ -248,6 +292,18 @@ int fbRRCriticalFlux(BODY *, int);
 int fbBondiCriticalDmDt(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
 void fvAtmEscRegimeChangeOutput(int, int, double);
+
+/* Gunell+2018 magnetic-limited escape (atmesc.c) */
+void fnMagLimitedRates(BODY *, int);
+double fdMagnetopauseStandoff(double, double, double, double);
+double fdGunellPickupRate(BODY *, int, double);
+double fdGunellCrossFieldRate(BODY *, int, double);
+double fdGunellPolarCapRate(BODY *, int);
+double fdGunellCuspRate(BODY *, int, double);
+double fdDriscollMagLimitedRate(BODY *, int, double);
+double fdDSurfaceWaterMassDtMagLim(BODY *, SYSTEM *, int *);
+double fdDOxygenMassDtMagLim(BODY *, SYSTEM *, int *);
+double fdDEnvelopeMassDtMagLim(BODY *, SYSTEM *, int *);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

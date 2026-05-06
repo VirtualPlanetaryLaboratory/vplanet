@@ -1,0 +1,36 @@
+# Earth with a constant 1-Earth-dipole magnetic field; solar-wind values
+# representative of the present quiet Sun at 1 AU. Both stellar wind and
+# magnetic field are held fixed across the simulation, so loss rates are
+# constant in time and serve as a reference point on the Gunell+2018
+# loss-rate vs dipole-moment curves.
+sName             earth
+saModules         atmesc
+
+dMass             -1.0
+dRadius           -1.0
+dRotPeriod        -1.0
+dRadGyra          0.5
+
+dEcc              0.0167
+dSemi             -1
+
+dXFrac            1.0
+dSurfWaterMass    -1
+dEnvelopeMass     -1e-3
+dOxygenMass       0
+dCO2Mass          3.0e15
+sWaterLossModel   ls16
+bInstantO2Sink    0
+sAtmXAbsEffH2OModel  bolmont16
+dJeansTime        -10
+bUseEnergyLimited 1
+
+bMagLimitedEscape 1
+dMagField         -1
+dStellarWindDensity   8.0e6
+dStellarWindVelocity  4.0e5
+dExobaseTemperature   1000
+
+saOutputOrder Time -MagField -MagPauseRadAtmEsc -MagPickupRate -CrossFieldRate $
+              -PolarCapRate -CuspRate -DriscollRate -MagTotalLossRate $
+              -SurfWaterMass -OxygenMass -EnvelopeMass -CO2Mass

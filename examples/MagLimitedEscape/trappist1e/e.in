@@ -1,0 +1,34 @@
+# Trappist-1e parameters (Agol et al. 2021); solar wind taken from the
+# Combined-for-Paper notebook (T1e block).
+sName             e
+saModules         atmesc
+
+dMass             -0.692
+dRadius           -0.920
+
+dEcc              0.00510
+dOrbPeriod        -6.101013
+
+# Standard AtmEsc inputs (left in place so the loss-rate diagnostics still
+# compute; the Gunell mode controls how those losses are partitioned).
+dXFrac            1.0
+dSurfWaterMass    -10
+dEnvelopeMass     -1e-3
+dOxygenMass       0
+dCO2Mass          4.4e16
+sWaterLossModel   ls16
+bInstantO2Sink    0
+sAtmXAbsEffH2OModel  bolmont16
+dJeansTime        -10
+bUseEnergyLimited 1
+
+# Gunell+2018 magnetic-limited escape
+bMagLimitedEscape 1
+dMagField         -1
+dStellarWindDensity   5.79e9
+dStellarWindVelocity  6.04e5
+dExobaseTemperature   900
+
+saOutputOrder Time -MagField -MagPauseRadAtmEsc -MagPickupRate -CrossFieldRate $
+              -PolarCapRate -CuspRate -DriscollRate -MagTotalLossRate $
+              -SurfWaterMass -OxygenMass -EnvelopeMass -CO2Mass

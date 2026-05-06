@@ -1,0 +1,58 @@
+# Earth coupled to THERMINT + RADHEAT: the geodynamo prediction (dMagMom)
+# is fed into the Gunell escape kernel via the new ATMESC<->THERMINT
+# PropsAuxMulti hook. dMagField is therefore overridden each step.
+sName             earth
+saModules         atmesc radheat thermint
+
+dMass             -1.0
+dRadius           -1.0
+dRotPeriod        -1.0
+dObliquity        23.5
+dRadGyra          0.5
+
+dEcc              0.0167
+dSemi             -1
+
+# RADHEAT: Earth-default initial radiogenic abundances (negative -> Earth)
+d40KPowerMan      -1
+d40KPowerCore     -1
+d40KPowerCrust    -1
+d232ThPowerMan    -1
+d232ThPowerCore   -1
+d232ThPowerCrust  -1
+d235UPowerMan     -1
+d235UPowerCore    -1
+d235UPowerCrust   -1
+d238UPowerMan     -1
+d238UPowerCore    -1
+d238UPowerCrust   -1
+
+# THERMINT initial state
+dTMan             3000
+dTCore            6000
+dActViscMan       3e5
+
+# AtmEsc baseline (used by photolysis-driven plumbing; Gunell mode replaces
+# the actual derivatives)
+dXFrac            1.0
+dSurfWaterMass    -1
+dEnvelopeMass     -1e-3
+dOxygenMass       0
+dCO2Mass          3.0e15
+sWaterLossModel   ls16
+bInstantO2Sink    0
+sAtmXAbsEffH2OModel  bolmont16
+dJeansTime        -10
+bUseEnergyLimited 1
+
+# Gunell+2018 - dMagField overridden by THERMINT each step.
+bMagLimitedEscape 1
+dMagField         -1
+dStellarWindDensity   8.0e6
+dStellarWindVelocity  4.0e5
+dExobaseTemperature   1000
+
+saOutputOrder Time -MagMom -MagField -MagPauseRadAtmEsc -MagPickupRate $
+              -CrossFieldRate -PolarCapRate -CuspRate -DriscollRate $
+              -MagTotalLossRate -SurfWaterMass -OxygenMass -EnvelopeMass $
+              -CO2Mass -TMan -TCore

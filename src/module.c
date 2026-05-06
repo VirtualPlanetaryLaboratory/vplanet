@@ -1419,6 +1419,20 @@ body[iBody].dTidalQOcean;
     }
   }
 }
+/** Register the ATMESC<->THERMINT coupling that overrides ATMESC's
+    user-supplied magnetic field with the thermint geodynamo prediction
+    when both modules are active and Gunell escape is enabled. Skipped if
+    EQTIDE is also active so we don't conflict with the 3-module hook. */
+void VerifyModuleMultiAtmescThermint(BODY *body, UPDATE *update,
+                                     CONTROL *control, FILES *files,
+                                     MODULE *module, OPTIONS *options,
+                                     int iBody, int *iModuleProps,
+                                     int *iModuleForce) {
+  if (body[iBody].bAtmEsc && body[iBody].bThermint && !body[iBody].bEqtide) {
+    control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescThermint;
+  }
+}
+
 void VerifyModuleMultiAtmescEqtideThermint(BODY *body, UPDATE *update,
                                            CONTROL *control, FILES *files,
                                            MODULE *module, OPTIONS *options,
@@ -1807,6 +1821,9 @@ void VerifyModuleMulti(BODY *body, UPDATE *update, CONTROL *control,
                                         options, iBody, &iNumMultiProps,
                                         &iNumMultiForce);
 
+  VerifyModuleMultiAtmescThermint(body, update, control, files, module, options,
+                                  iBody, &iNumMultiProps, &iNumMultiForce);
+
   // VerifyModuleMultiFlareStellar(body, update, control, files, module,
   // options,
   //                                iBody, &iNumMultiProps, &iNumMultiForce);
@@ -1850,6 +1867,16 @@ void PropsAuxAtmescEqtide(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   // If bUseTidalRadius == 0, dTidalRadius <- dRadius
   if (!body[iBody].bUseTidalRadius) {
     body[iBody].dTidalRadius = body[iBody].dRadius;
+  }
+}
+
+/** Couple THERMINT's geodynamo prediction into ATMESC's Gunell magnetic
+    escape: the planet's dipole moment is overridden every step by the
+    thermint-computed dMagMom. */
+void PropsAuxAtmescThermint(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
+                            int iBody) {
+  if (body[iBody].bMagLimitedEscape) {
+    body[iBody].dMagField = body[iBody].dMagMom;
   }
 }
 

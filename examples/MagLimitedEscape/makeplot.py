@@ -34,13 +34,13 @@ COLS_THERMINT = {
     "RIC": 16,
 }
 
-MECHANISMS = ["Pickup", "CrossField", "PolarCap", "Cusp", "Driscoll"]
+# Panel (a) shows only PolarCap and Cusp; the other three mechanisms are
+# many orders of magnitude smaller for Earth at modern conditions and
+# would force a 50-decade y-axis range that hides the visible action.
+MECHANISMS = ["PolarCap", "Cusp"]
 MECHANISM_COLORS = {
-    "Pickup": vp.orange,
-    "CrossField": vp.dark_blue,
     "PolarCap": vp.purple,
     "Cusp": vp.red,
-    "Driscoll": vp.pale_blue,
 }
 
 # Bumped from the vplot defaults so the panels remain readable when
@@ -82,7 +82,7 @@ def fnPlotMassLossPanel(ax, daConstRows, daThermRows):
     ax.set_xlabel("Time (Gyr)")
     ax.set_ylabel("Hydrogen mass loss rate (kg s$^{-1}$)")
     ax.grid(alpha=0.3, which="both")
-    ax.legend(fontsize=10, ncol=2, loc="lower right")
+    ax.legend(loc="lower right")
 
 
 def fnPlotMagFieldPanel(ax, daConstRows, daThermRows):

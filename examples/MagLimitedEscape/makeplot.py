@@ -26,12 +26,12 @@ EARTH_THERMINT_FORWARD = os.path.join(
 
 COLS_CONST = {
     "Time": 0, "MagField": 1, "Pickup": 3, "CrossField": 4,
-    "PolarCap": 5, "Cusp": 6, "Driscoll": 7,
+    "PolarCap": 5, "Cusp": 6, "Driscoll": 7, "Total": 8,
 }
 COLS_THERMINT = {
     "Time": 0, "MagMom": 1, "MagField": 2, "Pickup": 4, "CrossField": 5,
-    "PolarCap": 6, "Cusp": 7, "Driscoll": 8, "TMan": 14, "TCore": 15,
-    "RIC": 16,
+    "PolarCap": 6, "Cusp": 7, "Driscoll": 8, "Total": 9,
+    "TMan": 14, "TCore": 15, "RIC": 16,
 }
 
 # Panel (a) shows only PolarCap and Cusp; the other three mechanisms are
@@ -65,24 +65,30 @@ def fdaPositiveOrNan(daValues):
 
 
 def fnPlotMassLossPanel(ax, daConstRows, daThermRows):
-    """Per-mechanism mass loss rate, both Earth runs overlaid."""
+    """Bulk atmospheric mass loss for Earth: per-mechanism contributions
+    (PolarCap, Cusp) plus the well-mixed total. Each mechanism's
+    contribution to the bulk loss is 4 * Q * m_proton, since the bulk
+    atmosphere is partitioned equally across H2O, O2, CO2, and H. The
+    Total line reads MagTotalLossRate directly from the forward file."""
     daTimeConstGyr = daConstRows[:, COLS_CONST["Time"]] / 1e9
     daTimeThermGyr = daThermRows[:, COLS_THERMINT["Time"]] / 1e9
+    dBulkFactor = 4.0 * PROTON_MASS_KG
     for sMechanism in MECHANISMS:
         sColor = MECHANISM_COLORS[sMechanism]
-        daConstParticles = np.abs(daConstRows[:, COLS_CONST[sMechanism]])
-        daThermParticles = np.abs(daThermRows[:, COLS_THERMINT[sMechanism]])
-        daConstKgPerSec = fdaPositiveOrNan(daConstParticles * PROTON_MASS_KG)
-        daThermKgPerSec = fdaPositiveOrNan(daThermParticles * PROTON_MASS_KG)
-        ax.plot(daTimeConstGyr, daConstKgPerSec, color=sColor, linestyle="-",
+        daConstBulk = np.abs(daConstRows[:, COLS_CONST[sMechanism]]) * dBulkFactor
+        daThermBulk = np.abs(daThermRows[:, COLS_THERMINT[sMechanism]]) * dBulkFactor
+        ax.plot(daTimeConstGyr, daConstBulk, color=sColor, linestyle="-",
                 label=f"{sMechanism} (const B)")
-        ax.plot(daTimeThermGyr, daThermKgPerSec, color=sColor, linestyle="--",
+        ax.plot(daTimeThermGyr, daThermBulk, color=sColor, linestyle="--",
                 label=f"{sMechanism} (thermint B)")
-    ax.set_yscale("log")
+    ax.plot(daTimeConstGyr, daConstRows[:, COLS_CONST["Total"]],
+            color="black", linestyle="-", label="Total (const B)")
+    ax.plot(daTimeThermGyr, daThermRows[:, COLS_THERMINT["Total"]],
+            color="black", linestyle="--", label="Total (thermint B)")
     ax.set_xlabel("Time (Gyr)")
-    ax.set_ylabel("Hydrogen mass loss rate (kg s$^{-1}$)")
-    ax.grid(alpha=0.3, which="both")
-    ax.legend(loc="lower right")
+    ax.set_ylabel("Atmospheric mass loss rate (kg s$^{-1}$)")
+    ax.grid(alpha=0.3)
+    ax.legend(loc="center right")
 
 
 def fnPlotMagFieldPanel(ax, daConstRows, daThermRows):

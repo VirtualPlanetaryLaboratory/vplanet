@@ -19,6 +19,17 @@ import tempfile
 import matplotlib.pyplot as plt
 import numpy as np
 
+import vplot
+from vplot import colors as vp
+
+RC_OVERRIDES = {
+    "axes.labelsize": 17,
+    "xtick.labelsize": 14,
+    "ytick.labelsize": 14,
+    "legend.fontsize": 13,
+    "lines.linewidth": 2.0,
+}
+
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 T1E_DIR = os.path.join(THIS_DIR, "trappist1e")
 VPLANET_BINARY = os.path.join(THIS_DIR, "..", "..", "bin", "vplanet")
@@ -101,39 +112,37 @@ def fnPlotComparison(daFields, daRates, sOutputPath):
         daRaw = daRates[:, list(COLUMNS.keys()).index(sMechanism)]
         daTotalParticles = daTotalParticles + np.where(daRaw > 0, daRaw, 0)
 
-    fig, ax = plt.subplots(figsize=(9, 6))
-    dictColors = {"Pickup": "orange", "CrossField": "blue",
-                  "PolarCap": "purple", "Cusp": "deeppink",
-                  "Driscoll": "gold"}
+    dictColors = {"Pickup": vp.orange, "CrossField": vp.dark_blue,
+                  "PolarCap": vp.purple, "Cusp": vp.red,
+                  "Driscoll": vp.pale_blue}
     dictStyles = {"Pickup": "--", "CrossField": "-", "PolarCap": "-",
                   "Cusp": "--", "Driscoll": "-"}
-    for sMechanism in ["Pickup", "CrossField", "PolarCap", "Cusp",
-                       "Driscoll"]:
-        iIndex = list(COLUMNS.keys()).index(sMechanism)
-        daRaw = daRates[:, iIndex]
-        # Match the notebook's plotting choice: mask negatives so loglog
-        # doesn't mirror them through abs(). Driscoll's (n_L - n_sw) flips
-        # sign at high magnetic moment.
-        daSigned = np.where(daRaw > 0, daRaw, np.nan)
-        daYAtmGyr = fdaConvertToAtmPerGyr(daSigned)
-        ax.loglog(daFields, daYAtmGyr,
-                  color=dictColors[sMechanism],
-                  linestyle=dictStyles[sMechanism],
-                  linewidth=1.5,
-                  label=f"{sMechanism} H Escape")
-    daTotalAtmGyr = fdaConvertToAtmPerGyr(daTotalParticles)
-    ax.loglog(daFields, daTotalAtmGyr, color="black", linewidth=2.5,
-              label="Total H Escape")
-
-    ax.set_xlabel("Magnetic Dipole Moment [Earth Units]")
-    ax.set_ylabel("Escape Rate [Earth atm / Gyr]")
-    ax.set_title("Trappist-1e: vplanet reproduction of notebook page 27")
-    ax.set_xlim(1e-4, 1e2)
-    ax.set_ylim(1e-35, 1e5)
-    ax.legend(loc="lower left", fontsize=10, framealpha=0.95)
-    ax.grid(alpha=0.3, which="both")
-    fig.tight_layout()
-    fig.savefig(sOutputPath, dpi=150)
+    with plt.rc_context(RC_OVERRIDES):
+        fig, ax = plt.subplots(figsize=(10, 7))
+        for sMechanism in ["Pickup", "CrossField", "PolarCap", "Cusp",
+                           "Driscoll"]:
+            iIndex = list(COLUMNS.keys()).index(sMechanism)
+            daRaw = daRates[:, iIndex]
+            # Match the notebook's plotting choice: mask negatives so loglog
+            # doesn't mirror them through abs(). Driscoll's (n_L - n_sw)
+            # flips sign at high magnetic moment.
+            daSigned = np.where(daRaw > 0, daRaw, np.nan)
+            daYAtmGyr = fdaConvertToAtmPerGyr(daSigned)
+            ax.loglog(daFields, daYAtmGyr,
+                      color=dictColors[sMechanism],
+                      linestyle=dictStyles[sMechanism],
+                      label=f"{sMechanism} H escape")
+        daTotalAtmGyr = fdaConvertToAtmPerGyr(daTotalParticles)
+        ax.loglog(daFields, daTotalAtmGyr, color="black", linewidth=3.0,
+                  label="Total H escape")
+        ax.set_xlabel("Magnetic dipole moment (Earth units)")
+        ax.set_ylabel("Escape rate (Earth atm Gyr$^{-1}$)")
+        ax.set_xlim(1e-4, 1e2)
+        ax.set_ylim(1e-35, 1e5)
+        ax.legend(loc="lower left", framealpha=0.95)
+        ax.grid(alpha=0.3, which="both")
+        fig.tight_layout()
+        fig.savefig(sOutputPath, dpi=150)
     print(f"Wrote {sOutputPath}")
 
 

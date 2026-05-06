@@ -55,4 +55,4 @@ dExobaseTemperature   1000
 saOutputOrder Time -MagMom -MagField -MagPauseRadAtmEsc -MagPickupRate $
               -CrossFieldRate -PolarCapRate -CuspRate -DriscollRate $
               -MagTotalLossRate -SurfWaterMass -OxygenMass -EnvelopeMass $
-              -CO2Mass -TMan -TCore
+              -CO2Mass -TMan -TCore -RIC

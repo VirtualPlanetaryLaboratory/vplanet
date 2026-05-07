@@ -176,6 +176,8 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
     update[iBody].iNumSurfaceWaterMass = 0;
     update[iBody].iNumOxygenMass       = 0;
     update[iBody].iNumOxygenMantleMass = 0;
+    update[iBody].iNumCO2Mass          = 0;
+    update[iBody].iNumN2Mass           = 0;
     update[iBody].iNumTemperature      = 0;
     update[iBody].iNumTMan             = 0;
     update[iBody].iNumTCore            = 0;
@@ -2373,6 +2375,98 @@ void InitializeUpdate(BODY *body, CONTROL *control, MODULE *module,
       for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
         module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule](
               body, update, &iEqn, iVar, iBody, iFoo);
+      }
+
+      (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
+      iVar++;
+    }
+
+    // Atmospheric CO2 mass (Gunell magnetic-limited escape)
+    update[iBody].iCO2Mass = -1;
+    if (update[iBody].iNumCO2Mass) {
+      update[iBody].iCO2Mass       = iVar;
+      update[iBody].iaVar[iVar]    = VCO2MASS;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumCO2Mass;
+      update[iBody].pdVar[iVar]    = &body[iBody].dCO2Mass;
+      update[iBody].iNumBodies[iVar] =
+            malloc(update[iBody].iNumCO2Mass * sizeof(int));
+      update[iBody].iaBody[iVar] =
+            malloc(update[iBody].iNumCO2Mass * sizeof(int *));
+      update[iBody].iaType[iVar] =
+            malloc(update[iBody].iNumCO2Mass * sizeof(int));
+      update[iBody].iaModule[iVar] =
+            malloc(update[iBody].iNumCO2Mass * sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] =
+              &control->Evolve.tmpBody[iBody].dCO2Mass;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] =
+              malloc(update[iBody].iNumCO2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] =
+              malloc(update[iBody].iNumCO2Mass * sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] =
+              malloc(update[iBody].iNumCO2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] =
+              malloc(update[iBody].iNumCO2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] =
+              malloc(update[iBody].iNumCO2Mass * sizeof(int *));
+        for (iSubStep = 0; iSubStep < 4; iSubStep++) {
+          control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
+                malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
+        }
+      }
+
+      iEqn = 0;
+      for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
+        module->fnFinalizeUpdateCO2Mass[iBody][iModule](body, update, &iEqn,
+                                                        iVar, iBody, iFoo);
+      }
+
+      (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));
+      update[iBody].daDerivProc[iVar] = malloc(iEqn * sizeof(double));
+      iVar++;
+    }
+
+    // Atmospheric N2 mass (Gunell magnetic-limited escape)
+    update[iBody].iN2Mass = -1;
+    if (update[iBody].iNumN2Mass) {
+      update[iBody].iN2Mass        = iVar;
+      update[iBody].iaVar[iVar]    = VN2MASS;
+      update[iBody].iNumEqns[iVar] = update[iBody].iNumN2Mass;
+      update[iBody].pdVar[iVar]    = &body[iBody].dN2Mass;
+      update[iBody].iNumBodies[iVar] =
+            malloc(update[iBody].iNumN2Mass * sizeof(int));
+      update[iBody].iaBody[iVar] =
+            malloc(update[iBody].iNumN2Mass * sizeof(int *));
+      update[iBody].iaType[iVar] =
+            malloc(update[iBody].iNumN2Mass * sizeof(int));
+      update[iBody].iaModule[iVar] =
+            malloc(update[iBody].iNumN2Mass * sizeof(int));
+
+      if (control->Evolve.iOneStep == RUNGEKUTTA) {
+        control->Evolve.tmpUpdate[iBody].pdVar[iVar] =
+              &control->Evolve.tmpBody[iBody].dN2Mass;
+        control->Evolve.tmpUpdate[iBody].iNumBodies[iVar] =
+              malloc(update[iBody].iNumN2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].daDerivProc[iVar] =
+              malloc(update[iBody].iNumN2Mass * sizeof(double));
+        control->Evolve.tmpUpdate[iBody].iaType[iVar] =
+              malloc(update[iBody].iNumN2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaModule[iVar] =
+              malloc(update[iBody].iNumN2Mass * sizeof(int));
+        control->Evolve.tmpUpdate[iBody].iaBody[iVar] =
+              malloc(update[iBody].iNumN2Mass * sizeof(int *));
+        for (iSubStep = 0; iSubStep < 4; iSubStep++) {
+          control->Evolve.daDerivProc[iSubStep][iBody][iVar] =
+                malloc(update[iBody].iNumEqns[iVar] * sizeof(double));
+        }
+      }
+
+      iEqn = 0;
+      for (iModule = 0; iModule < module->iNumModules[iBody]; iModule++) {
+        module->fnFinalizeUpdateN2Mass[iBody][iModule](body, update, &iEqn,
+                                                       iVar, iBody, iFoo);
       }
 
       (*fnUpdate)[iBody][iVar]        = malloc(iEqn * sizeof(fnUpdateVariable));

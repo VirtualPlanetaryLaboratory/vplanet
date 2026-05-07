@@ -58,6 +58,8 @@
 #define VENVELOPEMASS 1203     // Envelope Mass
 #define VOXYGENMASS 1204       // Atmospheric Oxygen Mass
 #define VOXYGENMANTLEMASS 1205 // Mantle Oxygen Mass
+#define VCO2MASS 1206          // Atmospheric CO2 Mass
+#define VN2MASS 1207           // Atmospheric N2 Mass
 
 // STELLAR
 #define VLUMINOSITY 1502  // Luminosity

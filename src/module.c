@@ -173,6 +173,10 @@ void InitializeModule(BODY *body, CONTROL *control, MODULE *module) {
         malloc(iNumBodies * sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdateOxygenMantleMass =
         malloc(iNumBodies * sizeof(fnFinalizeUpdateOxygenMantleMassModule));
+  module->fnFinalizeUpdateCO2Mass =
+        malloc(iNumBodies * sizeof(fnFinalizeUpdateCO2MassModule));
+  module->fnFinalizeUpdateN2Mass =
+        malloc(iNumBodies * sizeof(fnFinalizeUpdateN2MassModule));
   module->fnFinalizeUpdatePinc =
         malloc(iNumBodies * sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc =
@@ -420,6 +424,10 @@ void FinalizeModule(BODY *body, CONTROL *control, MODULE *module, int iBody) {
         malloc(iNumModules * sizeof(fnFinalizeUpdateOxygenMassModule));
   module->fnFinalizeUpdateOxygenMantleMass[iBody] =
         malloc(iNumModules * sizeof(fnFinalizeUpdateOxygenMantleMassModule));
+  module->fnFinalizeUpdateCO2Mass[iBody] =
+        malloc(iNumModules * sizeof(fnFinalizeUpdateCO2MassModule));
+  module->fnFinalizeUpdateN2Mass[iBody] =
+        malloc(iNumModules * sizeof(fnFinalizeUpdateN2MassModule));
   module->fnFinalizeUpdatePinc[iBody] =
         malloc(iNumModules * sizeof(fnFinalizeUpdatePincModule));
   module->fnFinalizeUpdateQinc[iBody] =
@@ -543,6 +551,8 @@ void FinalizeModule(BODY *body, CONTROL *control, MODULE *module, int iBody) {
     module->fnFinalizeUpdateOxygenMass[iBody][iModule]   = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] =
           &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateCO2Mass[iBody][iModule] = &FinalizeUpdateNULL;
+    module->fnFinalizeUpdateN2Mass[iBody][iModule]  = &FinalizeUpdateNULL;
     module->fnFinalizeUpdatePinc[iBody][iModule] = &FinalizeUpdateNULL;
     module->fnFinalizeUpdateQinc[iBody][iModule] = &FinalizeUpdateNULL;
 

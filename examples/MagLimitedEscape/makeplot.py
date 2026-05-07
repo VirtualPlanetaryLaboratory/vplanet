@@ -18,6 +18,7 @@ from vplot import colors as vp
 
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 PROTON_MASS_KG = 1.67e-27
+MAG_NUM_WELL_MIXED_SPECIES = 5  # H2O, O2, CO2, H, N2 (mirrors atmesc.h)
 
 EARTH_CONST_FORWARD = os.path.join(
     THIS_DIR, "earth_const", "earth_const.earth.forward")
@@ -31,7 +32,7 @@ COLS_CONST = {
 COLS_THERMINT = {
     "Time": 0, "MagMom": 1, "MagField": 2, "Pickup": 4, "CrossField": 5,
     "PolarCap": 6, "Cusp": 7, "Driscoll": 8, "Total": 9,
-    "TMan": 14, "TCore": 15, "RIC": 16,
+    "TMan": 15, "TCore": 16, "RIC": 17,
 }
 
 # Panel (a) shows PolarCap, CrossField, and Cusp - the three mechanisms
@@ -74,7 +75,7 @@ def fnPlotMassLossPanel(ax, daConstRows, daThermRows):
     Total line reads MagTotalLossRate directly from the forward file."""
     daTimeConstGyr = daConstRows[:, COLS_CONST["Time"]] / 1e9
     daTimeThermGyr = daThermRows[:, COLS_THERMINT["Time"]] / 1e9
-    dBulkFactor = 4.0 * PROTON_MASS_KG
+    dBulkFactor = MAG_NUM_WELL_MIXED_SPECIES * PROTON_MASS_KG
     for sMechanism in MECHANISMS:
         sColor = MECHANISM_COLORS[sMechanism]
         daConstBulk = np.abs(daConstRows[:, COLS_CONST[sMechanism]]) * dBulkFactor

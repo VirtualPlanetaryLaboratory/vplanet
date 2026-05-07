@@ -277,6 +277,7 @@ struct BODY {
   double dStellarWindVelocity;    /**< Solar-wind speed at planet (m/s) */
   double dExobaseTemperature;     /**< Exobase temperature (K) */
   double dCO2Mass;                /**< Atmospheric CO2 reservoir (kg) */
+  double dN2Mass;                 /**< Atmospheric N2 reservoir (kg) */
   double dMagPickupRate;          /**< Gunell pickup escape rate (particles/s) */
   double dCrossFieldRate;         /**< Cross-field ion escape rate (particles/s) */
   double dPolarCapRate;           /**< Polar-cap escape rate (particles/s) */
@@ -1571,6 +1572,10 @@ struct UPDATE {
                             in the mantle */
   int iNumOxygenMantleMass; /**< Number of Equations Affecting oxygen mantle
                                mass [1] */
+  int iCO2Mass;             /**< variable number for atmospheric CO2 mass */
+  int iNumCO2Mass;          /**< Number of equations affecting CO2 mass [1] */
+  int iN2Mass;              /**< variable number for atmospheric N2 mass */
+  int iNumN2Mass;           /**< Number of equations affecting N2 mass [1] */
 
   /*! Points to the element in UPDATE's daDerivProc matrix that contains the
       derivative of these variables due to ATMESC. */
@@ -1579,6 +1584,8 @@ struct UPDATE {
   double *pdDMassDtAtmesc;
   double *pdDOxygenMassDtAtmesc;
   double *pdDOxygenMantleMassDtAtmesc;
+  double *pdDCO2MassDtAtmesc;
+  double *pdDN2MassDtAtmesc;
   double *pdRadiusAtmesc;
 
   /* BINARY */
@@ -2114,6 +2121,10 @@ typedef void (*fnFinalizeUpdateOxygenMassModule)(BODY *, UPDATE *, int *, int,
                                                  int, int);
 typedef void (*fnFinalizeUpdateOxygenMantleMassModule)(BODY *, UPDATE *, int *,
                                                        int, int, int);
+typedef void (*fnFinalizeUpdateCO2MassModule)(BODY *, UPDATE *, int *, int,
+                                              int, int);
+typedef void (*fnFinalizeUpdateN2MassModule)(BODY *, UPDATE *, int *, int,
+                                             int, int);
 typedef void (*fnFinalizeUpdateTemperatureModule)(BODY *, UPDATE *, int *, int,
                                                   int, int);
 typedef void (*fnFinalizeUpdateTCoreModule)(BODY *, UPDATE *, int *, int, int,
@@ -2300,6 +2311,10 @@ struct MODULE {
   fnFinalizeUpdateOxygenMassModule **fnFinalizeUpdateOxygenMass;
   /*! Function pointers to finalize mantle oxygen */
   fnFinalizeUpdateOxygenMantleMassModule **fnFinalizeUpdateOxygenMantleMass;
+  /*! Function pointers to finalize atmospheric CO2 */
+  fnFinalizeUpdateCO2MassModule **fnFinalizeUpdateCO2Mass;
+  /*! Function pointers to finalize atmospheric N2 */
+  fnFinalizeUpdateN2MassModule **fnFinalizeUpdateN2Mass;
   /*! Function pointers to finalize Envelope Mass */
   fnFinalizeUpdateEnvelopeMassModule **fnFinalizeUpdateEnvelopeMass;
   /*! Function pointers to finalize Core Temperature */

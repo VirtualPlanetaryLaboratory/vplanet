@@ -83,6 +83,7 @@
 #define OPT_STELLARWINDVELOCITY 1244 /**< Solar-wind speed at planet (m/s) */
 #define OPT_EXOBASETEMP 1245        /**< Exobase temperature (K) */
 #define OPT_CO2MASS 1246            /**< Initial atmospheric CO2 mass (kg) */
+#define OPT_N2MASS 1247             /**< Initial atmospheric N2 mass (kg) */
 
 /* Hard-coded reference constants for the Gunell+2018 formulas. These are the
    values used in the source notebook (Combined for Paper); they appear as
@@ -108,6 +109,13 @@
 #define MAG_DRISCOLL_ENERGY_EFF (1.0/10.6e44) /**< Driscoll efficiency (notebook) */
 #define MAG_PROTON_MASS         1.67e-27 /**< Proton mass used in notebook (kg) */
 #define MAG_VACUUM_PERMEABILITY (4.0 * PI * 1.0e-7) /**< mu_0 (H/m) */
+
+/* Number of atmospheric species used by the well-mixed Gunell+2018 escape
+   model: water, oxygen, CO2, hydrogen, N2. The total bulk mass loss rate
+   is N times the H-equivalent rate from the Gunell mechanisms; each
+   species loses mass at total/N. Hardcoded; matches the species set used
+   in the Gunell+2018 modern-Earth setup. */
+#define MAG_NUM_WELL_MIXED_SPECIES 5
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -230,6 +238,7 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_MAGPAUSERADATMESC 1276 /**< Magnetopause stand-off radius (m) */
 #define OUT_MAGFIELD          1277 /**< Planet dipole moment (A m^2) */
 #define OUT_CO2MASS           1278 /**< Atmospheric CO2 mass (kg) */
+#define OUT_N2MASS            1279 /**< Atmospheric N2 mass (kg) */
 
 void InitializeOutputAtmEsc(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputFunctionAtmEsc(OUTPUT *, int, int);
@@ -304,6 +313,10 @@ double fdDriscollMagLimitedRate(BODY *, int, double);
 double fdDSurfaceWaterMassDtMagLim(BODY *, SYSTEM *, int *);
 double fdDOxygenMassDtMagLim(BODY *, SYSTEM *, int *);
 double fdDEnvelopeMassDtMagLim(BODY *, SYSTEM *, int *);
+double fdDCO2MassDtMagLim(BODY *, SYSTEM *, int *);
+double fdDN2MassDtMagLim(BODY *, SYSTEM *, int *);
+void FinalizeUpdateCO2MassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
+void FinalizeUpdateN2MassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 
 /* Dummy functions */
 double fdSurfEnFluxAtmEsc(BODY *, SYSTEM *, UPDATE *, int, int);

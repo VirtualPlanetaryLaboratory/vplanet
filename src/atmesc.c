@@ -80,6 +80,7 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dStellarWindVelocity = src[iBody].dStellarWindVelocity;
   dest[iBody].dExobaseTemperature  = src[iBody].dExobaseTemperature;
   dest[iBody].dCO2Mass             = src[iBody].dCO2Mass;
+  dest[iBody].dN2Mass              = src[iBody].dN2Mass;
   dest[iBody].dMagPickupRate       = src[iBody].dMagPickupRate;
   dest[iBody].dCrossFieldRate      = src[iBody].dCrossFieldRate;
   dest[iBody].dPolarCapRate        = src[iBody].dPolarCapRate;
@@ -1032,6 +1033,32 @@ void ReadExobaseTemperature(BODY *body, CONTROL *control, FILES *files,
 }
 
 /**
+Read the initial atmospheric N2 reservoir mass (kg).
+*/
+void ReadN2Mass(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
+                SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dN2Mass = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dN2Mass = options->dDefault;
+  }
+}
+
+/**
 Read the initial atmospheric CO2 reservoir mass (kg).
 */
 void ReadCO2Mass(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -1472,6 +1499,16 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_CO2MASS].iType      = 2;
   options[OPT_CO2MASS].bMultiFile = 1;
   fnRead[OPT_CO2MASS]             = &ReadCO2Mass;
+
+  fvFormattedString(&options[OPT_N2MASS].cName, "dN2Mass");
+  fvFormattedString(&options[OPT_N2MASS].cDescr,
+                    "Initial atmospheric N2 mass (Gunell escape)");
+  fvFormattedString(&options[OPT_N2MASS].cDefault, "0");
+  fvFormattedString(&options[OPT_N2MASS].cDimension, "mass");
+  options[OPT_N2MASS].dDefault   = 0.0;
+  options[OPT_N2MASS].iType      = 2;
+  options[OPT_N2MASS].bMultiFile = 1;
+  fnRead[OPT_N2MASS]             = &ReadN2Mass;
 }
 
 /**
@@ -1566,6 +1603,32 @@ void VerifyOxygenMantleMass(BODY *body, OPTIONS *options, UPDATE *update,
 
   update[iBody].pdDOxygenMantleMassDtAtmesc =
         &update[iBody].daDerivProc[update[iBody].iOxygenMantleMass][0];
+}
+
+void VerifyCO2Mass(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
+                   int iBody) {
+  update[iBody].iaType[update[iBody].iCO2Mass][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iCO2Mass][0] = 1;
+  update[iBody].iaBody[update[iBody].iCO2Mass][0] =
+        malloc(update[iBody].iNumBodies[update[iBody].iCO2Mass][0] *
+               sizeof(int));
+  update[iBody].iaBody[update[iBody].iCO2Mass][0][0] = iBody;
+
+  update[iBody].pdDCO2MassDtAtmesc =
+        &update[iBody].daDerivProc[update[iBody].iCO2Mass][0];
+}
+
+void VerifyN2Mass(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
+                  int iBody) {
+  update[iBody].iaType[update[iBody].iN2Mass][0]     = 1;
+  update[iBody].iNumBodies[update[iBody].iN2Mass][0] = 1;
+  update[iBody].iaBody[update[iBody].iN2Mass][0] =
+        malloc(update[iBody].iNumBodies[update[iBody].iN2Mass][0] *
+               sizeof(int));
+  update[iBody].iaBody[update[iBody].iN2Mass][0][0] = iBody;
+
+  update[iBody].pdDN2MassDtAtmesc =
+        &update[iBody].daDerivProc[update[iBody].iN2Mass][0];
 }
 
 /**
@@ -1952,17 +2015,6 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                            fnUpdateVariable ***fnUpdate, int iBody,
                            int iModule) {
 
-  // Drain CO2 reservoir under Gunell magnetic-limited escape. CO2 is not a
-  // formal state variable, so we evolve it in lockstep with the integrator
-  // using the accepted timestep dDt. Floor at zero.
-  if (body[iBody].bMagLimitedEscape && body[iBody].dCO2Mass > 0) {
-    body[iBody].dCO2Mass -=
-          0.25 * body[iBody].dMagTotalLossRate * evolve->dCurrentDt;
-    if (body[iBody].dCO2Mass < 0) {
-      body[iBody].dCO2Mass = 0;
-    }
-  }
-
   if (body[iBody].dEnvelopeMass > 0) {
     ForceBehaviorEnvelopeEscape(body, module, evolve, io, system, update,
                                 fnUpdate, iBody, iModule);
@@ -2302,8 +2354,10 @@ void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
                              fnUpdateVariable ***fnUpdate, int iBody) {
   // Gunell+2018 magnetic-limited escape replaces the standard photolysis-
   // driven derivatives with a well-mixed bulk loss split equally across
-  // water, oxygen, CO2, and the H envelope. CO2 is decremented manually in
-  // fnForceBehaviorAtmEsc because it is not coupled to other modules.
+  // five species: water, oxygen, CO2, hydrogen, and N2. The bulk total
+  // dMagTotalLossRate is N=MAG_NUM_WELL_MIXED_SPECIES times the H-equivalent
+  // rate from the Gunell mechanisms, and each species derivative returns
+  // -dMagTotalLossRate/N.
   if (body[iBody].bMagLimitedEscape) {
     if (body[iBody].dSurfaceWaterMass > 0) {
       fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
@@ -2317,6 +2371,12 @@ void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
       fnUpdate[iBody][update[iBody].iEnvelopeMass][0] =
             &fdDEnvelopeMassDtMagLim;
       fnUpdate[iBody][update[iBody].iMass][0] = &fdDEnvelopeMassDtMagLim;
+    }
+    if (body[iBody].dCO2Mass > 0) {
+      fnUpdate[iBody][update[iBody].iCO2Mass][0] = &fdDCO2MassDtMagLim;
+    }
+    if (body[iBody].dN2Mass > 0) {
+      fnUpdate[iBody][update[iBody].iN2Mass][0] = &fdDN2MassDtMagLim;
     }
     fnUpdate[iBody][update[iBody].iRadius][0] = &fdPlanetRadius;
     return;
@@ -2384,6 +2444,14 @@ void NullAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   if (body[iBody].dEnvelopeMass > 0) {
     fnUpdate[iBody][update[iBody].iEnvelopeMass][0] = &fndUpdateFunctionTiny;
     fnUpdate[iBody][update[iBody].iMass][0]         = &fndUpdateFunctionTiny;
+  }
+  if (body[iBody].bMagLimitedEscape) {
+    if (body[iBody].dCO2Mass > 0) {
+      fnUpdate[iBody][update[iBody].iCO2Mass][0] = &fndUpdateFunctionTiny;
+    }
+    if (body[iBody].dN2Mass > 0) {
+      fnUpdate[iBody][update[iBody].iN2Mass][0] = &fndUpdateFunctionTiny;
+    }
   }
   fnUpdate[iBody][update[iBody].iRadius][0] =
         &fndUpdateFunctionTiny; // NOTE: This points to the VALUE of the radius!
@@ -2634,6 +2702,17 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     body[iBody].dSolidMass = body[iBody].dMass - body[iBody].dEnvelopeMass;
   }
 
+  // Gunell magnetic-limited escape: initialize CO2 and N2 update slots
+  // so the integrator's iaBody/iNumBodies arrays are populated.
+  if (body[iBody].bMagLimitedEscape) {
+    if (body[iBody].dCO2Mass > 0) {
+      VerifyCO2Mass(body, options, update, body[iBody].dAge, iBody);
+    }
+    if (body[iBody].dN2Mass > 0) {
+      VerifyN2Mass(body, options, update, body[iBody].dAge, iBody);
+    }
+  }
+
   // Setup radius and other radii of interest
   VerifyRadiusAtmEsc(body, control, options, update, body[iBody].dAge, iBody);
   body[iBody].dBondiRadius = fdBondiRadius(body, iBody);
@@ -2690,6 +2769,23 @@ void InitializeUpdateAtmEsc(BODY *body, UPDATE *update, int iBody) {
       update[iBody].iNumVars++;
     }
     update[iBody].iNumRadius++;
+  }
+
+  // Gunell magnetic-limited escape: track CO2 and N2 reservoirs as
+  // formal state variables when the user has specified an initial mass.
+  if (body[iBody].bMagLimitedEscape) {
+    if (body[iBody].dCO2Mass > 0) {
+      if (update[iBody].iNumCO2Mass == 0) {
+        update[iBody].iNumVars++;
+      }
+      update[iBody].iNumCO2Mass++;
+    }
+    if (body[iBody].dN2Mass > 0) {
+      if (update[iBody].iNumN2Mass == 0) {
+        update[iBody].iNumVars++;
+      }
+      update[iBody].iNumN2Mass++;
+    }
   }
 }
 
@@ -2758,6 +2854,24 @@ void FinalizeUpdateOxygenMantleMassAtmEsc(BODY *body, UPDATE *update, int *iEqn,
                                           int iVar, int iBody, int iFoo) {
   update[iBody].iaModule[iVar][*iEqn] = ATMESC;
   update[iBody].iNumOxygenMantleMass  = (*iEqn)++;
+}
+
+/**
+Mark CO2 mass as updated by ATMESC. Used by Gunell magnetic-limited escape.
+*/
+void FinalizeUpdateCO2MassAtmEsc(BODY *body, UPDATE *update, int *iEqn,
+                                 int iVar, int iBody, int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumCO2Mass           = (*iEqn)++;
+}
+
+/**
+Mark N2 mass as updated by ATMESC. Used by Gunell magnetic-limited escape.
+*/
+void FinalizeUpdateN2MassAtmEsc(BODY *body, UPDATE *update, int *iEqn,
+                                int iVar, int iBody, int iFoo) {
+  update[iBody].iaModule[iVar][*iEqn] = ATMESC;
+  update[iBody].iNumN2Mass            = (*iEqn)++;
 }
 
 /**
@@ -3092,9 +3206,17 @@ double fdDriscollMagLimitedRate(BODY *body, int iBody, double dRadMP) {
 
 /**
 Compute and store all five Gunell+2018 escape rates plus the bulk
-atmospheric loss rate. Each species (water, oxygen, CO2, hydrogen) loses
-mass at rate (Q_total * m_proton) so that the bulk loss is well-mixed across
-four equal-mass reservoirs (notebook + user specification).
+atmospheric loss rate.
+
+Conventions:
+- Each Q from the Gunell mechanisms is an ion escape rate (particles/s),
+  treated here as an H-equivalent rate (multiplied by proton mass to get
+  kg/s of H per mechanism).
+- Under the well-mixed assumption, the total atmospheric mass loss is N
+  times the H-equivalent rate, where N = MAG_NUM_WELL_MIXED_SPECIES = 5
+  (water, oxygen, CO2, hydrogen, N2). With Gunell+2018 modern-Earth
+  parameters this gives ~1.4 kg/s, matching the paper's reported value.
+- Each species loses mass at total/N kg/s.
 */
 void fnMagLimitedRates(BODY *body, int iBody) {
   double dRadMP = fdMagnetopauseStandoff(body[iBody].dMagField,
@@ -3113,31 +3235,47 @@ void fnMagLimitedRates(BODY *body, int iBody) {
                            body[iBody].dPolarCapRate + body[iBody].dCuspRate +
                            body[iBody].dDriscollRate;
   double dPerSpeciesKgPerSec = dTotalParticles * MAG_PROTON_MASS;
-  body[iBody].dMagTotalLossRate = 4.0 * dPerSpeciesKgPerSec;
+  body[iBody].dMagTotalLossRate =
+        MAG_NUM_WELL_MIXED_SPECIES * dPerSpeciesKgPerSec;
 }
 
 /**
-Surface-water derivative under Gunell magnetic-limited escape: 1/4 of the
+Surface-water derivative under Gunell magnetic-limited escape: 1/N of the
 total bulk loss rate. fnMagLimitedRates is called once per step in
 fnPropsAuxAtmEsc, so derivatives just read the cached rate.
 */
 double fdDSurfaceWaterMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -0.25 * body[iaBody[0]].dMagTotalLossRate;
+  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /**
 Atmospheric oxygen derivative under Gunell magnetic-limited escape.
 */
 double fdDOxygenMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -0.25 * body[iaBody[0]].dMagTotalLossRate;
+  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /**
 Envelope-mass (hydrogen) derivative under Gunell magnetic-limited escape.
 */
 double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  body[iaBody[0]].dEnvMassDt = -0.25 * body[iaBody[0]].dMagTotalLossRate;
+  body[iaBody[0]].dEnvMassDt =
+        -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
   return body[iaBody[0]].dEnvMassDt;
+}
+
+/**
+Atmospheric CO2 derivative under Gunell magnetic-limited escape.
+*/
+double fdDCO2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+}
+
+/**
+Atmospheric N2 derivative under Gunell magnetic-limited escape.
+*/
+double fdDN2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /************* ATMESC Outputs ******************/
@@ -4104,6 +4242,19 @@ void WriteCO2Mass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   }
 }
 
+void WriteN2Mass(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+                 UNITS *units, UPDATE *update, int iBody, double *dTmp,
+                 char **cUnit) {
+  *dTmp = body[iBody].dN2Mass;
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsMass(units->iMass);
+    fsUnitsMass(units->iMass, cUnit);
+  }
+}
+
 /**
 Set up stuff to be logged for atmesc.
 
@@ -4500,6 +4651,16 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_CO2MASS].iNum       = 1;
   output[OUT_CO2MASS].iModuleBit = ATMESC;
   fnWrite[OUT_CO2MASS]           = &WriteCO2Mass;
+
+  fvFormattedString(&output[OUT_N2MASS].cName, "N2Mass");
+  fvFormattedString(&output[OUT_N2MASS].cDescr,
+                    "Atmospheric N2 reservoir (Gunell escape)");
+  fvFormattedString(&output[OUT_N2MASS].cNeg, "kg");
+  output[OUT_N2MASS].bNeg       = 1;
+  output[OUT_N2MASS].dNeg       = 1;
+  output[OUT_N2MASS].iNum       = 1;
+  output[OUT_N2MASS].iModuleBit = ATMESC;
+  fnWrite[OUT_N2MASS]           = &WriteN2Mass;
 }
 
 /************ ATMESC Logging Functions **************/
@@ -4604,6 +4765,10 @@ void AddModuleAtmEsc(CONTROL *control, MODULE *module, int iBody, int iModule) {
         &FinalizeUpdateOxygenMassAtmEsc;
   module->fnFinalizeUpdateOxygenMantleMass[iBody][iModule] =
         &FinalizeUpdateOxygenMantleMassAtmEsc;
+  module->fnFinalizeUpdateCO2Mass[iBody][iModule] =
+        &FinalizeUpdateCO2MassAtmEsc;
+  module->fnFinalizeUpdateN2Mass[iBody][iModule] =
+        &FinalizeUpdateN2MassAtmEsc;
   module->fnFinalizeUpdateEnvelopeMass[iBody][iModule] =
         &FinalizeUpdateEnvelopeMassAtmEsc;
   module->fnFinalizeUpdateMass[iBody][iModule] =

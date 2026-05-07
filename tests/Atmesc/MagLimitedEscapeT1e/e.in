@@ -16,6 +16,7 @@ dSurfWaterMass    -10
 dEnvelopeMass     -1e-3
 dOxygenMass       0
 dCO2Mass          4.4e16
+dN2Mass           0
 sWaterLossModel   ls16
 bInstantO2Sink    0
 sAtmXAbsEffH2OModel  bolmont16
@@ -31,4 +32,4 @@ dExobaseTemperature   900
 
 saOutputOrder Time -MagField -MagPauseRadAtmEsc -MagPickupRate -CrossFieldRate $
               -PolarCapRate -CuspRate -DriscollRate -MagTotalLossRate $
-              -SurfWaterMass -OxygenMass -EnvelopeMass -CO2Mass
+              -SurfWaterMass -OxygenMass -EnvelopeMass -CO2Mass -N2Mass

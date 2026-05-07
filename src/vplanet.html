@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="distrot" href="distrot.html" />
-    <link rel="prev" title="radheat" href="radheat.html" /> 
+    <link rel="next" title="body" href="body.html" />
+    <link rel="prev" title="magmoc" href="magmoc.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,26 +51,24 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">vplanet</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#vplanet-c">vplanet.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv49main_impliA_Pc"><code class="docutils literal notranslate"><span class="pre">main_impl()</span></code></a></li>
@@ -650,6 +648,26 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY20dLuminosityAmplitudeE"><code class="docutils literal notranslate"><span class="pre">dLuminosityAmplitude</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY20dLuminosityFrequencyE"><code class="docutils literal notranslate"><span class="pre">dLuminosityFrequency</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY16dLuminosityPhaseE"><code class="docutils literal notranslate"><span class="pre">dLuminosityPhase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dXUVEngleEarlyAE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleEarlyA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dXUVEngleEarlyBE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleEarlyB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dXUVEngleEarlyCE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleEarlyC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dXUVEngleEarlyDE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleEarlyD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17dXUVEngleMidLateAE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleMidLateA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17dXUVEngleMidLateBE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleMidLateB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17dXUVEngleMidLateCE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleMidLateC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY17dXUVEngleMidLateDE"><code class="docutils literal notranslate"><span class="pre">dXUVEngleMidLateD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dRotEngleEarlyAE"><code class="docutils literal notranslate"><span class="pre">dRotEngleEarlyA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dRotEngleEarlyBE"><code class="docutils literal notranslate"><span class="pre">dRotEngleEarlyB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dRotEngleEarlyCE"><code class="docutils literal notranslate"><span class="pre">dRotEngleEarlyC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dRotEngleEarlyDE"><code class="docutils literal notranslate"><span class="pre">dRotEngleEarlyD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dRotEngleMidAE"><code class="docutils literal notranslate"><span class="pre">dRotEngleMidA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dRotEngleMidBE"><code class="docutils literal notranslate"><span class="pre">dRotEngleMidB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dRotEngleMidCE"><code class="docutils literal notranslate"><span class="pre">dRotEngleMidC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dRotEngleMidDE"><code class="docutils literal notranslate"><span class="pre">dRotEngleMidD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY14dRotEngleLateAE"><code class="docutils literal notranslate"><span class="pre">dRotEngleLateA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY14dRotEngleLateBE"><code class="docutils literal notranslate"><span class="pre">dRotEngleLateB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY14dRotEngleLateCE"><code class="docutils literal notranslate"><span class="pre">dRotEngleLateC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY14dRotEngleLateDE"><code class="docutils literal notranslate"><span class="pre">dRotEngleLateD</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY6bPoiseE"><code class="docutils literal notranslate"><span class="pre">bPoise</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY9dAblateFFE"><code class="docutils literal notranslate"><span class="pre">dAblateFF</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13bAccuracyModeE"><code class="docutils literal notranslate"><span class="pre">bAccuracyMode</span></code></a></li>
@@ -850,6 +868,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY6bFlareE"><code class="docutils literal notranslate"><span class="pre">bFlare</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY10dFlareYIntE"><code class="docutils literal notranslate"><span class="pre">dFlareYInt</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY11dFlareSlopeE"><code class="docutils literal notranslate"><span class="pre">dFlareSlope</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dFlareSlopeA1E"><code class="docutils literal notranslate"><span class="pre">dFlareSlopeA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dFlareSlopeA2E"><code class="docutils literal notranslate"><span class="pre">dFlareSlopeA2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY13dFlareSlopeA3E"><code class="docutils literal notranslate"><span class="pre">dFlareSlopeA3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY12dFlareYIntB1E"><code class="docutils literal notranslate"><span class="pre">dFlareYIntB1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY12dFlareYIntB2E"><code class="docutils literal notranslate"><span class="pre">dFlareYIntB2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY12dFlareYIntB3E"><code class="docutils literal notranslate"><span class="pre">dFlareYIntB3</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dFlareMinEnergyE"><code class="docutils literal notranslate"><span class="pre">dFlareMinEnergy</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY15dFlareMaxEnergyE"><code class="docutils literal notranslate"><span class="pre">dFlareMaxEnergy</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4BODY11dFlareFreq1E"><code class="docutils literal notranslate"><span class="pre">dFlareFreq1</span></code></a></li>
@@ -1623,9 +1647,11 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -4934,6 +4960,106 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dXUVEngleEarlyAE">
+<span id="_CPPv3N4BODY15dXUVEngleEarlyAE"></span><span id="_CPPv2N4BODY15dXUVEngleEarlyAE"></span><span id="BODY::dXUVEngleEarlyA__double"></span><span class="target" id="struct_b_o_d_y_1af2e76885634e08c5b8b2a04adda6827d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleEarlyA</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dXUVEngleEarlyAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dXUVEngleEarlyBE">
+<span id="_CPPv3N4BODY15dXUVEngleEarlyBE"></span><span id="_CPPv2N4BODY15dXUVEngleEarlyBE"></span><span id="BODY::dXUVEngleEarlyB__double"></span><span class="target" id="struct_b_o_d_y_1acc051c767b590a55d476844ddc29b4aa"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleEarlyB</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dXUVEngleEarlyBE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dXUVEngleEarlyCE">
+<span id="_CPPv3N4BODY15dXUVEngleEarlyCE"></span><span id="_CPPv2N4BODY15dXUVEngleEarlyCE"></span><span id="BODY::dXUVEngleEarlyC__double"></span><span class="target" id="struct_b_o_d_y_1a5ee6e1b884979f97e76a1e3b6c180aa2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleEarlyC</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dXUVEngleEarlyCE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dXUVEngleEarlyDE">
+<span id="_CPPv3N4BODY15dXUVEngleEarlyDE"></span><span id="_CPPv2N4BODY15dXUVEngleEarlyDE"></span><span id="BODY::dXUVEngleEarlyD__double"></span><span class="target" id="struct_b_o_d_y_1a1d704c0aed58710756e7db95b90efc5d"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleEarlyD</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dXUVEngleEarlyDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY17dXUVEngleMidLateAE">
+<span id="_CPPv3N4BODY17dXUVEngleMidLateAE"></span><span id="_CPPv2N4BODY17dXUVEngleMidLateAE"></span><span id="BODY::dXUVEngleMidLateA__double"></span><span class="target" id="struct_b_o_d_y_1a038a2ae3fddbb2127b7c26de83143144"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleMidLateA</span></span></span><a class="headerlink" href="#_CPPv4N4BODY17dXUVEngleMidLateAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY17dXUVEngleMidLateBE">
+<span id="_CPPv3N4BODY17dXUVEngleMidLateBE"></span><span id="_CPPv2N4BODY17dXUVEngleMidLateBE"></span><span id="BODY::dXUVEngleMidLateB__double"></span><span class="target" id="struct_b_o_d_y_1af96e8c752a6e247dff258b31325227d1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleMidLateB</span></span></span><a class="headerlink" href="#_CPPv4N4BODY17dXUVEngleMidLateBE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY17dXUVEngleMidLateCE">
+<span id="_CPPv3N4BODY17dXUVEngleMidLateCE"></span><span id="_CPPv2N4BODY17dXUVEngleMidLateCE"></span><span id="BODY::dXUVEngleMidLateC__double"></span><span class="target" id="struct_b_o_d_y_1a04a1a2edf2b03bda660c146f651df094"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleMidLateC</span></span></span><a class="headerlink" href="#_CPPv4N4BODY17dXUVEngleMidLateCE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY17dXUVEngleMidLateDE">
+<span id="_CPPv3N4BODY17dXUVEngleMidLateDE"></span><span id="_CPPv2N4BODY17dXUVEngleMidLateDE"></span><span id="BODY::dXUVEngleMidLateD__double"></span><span class="target" id="struct_b_o_d_y_1acdbc44fd1ee28981524d96c0e30ff0e2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dXUVEngleMidLateD</span></span></span><a class="headerlink" href="#_CPPv4N4BODY17dXUVEngleMidLateDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dRotEngleEarlyAE">
+<span id="_CPPv3N4BODY15dRotEngleEarlyAE"></span><span id="_CPPv2N4BODY15dRotEngleEarlyAE"></span><span id="BODY::dRotEngleEarlyA__double"></span><span class="target" id="struct_b_o_d_y_1aeceb686fa0fed9fa12b605a1a98ca9e9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleEarlyA</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dRotEngleEarlyAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dRotEngleEarlyBE">
+<span id="_CPPv3N4BODY15dRotEngleEarlyBE"></span><span id="_CPPv2N4BODY15dRotEngleEarlyBE"></span><span id="BODY::dRotEngleEarlyB__double"></span><span class="target" id="struct_b_o_d_y_1a1cd44cbe0d328f8e3c4eb5dc940086ce"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleEarlyB</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dRotEngleEarlyBE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dRotEngleEarlyCE">
+<span id="_CPPv3N4BODY15dRotEngleEarlyCE"></span><span id="_CPPv2N4BODY15dRotEngleEarlyCE"></span><span id="BODY::dRotEngleEarlyC__double"></span><span class="target" id="struct_b_o_d_y_1a9b8ab22ac3a4b20b65085337f26a9ccc"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleEarlyC</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dRotEngleEarlyCE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY15dRotEngleEarlyDE">
+<span id="_CPPv3N4BODY15dRotEngleEarlyDE"></span><span id="_CPPv2N4BODY15dRotEngleEarlyDE"></span><span id="BODY::dRotEngleEarlyD__double"></span><span class="target" id="struct_b_o_d_y_1aae9ac059d02c1f2c21ba435105d5a92f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleEarlyD</span></span></span><a class="headerlink" href="#_CPPv4N4BODY15dRotEngleEarlyDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dRotEngleMidAE">
+<span id="_CPPv3N4BODY13dRotEngleMidAE"></span><span id="_CPPv2N4BODY13dRotEngleMidAE"></span><span id="BODY::dRotEngleMidA__double"></span><span class="target" id="struct_b_o_d_y_1a08d8d60a0cdaf63ad9f8bda6aad5cd89"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleMidA</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dRotEngleMidAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dRotEngleMidBE">
+<span id="_CPPv3N4BODY13dRotEngleMidBE"></span><span id="_CPPv2N4BODY13dRotEngleMidBE"></span><span id="BODY::dRotEngleMidB__double"></span><span class="target" id="struct_b_o_d_y_1abe1a90551dbee5771ffa4160258d7909"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleMidB</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dRotEngleMidBE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dRotEngleMidCE">
+<span id="_CPPv3N4BODY13dRotEngleMidCE"></span><span id="_CPPv2N4BODY13dRotEngleMidCE"></span><span id="BODY::dRotEngleMidC__double"></span><span class="target" id="struct_b_o_d_y_1a604e55ed9cd29d6e3c0c0da9f8cd2f08"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleMidC</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dRotEngleMidCE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dRotEngleMidDE">
+<span id="_CPPv3N4BODY13dRotEngleMidDE"></span><span id="_CPPv2N4BODY13dRotEngleMidDE"></span><span id="BODY::dRotEngleMidD__double"></span><span class="target" id="struct_b_o_d_y_1a166b2fb476d7961cb344311b40e63be0"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleMidD</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dRotEngleMidDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY14dRotEngleLateAE">
+<span id="_CPPv3N4BODY14dRotEngleLateAE"></span><span id="_CPPv2N4BODY14dRotEngleLateAE"></span><span id="BODY::dRotEngleLateA__double"></span><span class="target" id="struct_b_o_d_y_1aeb0c05c85f92fa55cd3a03e1d906e6ae"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleLateA</span></span></span><a class="headerlink" href="#_CPPv4N4BODY14dRotEngleLateAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY14dRotEngleLateBE">
+<span id="_CPPv3N4BODY14dRotEngleLateBE"></span><span id="_CPPv2N4BODY14dRotEngleLateBE"></span><span id="BODY::dRotEngleLateB__double"></span><span class="target" id="struct_b_o_d_y_1a779a2149a58671636c52a5d7237f4587"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleLateB</span></span></span><a class="headerlink" href="#_CPPv4N4BODY14dRotEngleLateBE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY14dRotEngleLateCE">
+<span id="_CPPv3N4BODY14dRotEngleLateCE"></span><span id="_CPPv2N4BODY14dRotEngleLateCE"></span><span id="BODY::dRotEngleLateC__double"></span><span class="target" id="struct_b_o_d_y_1ae487b3e5127368cb816e6a2007e1ee3a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleLateC</span></span></span><a class="headerlink" href="#_CPPv4N4BODY14dRotEngleLateCE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY14dRotEngleLateDE">
+<span id="_CPPv3N4BODY14dRotEngleLateDE"></span><span id="_CPPv2N4BODY14dRotEngleLateDE"></span><span id="BODY::dRotEngleLateD__double"></span><span class="target" id="struct_b_o_d_y_1a4907fca8dc1d1df52c264b064c1f6094"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dRotEngleLateD</span></span></span><a class="headerlink" href="#_CPPv4N4BODY14dRotEngleLateDE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY6bPoiseE">
 <span id="_CPPv3N4BODY6bPoiseE"></span><span id="_CPPv2N4BODY6bPoiseE"></span><span id="BODY::bPoise__i"></span><span class="target" id="struct_b_o_d_y_1ad8096f24f72dd9e2ceba1000d59ab568"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bPoise</span></span></span><a class="headerlink" href="#_CPPv4N4BODY6bPoiseE" title="Link to this definition"></a><br /></dt>
 <dd><p>Apply POISE module? </p>
@@ -6130,6 +6256,42 @@
 <dt class="sig sig-object cpp" id="_CPPv4N4BODY11dFlareSlopeE">
 <span id="_CPPv3N4BODY11dFlareSlopeE"></span><span id="_CPPv2N4BODY11dFlareSlopeE"></span><span id="BODY::dFlareSlope__double"></span><span class="target" id="struct_b_o_d_y_1a3cadabc4974c900e30b84495efbd9b79"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareSlope</span></span></span><a class="headerlink" href="#_CPPv4N4BODY11dFlareSlopeE" title="Link to this definition"></a><br /></dt>
 <dd><p>Flare function slope /FFD angular coefficient </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dFlareSlopeA1E">
+<span id="_CPPv3N4BODY13dFlareSlopeA1E"></span><span id="_CPPv2N4BODY13dFlareSlopeA1E"></span><span id="BODY::dFlareSlopeA1__double"></span><span class="target" id="struct_b_o_d_y_1a4bc72fcd99fefcde68537310f1d48d2a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareSlopeA1</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dFlareSlopeA1E" title="Link to this definition"></a><br /></dt>
+<dd><p>a1 in slope = a1*log10(age_Myr) + a2*M_sun + a3 (Davenport+2019 variable-slope FFD) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dFlareSlopeA2E">
+<span id="_CPPv3N4BODY13dFlareSlopeA2E"></span><span id="_CPPv2N4BODY13dFlareSlopeA2E"></span><span id="BODY::dFlareSlopeA2__double"></span><span class="target" id="struct_b_o_d_y_1a8213dea7f4cac27f92e2c282effcedf3"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareSlopeA2</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dFlareSlopeA2E" title="Link to this definition"></a><br /></dt>
+<dd><p>a2 coefficient; see dFlareSlopeA1 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY13dFlareSlopeA3E">
+<span id="_CPPv3N4BODY13dFlareSlopeA3E"></span><span id="_CPPv2N4BODY13dFlareSlopeA3E"></span><span id="BODY::dFlareSlopeA3__double"></span><span class="target" id="struct_b_o_d_y_1ac7c2fbf99efff56208331e11213ec4d9"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareSlopeA3</span></span></span><a class="headerlink" href="#_CPPv4N4BODY13dFlareSlopeA3E" title="Link to this definition"></a><br /></dt>
+<dd><p>a3 coefficient; see dFlareSlopeA1 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY12dFlareYIntB1E">
+<span id="_CPPv3N4BODY12dFlareYIntB1E"></span><span id="_CPPv2N4BODY12dFlareYIntB1E"></span><span id="BODY::dFlareYIntB1__double"></span><span class="target" id="struct_b_o_d_y_1a00eaacf3ad6218b53341e4fc0a8bf557"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareYIntB1</span></span></span><a class="headerlink" href="#_CPPv4N4BODY12dFlareYIntB1E" title="Link to this definition"></a><br /></dt>
+<dd><p>b1 in yint = b1*log10(age_Myr) + b2*M_sun + b3 (Davenport+2019 variable-slope FFD) </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY12dFlareYIntB2E">
+<span id="_CPPv3N4BODY12dFlareYIntB2E"></span><span id="_CPPv2N4BODY12dFlareYIntB2E"></span><span id="BODY::dFlareYIntB2__double"></span><span class="target" id="struct_b_o_d_y_1a4227d9d7438494e3cc87ef5d69aae9fb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareYIntB2</span></span></span><a class="headerlink" href="#_CPPv4N4BODY12dFlareYIntB2E" title="Link to this definition"></a><br /></dt>
+<dd><p>b2 coefficient; see dFlareYIntB1 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4BODY12dFlareYIntB3E">
+<span id="_CPPv3N4BODY12dFlareYIntB3E"></span><span id="_CPPv2N4BODY12dFlareYIntB3E"></span><span id="BODY::dFlareYIntB3__double"></span><span class="target" id="struct_b_o_d_y_1a26fdf552a6a50a9d63827643fd38a5bb"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dFlareYIntB3</span></span></span><a class="headerlink" href="#_CPPv4N4BODY12dFlareYIntB3E" title="Link to this definition"></a><br /></dt>
+<dd><p>b3 coefficient; see dFlareYIntB1 </p>
 </dd></dl>
 
 <dl class="cpp var">
@@ -10641,8 +10803,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="radheat.html" class="btn btn-neutral float-left" title="radheat" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="distrot.html" class="btn btn-neutral float-right" title="distrot" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="magmoc.html" class="btn btn-neutral float-left" title="magmoc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="body.html" class="btn btn-neutral float-right" title="body" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

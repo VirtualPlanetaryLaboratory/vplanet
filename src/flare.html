@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="galhabit" href="galhabit.html" />
-    <link rel="prev" title="C API" href="../src.html" /> 
+    <link rel="next" title="poise" href="poise.html" />
+    <link rel="prev" title="stellar" href="stellar.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,6 +51,21 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
+<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">flare</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#flare-c">flare.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413BodyCopyFlareP4BODYP4BODYiii"><code class="docutils literal notranslate"><span class="pre">BodyCopyFlare()</span></code></a></li>
@@ -61,6 +76,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418ReadFlareMaxEnergyP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareMaxEnergy()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413ReadFlareYIntP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareYInt()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414ReadFlareSlopeP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareSlope()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv416ReadFlareSlopeA1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareSlopeA1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv416ReadFlareSlopeA2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareSlopeA2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv416ReadFlareSlopeA3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareSlopeA3()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415ReadFlareYIntB1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareYIntB1()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415ReadFlareYIntB2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareYIntB2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415ReadFlareYIntB3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadFlareYIntB3()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418ReadLXUVFlareConstP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"><code class="docutils literal notranslate"><span class="pre">ReadLXUVFlareConst()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv422InitializeOptionsFlareP7OPTIONSA_12fnReadOption"><code class="docutils literal notranslate"><span class="pre">InitializeOptionsFlare()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416ReadOptionsFlareP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMA_12fnReadOptioni"><code class="docutils literal notranslate"><span class="pre">ReadOptionsFlare()</span></code></a></li>
@@ -78,6 +99,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415CountHaltsFlareP4HALTPi"><code class="docutils literal notranslate"><span class="pre">CountHaltsFlare()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415VerifyHaltFlareP4BODYP7CONTROLP7OPTIONSiPi"><code class="docutils literal notranslate"><span class="pre">VerifyHaltFlare()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteLXUVFlare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv418WriteFlareSlopeOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteFlareSlopeOUT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv417WriteFlareYIntOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteFlareYIntOUT()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415WriteFlareFreq1P4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteFlareFreq1()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415WriteFlareFreq2P4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteFlareFreq2()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415WriteFlareFreq3P4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"><code class="docutils literal notranslate"><span class="pre">WriteFlareFreq3()</span></code></a></li>
@@ -100,6 +123,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413fdBandPassXUVP4BODYid"><code class="docutils literal notranslate"><span class="pre">fdBandPassXUV()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv416fdBandPassKeplerP4BODYid"><code class="docutils literal notranslate"><span class="pre">fdBandPassKepler()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411fdDavenportddddd"><code class="docutils literal notranslate"><span class="pre">fdDavenport()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv415fdFlareSlopeOUTP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdFlareSlopeOUT()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv414fdFlareYIntOUTP4BODYi"><code class="docutils literal notranslate"><span class="pre">fdFlareYIntOUT()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv45fdFFDP4BODYiddd"><code class="docutils literal notranslate"><span class="pre">fdFFD()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv417fdEnergyJoulesXUVd"><code class="docutils literal notranslate"><span class="pre">fdEnergyJoulesXUV()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv411fdLXUVFlareP4BODYdi"><code class="docutils literal notranslate"><span class="pre">fdLXUVFlare()</span></code></a></li>
@@ -132,6 +157,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLAREENERGYBIN"><code class="docutils literal notranslate"><span class="pre">OPT_FLAREENERGYBIN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLAREBANDPASS"><code class="docutils literal notranslate"><span class="pre">OPT_FLAREBANDPASS</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OPT_LXUVFLARECONST"><code class="docutils literal notranslate"><span class="pre">OPT_LXUVFLARECONST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLARESLOPEA1"><code class="docutils literal notranslate"><span class="pre">OPT_FLARESLOPEA1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLARESLOPEA2"><code class="docutils literal notranslate"><span class="pre">OPT_FLARESLOPEA2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLARESLOPEA3"><code class="docutils literal notranslate"><span class="pre">OPT_FLARESLOPEA3</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLAREYINTB1"><code class="docutils literal notranslate"><span class="pre">OPT_FLAREYINTB1</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLAREYINTB2"><code class="docutils literal notranslate"><span class="pre">OPT_FLAREYINTB2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OPT_FLAREYINTB3"><code class="docutils literal notranslate"><span class="pre">OPT_FLAREYINTB3</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OUTSTARTFLARE"><code class="docutils literal notranslate"><span class="pre">OUTSTARTFLARE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OUTENDFLARE"><code class="docutils literal notranslate"><span class="pre">OUTENDFLARE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OUT_LXUVFLARE"><code class="docutils literal notranslate"><span class="pre">OUT_LXUVFLARE</span></code></a></li>
@@ -149,33 +180,20 @@
 <li class="toctree-l4"><a class="reference internal" href="#c.OUT_FLAREENERGYMIN"><code class="docutils literal notranslate"><span class="pre">OUT_FLAREENERGYMIN</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OUT_FLAREENERGYMID"><code class="docutils literal notranslate"><span class="pre">OUT_FLAREENERGYMID</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.OUT_FLAREENERGYMAX"><code class="docutils literal notranslate"><span class="pre">OUT_FLAREENERGYMAX</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OUT_FLAREYINTOUT"><code class="docutils literal notranslate"><span class="pre">OUT_FLAREYINTOUT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.OUT_FLARESLOPEOUT"><code class="docutils literal notranslate"><span class="pre">OUT_FLARESLOPEOUT</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
 <li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
 <li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stellar.html">stellar</a></li>
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -275,6 +293,36 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416ReadFlareSlopeA1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadFlareSlopeA1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadFlareSlopeA1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareSlopeA1__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a4fa5a738b732c6512732d97df9e163e5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareSlopeA1</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadFlareSlopeA1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416ReadFlareSlopeA2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadFlareSlopeA2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadFlareSlopeA2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareSlopeA2__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a2ba3d4c3b1286f17461e1e399d98bfb4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareSlopeA2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadFlareSlopeA2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416ReadFlareSlopeA3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv316ReadFlareSlopeA3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv216ReadFlareSlopeA3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareSlopeA3__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a372ea69a387d4b1e8faf786a06aab5a6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareSlopeA3</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ReadFlareSlopeA3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ReadFlareYIntB1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadFlareYIntB1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadFlareYIntB1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareYIntB1__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a70725e6360b7ea2af8f296a6ce7fd0d2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareYIntB1</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadFlareYIntB1P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ReadFlareYIntB2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadFlareYIntB2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadFlareYIntB2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareYIntB2__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a1f69784da2ec11d7b63f8ea577c39146"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareYIntB2</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadFlareYIntB2P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ReadFlareYIntB3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
+<span id="_CPPv315ReadFlareYIntB3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv215ReadFlareYIntB3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadFlareYIntB3__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a111020bcbba2f8605d08a1b2312c0200"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadFlareYIntB3</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ReadFlareYIntB3P4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv418ReadLXUVFlareConstP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi">
 <span id="_CPPv318ReadLXUVFlareConstP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="_CPPv218ReadLXUVFlareConstP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi"></span><span id="ReadLXUVFlareConst__BODYP.CONTROLP.FILESP.OPTIONSP.SYSTEMP.i"></span><span class="target" id="flare_8c_1a7feffa67eddba11e54606dd34ff12230"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReadLXUVFlareConst</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ReadLXUVFlareConstP4BODYP7CONTROLP5FILESP7OPTIONSP6SYSTEMi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -357,6 +405,16 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv414WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc">
 <span id="_CPPv314WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="_CPPv214WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="WriteLXUVFlare__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cPP"></span><span class="target" id="flare_8c_1a97dd946e3a353189b162e2861c44676e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteLXUVFlare</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414WriteLXUVFlareP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418WriteFlareSlopeOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc">
+<span id="_CPPv318WriteFlareSlopeOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="_CPPv218WriteFlareSlopeOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="WriteFlareSlopeOUT__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cPP"></span><span class="target" id="flare_8c_1a357bf1c7c12476388f59991c1c51d0cb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteFlareSlopeOUT</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418WriteFlareSlopeOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv417WriteFlareYIntOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc">
+<span id="_CPPv317WriteFlareYIntOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="_CPPv217WriteFlareYIntOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc"></span><span id="WriteFlareYIntOUT__BODYP.CONTROLP.OUTPUTP.SYSTEMP.UNITSP.UPDATEP.i.doubleP.cPP"></span><span class="target" id="flare_8c_1a30f8cf6183c0e7cc0f66baa4ac558d40"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WriteFlareYIntOUT</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46OUTPUT" title="OUTPUT"><span class="n"><span class="pre">OUTPUT</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46SYSTEM" title="SYSTEM"><span class="n"><span class="pre">SYSTEM</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">system</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45UNITS" title="UNITS"><span class="n"><span class="pre">UNITS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">units</span></span>, <a class="reference internal" href="vplanet.html#_CPPv46UPDATE" title="UPDATE"><span class="n"><span class="pre">UPDATE</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">update</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">dTmp</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cUnit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv417WriteFlareYIntOUTP4BODYP7CONTROLP6OUTPUTP6SYSTEMP5UNITSP6UPDATEiPdPPc" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -467,6 +525,16 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv411fdDavenportddddd">
 <span id="_CPPv311fdDavenportddddd"></span><span id="_CPPv211fdDavenportddddd"></span><span id="fdDavenport__double.double.double.double.double"></span><span class="target" id="flare_8c_1a958ce73d7519581f983f7481b72719ef"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdDavenport</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dA1</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dA2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dA3</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStarAge</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dStarMass</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv411fdDavenportddddd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415fdFlareSlopeOUTP4BODYi">
+<span id="_CPPv315fdFlareSlopeOUTP4BODYi"></span><span id="_CPPv215fdFlareSlopeOUTP4BODYi"></span><span id="fdFlareSlopeOUT__BODYP.i"></span><span class="target" id="flare_8c_1a86bace127bcaab44029501f28ace4ba7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdFlareSlopeOUT</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415fdFlareSlopeOUTP4BODYi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414fdFlareYIntOUTP4BODYi">
+<span id="_CPPv314fdFlareYIntOUTP4BODYi"></span><span id="_CPPv214fdFlareYIntOUTP4BODYi"></span><span id="fdFlareYIntOUT__BODYP.i"></span><span class="target" id="flare_8c_1ac716f15e582ccc6f2d948631c5dd75d5"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fdFlareYIntOUT</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414fdFlareYIntOUTP4BODYi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -629,6 +697,36 @@
 <dd></dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLARESLOPEA1">
+<span class="target" id="flare_8h_1a859003053aea52d27850c5aa0b9ab5c8"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLARESLOPEA1</span></span></span><a class="headerlink" href="#c.OPT_FLARESLOPEA1" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLARESLOPEA2">
+<span class="target" id="flare_8h_1ae9bff498c982fb7df8ba612c8986aa62"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLARESLOPEA2</span></span></span><a class="headerlink" href="#c.OPT_FLARESLOPEA2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLARESLOPEA3">
+<span class="target" id="flare_8h_1a6a39f3dcb6f8770541bd2bac209f1ca4"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLARESLOPEA3</span></span></span><a class="headerlink" href="#c.OPT_FLARESLOPEA3" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLAREYINTB1">
+<span class="target" id="flare_8h_1a96670bdb1942fde3358a238b4344b0c8"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLAREYINTB1</span></span></span><a class="headerlink" href="#c.OPT_FLAREYINTB1" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLAREYINTB2">
+<span class="target" id="flare_8h_1af83c6887eb86d3955799619168c6fafb"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLAREYINTB2</span></span></span><a class="headerlink" href="#c.OPT_FLAREYINTB2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OPT_FLAREYINTB3">
+<span class="target" id="flare_8h_1aa2b9f9a049293ebbbae286629061acbd"></span><span class="sig-name descname"><span class="n"><span class="pre">OPT_FLAREYINTB3</span></span></span><a class="headerlink" href="#c.OPT_FLAREYINTB3" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.OUTSTARTFLARE">
 <span class="target" id="flare_8h_1a2000d3344aaf9407c5f8e411ca2a8cca"></span><span class="sig-name descname"><span class="n"><span class="pre">OUTSTARTFLARE</span></span></span><a class="headerlink" href="#c.OUTSTARTFLARE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
@@ -713,6 +811,16 @@
 <span class="target" id="flare_8h_1ac5bf433d90362ad2c6d8fb239c6c1103"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_FLAREENERGYMAX</span></span></span><a class="headerlink" href="#c.OUT_FLAREENERGYMAX" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OUT_FLAREYINTOUT">
+<span class="target" id="flare_8h_1ae5d776f13ecfa7c30376ed76a66672df"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_FLAREYINTOUT</span></span></span><a class="headerlink" href="#c.OUT_FLAREYINTOUT" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.OUT_FLARESLOPEOUT">
+<span class="target" id="flare_8h_1a8ebf375fab28111557efdb03ae3eb63e"></span><span class="sig-name descname"><span class="n"><span class="pre">OUT_FLARESLOPEOUT</span></span></span><a class="headerlink" href="#c.OUT_FLARESLOPEOUT" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
 </div>
 </section>
 </section>
@@ -721,8 +829,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../src.html" class="btn btn-neutral float-left" title="C API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="galhabit.html" class="btn btn-neutral float-right" title="galhabit" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="stellar.html" class="btn btn-neutral float-left" title="stellar" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="poise.html" class="btn btn-neutral float-right" title="poise" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

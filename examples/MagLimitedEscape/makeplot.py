@@ -69,17 +69,23 @@ def fdaPositiveOrNan(daValues):
 
 def fnPlotMassLossPanel(ax, daConstRows, daThermRows):
     """Bulk atmospheric mass loss for Earth: per-mechanism contributions
-    (PolarCap, Cusp) plus the well-mixed total. Each mechanism's
-    contribution to the bulk loss is 4 * Q * m_proton, since the bulk
-    atmosphere is partitioned equally across H2O, O2, CO2, and H. The
-    Total line reads MagTotalLossRate directly from the forward file."""
+    plus the well-mixed total. Each mechanism's contribution to the bulk
+    loss is N * Q * m_proton, since the bulk atmosphere is partitioned
+    equally across N=5 species. The Total line reads DMagLimitedMassDt
+    directly from the forward file. Per-mechanism columns set to -1 by
+    the inactive model are masked to NaN."""
     daTimeConstGyr = daConstRows[:, COLS_CONST["Time"]] / 1e9
     daTimeThermGyr = daThermRows[:, COLS_THERMINT["Time"]] / 1e9
     dBulkFactor = MAG_NUM_WELL_MIXED_SPECIES * PROTON_MASS_KG
     for sMechanism in MECHANISMS:
         sColor = MECHANISM_COLORS[sMechanism]
-        daConstBulk = np.abs(daConstRows[:, COLS_CONST[sMechanism]]) * dBulkFactor
-        daThermBulk = np.abs(daThermRows[:, COLS_THERMINT[sMechanism]]) * dBulkFactor
+        daConstRaw = daConstRows[:, COLS_CONST[sMechanism]]
+        daThermRaw = daThermRows[:, COLS_THERMINT[sMechanism]]
+        # Mask the -1 sentinel emitted by the inactive model.
+        daConstBulk = np.where(daConstRaw == -1, np.nan,
+                               np.abs(daConstRaw) * dBulkFactor)
+        daThermBulk = np.where(daThermRaw == -1, np.nan,
+                               np.abs(daThermRaw) * dBulkFactor)
         ax.plot(daTimeConstGyr, daConstBulk, color=sColor, linestyle="-",
                 label=f"{sMechanism} (const B)")
         ax.plot(daTimeThermGyr, daThermBulk, color=sColor, linestyle="--",

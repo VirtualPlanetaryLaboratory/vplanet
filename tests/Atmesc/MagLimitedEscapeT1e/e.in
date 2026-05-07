@@ -24,12 +24,13 @@ dJeansTime        -10
 bUseEnergyLimited 1
 
 # Gunell+2018 magnetic-limited escape
-bMagLimitedEscape 1
-dMagField         -1
+bMagLimitedEscape       1
+sMagLimitedEscapeModel  Gunell18
+dMagField               -1
 dStellarWindDensity   5.79e9
 dStellarWindVelocity  6.04e5
 dExobaseTemperature   900
 
 saOutputOrder Time -MagField -MagPauseRadAtmEsc -MagPickupRate -CrossFieldRate $
-              -PolarCapRate -CuspRate -DriscollRate -MagTotalLossRate $
+              -PolarCapRate -CuspRate -DriscollRate -DMagLimitedMassDt $
               -SurfWaterMass -OxygenMass -EnvelopeMass -CO2Mass -N2Mass

@@ -283,7 +283,11 @@ struct BODY {
   double dPolarCapRate;           /**< Polar-cap escape rate (particles/s) */
   double dCuspRate;               /**< Cusp escape rate (particles/s) */
   double dDriscollRate;           /**< Driscoll magnetic-limited rate (particles/s) */
-  double dMagTotalLossRate;       /**< Total bulk atmospheric loss rate (kg/s) */
+  double dDMagLimitedMassDt;      /**< Bulk atmospheric mass loss rate (kg/s)
+                                       from selected magnetic-limited model */
+  int iMagLimitedEscapeModel;     /**< 0 = Gunell18 (default), 1 = Driscoll13 */
+  double (*fdMagLimitedEscapeDt)(BODY *, int); /**< pointer to chosen
+                                                    model implementation */
   double dMagPauseRadAtmEsc;      /**< Magnetopause stand-off radius (m) */
 
   /* BINARY parameters */

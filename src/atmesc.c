@@ -86,7 +86,9 @@ void BodyCopyAtmEsc(BODY *dest, BODY *src, int foo, int iNumBodies, int iBody) {
   dest[iBody].dPolarCapRate        = src[iBody].dPolarCapRate;
   dest[iBody].dCuspRate            = src[iBody].dCuspRate;
   dest[iBody].dDriscollRate        = src[iBody].dDriscollRate;
-  dest[iBody].dMagTotalLossRate    = src[iBody].dMagTotalLossRate;
+  dest[iBody].dDMagLimitedMassDt   = src[iBody].dDMagLimitedMassDt;
+  dest[iBody].iMagLimitedEscapeModel = src[iBody].iMagLimitedEscapeModel;
+  dest[iBody].fdMagLimitedEscapeDt   = src[iBody].fdMagLimitedEscapeDt;
   dest[iBody].dMagPauseRadAtmEsc   = src[iBody].dMagPauseRadAtmEsc;
 }
 
@@ -1085,6 +1087,38 @@ void ReadCO2Mass(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 }
 
 /**
+Read which magnetic-limited escape model to use. Default Gunell18.
+*/
+void ReadMagLimitedEscapeModel(BODY *body, CONTROL *control, FILES *files,
+                               OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "gunell18", 8)) {
+      body[iFile - 1].iMagLimitedEscapeModel = MAG_MODEL_GUNELL18;
+    } else if (!memcmp(sLower(cTmp), "driscoll13", 10)) {
+      body[iFile - 1].iMagLimitedEscapeModel = MAG_MODEL_DRISCOLL13;
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are "
+                "Gunell18 or Driscoll13.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].iMagLimitedEscapeModel = MAG_MODEL_GUNELL18;
+  }
+}
+
+/**
 Initialize the user options for the atmospheric escape model.
 
 @param options A pointer to the OPTIONS instance
@@ -1509,6 +1543,24 @@ void InitializeOptionsAtmEsc(OPTIONS *options, fnReadOption fnRead[]) {
   options[OPT_N2MASS].iType      = 2;
   options[OPT_N2MASS].bMultiFile = 1;
   fnRead[OPT_N2MASS]             = &ReadN2Mass;
+
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPEMODEL].cName,
+                    "sMagLimitedEscapeModel");
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPEMODEL].cDescr,
+                    "Magnetic-limited atmospheric escape model");
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPEMODEL].cDefault, "Gunell18");
+  fvFormattedString(&options[OPT_MAGLIMITEDESCAPEMODEL].cValues,
+                    "Gunell18 Driscoll13");
+  options[OPT_MAGLIMITEDESCAPEMODEL].iType      = 3;
+  options[OPT_MAGLIMITEDESCAPEMODEL].bMultiFile = 1;
+  fnRead[OPT_MAGLIMITEDESCAPEMODEL]             = &ReadMagLimitedEscapeModel;
+  fvFormattedString(
+        &options[OPT_MAGLIMITEDESCAPEMODEL].cLongDescr,
+        "Selects which magnetic-limited escape model drives the bulk loss "
+        "rate when bMagLimitedEscape is on. Gunell18 sums the four Gunell "
+        "et al. (2018) mechanisms (Pickup, Cross-field, Polar Cap, Cusp); "
+        "Driscoll13 uses the Driscoll & Bercovici (2013) magnetic limit. "
+        "Per-mechanism diagnostics for the inactive model read -1.");
 }
 
 /**
@@ -1629,6 +1681,36 @@ void VerifyN2Mass(BODY *body, OPTIONS *options, UPDATE *update, double dAge,
 
   update[iBody].pdDN2MassDtAtmesc =
         &update[iBody].daDerivProc[update[iBody].iN2Mass][0];
+}
+
+/**
+Resolve the magnetic-limited escape model function pointer from
+iMagLimitedEscapeModel. Called from VerifyAtmEsc when bMagLimitedEscape
+is on. Future: add forbidden-combination checks here.
+*/
+void VerifyMagLimitedEscape(BODY *body, CONTROL *control, OPTIONS *options,
+                            int iBody) {
+  if (!body[iBody].bMagLimitedEscape) {
+    body[iBody].fdMagLimitedEscapeDt = NULL;
+    return;
+  }
+  switch (body[iBody].iMagLimitedEscapeModel) {
+    case MAG_MODEL_GUNELL18:
+      body[iBody].fdMagLimitedEscapeDt = &fdMagLimitedEscapeDtGunell18;
+      break;
+    case MAG_MODEL_DRISCOLL13:
+      body[iBody].fdMagLimitedEscapeDt = &fdMagLimitedEscapeDtDriscoll13;
+      break;
+    default:
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown magnetic-limited escape model code %d. "
+                "Valid options for sMagLimitedEscapeModel are Gunell18 "
+                "or Driscoll13.\n",
+                body[iBody].iMagLimitedEscapeModel);
+      }
+      exit(EXIT_INPUT);
+  }
 }
 
 /**
@@ -2065,10 +2147,12 @@ void fnPropsAuxAtmEsc(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   body[iBody].dAtmEscXi    = fdAtmEscXi(body, iBody);
   body[iBody].dKTide       = fdKTide(body, io, evolve->iNumBodies, iBody);
 
-  // Gunell+2018 magnetic-limited escape: precompute rates so derivatives
-  // can read them without recomputing five times per step.
+  // Magnetic-limited escape: precompute the bulk loss rate via the
+  // selected model so per-species derivatives can read the cached value
+  // without recomputing the mechanisms per equation.
   if (body[iBody].bMagLimitedEscape) {
-    fnMagLimitedRates(body, iBody);
+    body[iBody].dDMagLimitedMassDt =
+          body[iBody].fdMagLimitedEscapeDt(body, iBody);
   }
 
   // The XUV flux
@@ -2355,9 +2439,9 @@ void AssignAtmEscDerivatives(BODY *body, EVOLVE *evolve, UPDATE *update,
   // Gunell+2018 magnetic-limited escape replaces the standard photolysis-
   // driven derivatives with a well-mixed bulk loss split equally across
   // five species: water, oxygen, CO2, hydrogen, and N2. The bulk total
-  // dMagTotalLossRate is N=MAG_NUM_WELL_MIXED_SPECIES times the H-equivalent
+  // dDMagLimitedMassDt is N=MAG_NUM_WELL_MIXED_SPECIES times the H-equivalent
   // rate from the Gunell mechanisms, and each species derivative returns
-  // -dMagTotalLossRate/N.
+  // -dDMagLimitedMassDt/N.
   if (body[iBody].bMagLimitedEscape) {
     if (body[iBody].dSurfaceWaterMass > 0) {
       fnUpdate[iBody][update[iBody].iSurfaceWaterMass][0] =
@@ -2702,8 +2786,9 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     body[iBody].dSolidMass = body[iBody].dMass - body[iBody].dEnvelopeMass;
   }
 
-  // Gunell magnetic-limited escape: initialize CO2 and N2 update slots
-  // so the integrator's iaBody/iNumBodies arrays are populated.
+  // Magnetic-limited escape: initialize CO2 and N2 update slots so the
+  // integrator's iaBody/iNumBodies arrays are populated, and resolve the
+  // model function pointer from sMagLimitedEscapeModel.
   if (body[iBody].bMagLimitedEscape) {
     if (body[iBody].dCO2Mass > 0) {
       VerifyCO2Mass(body, options, update, body[iBody].dAge, iBody);
@@ -2711,6 +2796,7 @@ void VerifyAtmEsc(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (body[iBody].dN2Mass > 0) {
       VerifyN2Mass(body, options, update, body[iBody].dAge, iBody);
     }
+    VerifyMagLimitedEscape(body, control, options, iBody);
   }
 
   // Setup radius and other radii of interest
@@ -3205,20 +3291,16 @@ double fdDriscollMagLimitedRate(BODY *body, int iBody, double dRadMP) {
 }
 
 /**
-Compute and store all five Gunell+2018 escape rates plus the bulk
-atmospheric loss rate.
+Gunell+2018 magnetic-limited escape: bulk atmospheric mass loss rate (kg/s).
 
-Conventions:
-- Each Q from the Gunell mechanisms is an ion escape rate (particles/s),
-  treated here as an H-equivalent rate (multiplied by proton mass to get
-  kg/s of H per mechanism).
-- Under the well-mixed assumption, the total atmospheric mass loss is N
-  times the H-equivalent rate, where N = MAG_NUM_WELL_MIXED_SPECIES = 5
-  (water, oxygen, CO2, hydrogen, N2). With Gunell+2018 modern-Earth
-  parameters this gives ~1.4 kg/s, matching the paper's reported value.
-- Each species loses mass at total/N kg/s.
+Sums the four Gunell mechanisms (Pickup, CrossField, PolarCap, Cusp),
+multiplies by proton mass and the well-mixed species count, and returns
+the bulk loss rate. Each Gunell mechanism's H-equivalent rate is stored
+in its body field so the per-mechanism outputs reflect what's active.
+The Driscoll diagnostic is set to -1 as a sentinel ("not used by this
+model") so plot scripts can mask it.
 */
-void fnMagLimitedRates(BODY *body, int iBody) {
+double fdMagLimitedEscapeDtGunell18(BODY *body, int iBody) {
   double dRadMP = fdMagnetopauseStandoff(body[iBody].dMagField,
                                          body[iBody].dStellarWindDensity,
                                          body[iBody].dStellarWindVelocity,
@@ -3228,15 +3310,33 @@ void fnMagLimitedRates(BODY *body, int iBody) {
   body[iBody].dCrossFieldRate    = fdGunellCrossFieldRate(body, iBody, dRadMP);
   body[iBody].dPolarCapRate      = fdGunellPolarCapRate(body, iBody);
   body[iBody].dCuspRate          = fdGunellCuspRate(body, iBody, dRadMP);
-  body[iBody].dDriscollRate = fdDriscollMagLimitedRate(body, iBody, dRadMP);
+  body[iBody].dDriscollRate      = -1.0; /* Inactive under Gunell18 */
 
   double dTotalParticles = body[iBody].dMagPickupRate +
                            body[iBody].dCrossFieldRate +
-                           body[iBody].dPolarCapRate + body[iBody].dCuspRate +
-                           body[iBody].dDriscollRate;
-  double dPerSpeciesKgPerSec = dTotalParticles * MAG_PROTON_MASS;
-  body[iBody].dMagTotalLossRate =
-        MAG_NUM_WELL_MIXED_SPECIES * dPerSpeciesKgPerSec;
+                           body[iBody].dPolarCapRate + body[iBody].dCuspRate;
+  return MAG_NUM_WELL_MIXED_SPECIES * dTotalParticles * MAG_PROTON_MASS;
+}
+
+/**
+Driscoll & Bercovici 2013 magnetic-limited escape: bulk atmospheric mass
+loss rate (kg/s) from the single Driscoll formula. The Gunell mechanism
+diagnostics are set to -1 as a sentinel under this model.
+*/
+double fdMagLimitedEscapeDtDriscoll13(BODY *body, int iBody) {
+  double dRadMP = fdMagnetopauseStandoff(body[iBody].dMagField,
+                                         body[iBody].dStellarWindDensity,
+                                         body[iBody].dStellarWindVelocity,
+                                         1.0);
+  body[iBody].dMagPauseRadAtmEsc = dRadMP;
+  body[iBody].dMagPickupRate     = -1.0; /* Inactive under Driscoll13 */
+  body[iBody].dCrossFieldRate    = -1.0;
+  body[iBody].dPolarCapRate      = -1.0;
+  body[iBody].dCuspRate          = -1.0;
+  body[iBody].dDriscollRate = fdDriscollMagLimitedRate(body, iBody, dRadMP);
+
+  return MAG_NUM_WELL_MIXED_SPECIES * body[iBody].dDriscollRate *
+         MAG_PROTON_MASS;
 }
 
 /**
@@ -3245,14 +3345,14 @@ total bulk loss rate. fnMagLimitedRates is called once per step in
 fnPropsAuxAtmEsc, so derivatives just read the cached rate.
 */
 double fdDSurfaceWaterMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+  return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /**
 Atmospheric oxygen derivative under Gunell magnetic-limited escape.
 */
 double fdDOxygenMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+  return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /**
@@ -3260,7 +3360,7 @@ Envelope-mass (hydrogen) derivative under Gunell magnetic-limited escape.
 */
 double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
   body[iaBody[0]].dEnvMassDt =
-        -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+        -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
   return body[iaBody[0]].dEnvMassDt;
 }
 
@@ -3268,14 +3368,14 @@ double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
 Atmospheric CO2 derivative under Gunell magnetic-limited escape.
 */
 double fdDCO2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+  return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /**
 Atmospheric N2 derivative under Gunell magnetic-limited escape.
 */
 double fdDN2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
-  return -body[iaBody[0]].dMagTotalLossRate / MAG_NUM_WELL_MIXED_SPECIES;
+  return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
 /************* ATMESC Outputs ******************/
@@ -4198,10 +4298,10 @@ void WriteDriscollRate(BODY *body, CONTROL *control, OUTPUT *output,
   fvFormattedString(cUnit, "/sec");
 }
 
-void WriteMagTotalLossRate(BODY *body, CONTROL *control, OUTPUT *output,
+void WriteDMagLimitedMassDt(BODY *body, CONTROL *control, OUTPUT *output,
                            SYSTEM *system, UNITS *units, UPDATE *update,
                            int iBody, double *dTmp, char **cUnit) {
-  *dTmp = body[iBody].dMagTotalLossRate;
+  *dTmp = body[iBody].dDMagLimitedMassDt;
   fvFormattedString(cUnit, "kg/s");
 }
 
@@ -4611,15 +4711,16 @@ void InitializeOutputAtmEsc(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_DRISCOLLRATE].iModuleBit = ATMESC;
   fnWrite[OUT_DRISCOLLRATE]           = &WriteDriscollRate;
 
-  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cName, "MagTotalLossRate");
-  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cDescr,
-                    "Total bulk atmospheric mass loss rate (Gunell+2018)");
-  fvFormattedString(&output[OUT_MAGTOTALLOSSRATE].cNeg, "kg/s");
-  output[OUT_MAGTOTALLOSSRATE].bNeg       = 1;
-  output[OUT_MAGTOTALLOSSRATE].dNeg       = 1;
-  output[OUT_MAGTOTALLOSSRATE].iNum       = 1;
-  output[OUT_MAGTOTALLOSSRATE].iModuleBit = ATMESC;
-  fnWrite[OUT_MAGTOTALLOSSRATE]           = &WriteMagTotalLossRate;
+  fvFormattedString(&output[OUT_DMAGLIMITEDMASSDT].cName, "DMagLimitedMassDt");
+  fvFormattedString(&output[OUT_DMAGLIMITEDMASSDT].cDescr,
+                    "Magnetic-limited bulk atmospheric mass loss rate "
+                    "from selected (Gunell18 or Driscoll13) model");
+  fvFormattedString(&output[OUT_DMAGLIMITEDMASSDT].cNeg, "kg/s");
+  output[OUT_DMAGLIMITEDMASSDT].bNeg       = 1;
+  output[OUT_DMAGLIMITEDMASSDT].dNeg       = 1;
+  output[OUT_DMAGLIMITEDMASSDT].iNum       = 1;
+  output[OUT_DMAGLIMITEDMASSDT].iModuleBit = ATMESC;
+  fnWrite[OUT_DMAGLIMITEDMASSDT]           = &WriteDMagLimitedMassDt;
 
   fvFormattedString(&output[OUT_MAGPAUSERADATMESC].cName,
                     "MagPauseRadAtmEsc");

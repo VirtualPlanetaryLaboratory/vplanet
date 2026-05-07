@@ -84,6 +84,13 @@
 #define OPT_EXOBASETEMP 1245        /**< Exobase temperature (K) */
 #define OPT_CO2MASS 1246            /**< Initial atmospheric CO2 mass (kg) */
 #define OPT_N2MASS 1247             /**< Initial atmospheric N2 mass (kg) */
+#define OPT_MAGLIMITEDESCAPEMODEL 1248 /**< Magnetic-limited escape model */
+
+/* Magnetic-limited escape model selectors. Stored in
+   body[iBody].iMagLimitedEscapeModel; the function pointer
+   body[iBody].fdMagLimitedEscapeDt is resolved at verify time. */
+#define MAG_MODEL_GUNELL18  0  /**< Gunell+2018 (4 mechanisms summed) */
+#define MAG_MODEL_DRISCOLL13 1 /**< Driscoll & Bercovici 2013 (single formula) */
 
 /* Hard-coded reference constants for the Gunell+2018 formulas. These are the
    values used in the source notebook (Combined for Paper); they appear as
@@ -234,7 +241,7 @@ void FinalizeUpdateMassAtmEsc(BODY *, UPDATE *, int *, int, int, int);
 #define OUT_POLARCAPRATE      1272 /**< Polar-cap escape rate (particles/s) */
 #define OUT_CUSPRATE          1273 /**< Cusp escape rate (particles/s) */
 #define OUT_DRISCOLLRATE      1274 /**< Driscoll mag-limited rate (particles/s) */
-#define OUT_MAGTOTALLOSSRATE  1275 /**< Total bulk loss rate (kg/s) */
+#define OUT_DMAGLIMITEDMASSDT 1275 /**< Magnetic-limited bulk mass loss rate (kg/s) */
 #define OUT_MAGPAUSERADATMESC 1276 /**< Magnetopause stand-off radius (m) */
 #define OUT_MAGFIELD          1277 /**< Planet dipole moment (A m^2) */
 #define OUT_CO2MASS           1278 /**< Atmospheric CO2 mass (kg) */
@@ -302,8 +309,12 @@ int fbBondiCriticalDmDt(BODY *, int);
 double fdRRCriticalFlux(BODY *, int);
 void fvAtmEscRegimeChangeOutput(int, int, double);
 
-/* Gunell+2018 magnetic-limited escape (atmesc.c) */
-void fnMagLimitedRates(BODY *, int);
+/* Magnetic-limited escape models (atmesc.c) */
+double fdMagLimitedEscapeDtGunell18(BODY *, int);
+double fdMagLimitedEscapeDtDriscoll13(BODY *, int);
+void VerifyMagLimitedEscape(BODY *, CONTROL *, OPTIONS *, int);
+void ReadMagLimitedEscapeModel(BODY *, CONTROL *, FILES *, OPTIONS *,
+                               SYSTEM *, int);
 double fdMagnetopauseStandoff(double, double, double, double);
 double fdGunellPickupRate(BODY *, int, double);
 double fdGunellCrossFieldRate(BODY *, int, double);

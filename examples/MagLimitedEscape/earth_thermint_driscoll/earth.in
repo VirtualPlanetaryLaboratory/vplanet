@@ -48,7 +48,7 @@ bUseEnergyLimited 1
 
 # Gunell+2018 - dMagField overridden by THERMINT each step.
 bMagLimitedEscape       1
-sMagLimitedEscapeModel  Gunell18
+sMagLimitedEscapeModel  Driscoll13
 dMagField               -1
 dStellarWindDensity   8.0e6
 dStellarWindVelocity  4.0e5

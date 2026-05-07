@@ -25,7 +25,7 @@ bUseEnergyLimited 1
 
 # Gunell+2018 magnetic-limited escape
 bMagLimitedEscape       1
-sMagLimitedEscapeModel  Gunell18
+sMagLimitedEscapeModel  Driscoll13
 dMagField               -1
 dStellarWindDensity   5.79e9
 dStellarWindVelocity  6.04e5

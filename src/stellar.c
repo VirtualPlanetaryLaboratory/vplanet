@@ -269,11 +269,13 @@ void ReadXUVModel(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
       body[iFile - 1].iXUVModel = STELLAR_MODEL_ENGLE24EARLY;
     } else if (!memcmp(sLower(cTmp), "engle24m", 8)) {
       body[iFile - 1].iXUVModel = STELLAR_MODEL_ENGLE24MIDLATE;
+    } else if (!memcmp(sLower(cTmp), "engle24a", 8)) {
+      body[iFile - 1].iXUVModel = STELLAR_MODEL_ENGLE24AUTO;
     } else {
       if (control->Io.iVerbose >= VERBERR) {
         fprintf(stderr,
                 "ERROR: Unknown argument to %s: %s. Options are RIBAS, REINERS, "
-                "ENGLE24EARLY, ENGLE24MIDLATE, or NONE.\n",
+                "ENGLE24EARLY, ENGLE24MIDLATE, ENGLE24AUTO, or NONE.\n",
                 options->cName, cTmp);
       }
       LineExit(files->Infile[iFile].cIn, lTmp);
@@ -1677,6 +1679,17 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     body[iBody].dLXUV = fdLXUVEngle(
           body, body[iBody].dXUVEngleMidLateA, body[iBody].dXUVEngleMidLateB,
           body[iBody].dXUVEngleMidLateC, body[iBody].dXUVEngleMidLateD, iBody);
+  } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24AUTO) {
+    /* Per-timestep dispatch on stellar mass.  Boundary at 0.4 Msun. */
+    if (body[iBody].dMass >= 0.4 * MSUN) {
+      body[iBody].dLXUV = fdLXUVEngle(
+            body, body[iBody].dXUVEngleEarlyA, body[iBody].dXUVEngleEarlyB,
+            body[iBody].dXUVEngleEarlyC, body[iBody].dXUVEngleEarlyD, iBody);
+    } else {
+      body[iBody].dLXUV = fdLXUVEngle(
+            body, body[iBody].dXUVEngleMidLateA, body[iBody].dXUVEngleMidLateB,
+            body[iBody].dXUVEngleMidLateC, body[iBody].dXUVEngleMidLateD, iBody);
+    }
   } else {
 
     // Constant XUV fraction
@@ -1904,12 +1917,29 @@ void VerifyXUVEngleMidLate(BODY *body, CONTROL *control, FILES *files,
                               OPT_XUVMODEL, OPT_XUVENGLEEARLYD, iBody);
 }
 
+void VerifyXUVEngleAuto(BODY *body, CONTROL *control, FILES *files,
+                        OPTIONS *options, int iBody) {
+  /* Engle24Auto: pick Early or MidLate per-timestep based on dMass.  Allow
+     up to 25% extrapolation outside the calibrated union range
+     [0.1, 0.6] M_sun, but exit for masses more than 25% out of bounds. */
+  char cModel[LINE] = "ENGLE24AUTO XUV";
+  double dMinSafe   = 0.075;
+  double dMaxSafe   = 0.750;
+
+  VerifyEngleMassSpectralType(body, control, files, options, cModel,
+                              dMaxSafe, dMinSafe, OPT_XUVMODEL, iBody);
+  /* No VerifyTwoEngleOptionsNotSet calls — Auto requires BOTH Early
+     and MidLate coefficient blocks to be present in star.in. */
+}
+
 void VerifyXUVEngle(BODY *body, CONTROL *control, FILES *files,
                     OPTIONS *options, int iBody) {
   if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24EARLY) {
     VerifyXUVEngleEarly(body, control, files, options, iBody);
   } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24MIDLATE) {
     VerifyXUVEngleMidLate(body, control, files, options, iBody);
+  } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24AUTO) {
+    VerifyXUVEngleAuto(body, control, files, options, iBody);
   }
 }
 

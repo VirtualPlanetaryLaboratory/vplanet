@@ -1,0 +1,30 @@
+# Engle24Auto -- Early dispatch test fixture (M = 0.5 Msun).
+# At M = 0.5 > 0.40 Msun, Auto-mode dispatch must select the Early
+# coefficient set.  Companion fixture `star_early.in` runs the same setup
+# with sXUVModel = Engle24Early directly; the test asserts the resulting
+# .log files agree, proving dispatch correctness in the Early regime.
+
+sName               star
+saModules           stellar
+
+dMass               0.5
+dRotPeriod          -10
+dAge                1e9
+
+sStellarModel       baraffe
+sXUVModel           Engle24Auto
+sMagBrakingModel    reiners
+
+# Engle (2024) Early coefficients (active for M = 0.5 >= 0.4)
+dXUVEngleEarlyA     -0.4896
+dXUVEngleEarlyB     -3.2128
+dXUVEngleEarlyC     -0.4469
+dXUVEngleEarlyD     -0.2985
+
+# Engle (2024) MidLate coefficients (present but unused for M=0.5)
+dXUVEngleMidLateA   -0.1456
+dXUVEngleMidLateB   -2.8876
+dXUVEngleMidLateC   -1.8187
+dXUVEngleMidLateD    0.3545
+
+saOutputOrder Time -Luminosity -LXUVStellar -LXUVTot

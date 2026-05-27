@@ -1,0 +1,31 @@
+# Engle24Auto XUV model — MidLate dispatch test.
+# Same physical setup as tests/Stellar/EngleXUV (M=0.181, P_rot=-122d) but
+# with sXUVModel = Engle24Auto.  Because M < 0.40 Msun, Auto-mode dispatch
+# must select the MidLate coefficient set; numerical results should be
+# bit-identical to the EngleXUV benchmark.  Engle24Early coefficients are
+# also present (required by Auto mode) but should not influence the result.
+
+sName               star
+saModules           stellar
+
+dMass               0.181
+dRotPeriod          -122
+dAge                1e9
+
+sStellarModel       baraffe
+sXUVModel           Engle24Auto
+sMagBrakingModel    reiners
+
+# Engle (2024) Early coefficients (unused for M=0.181 < 0.4)
+dXUVEngleEarlyA     -0.4896
+dXUVEngleEarlyB     -3.2128
+dXUVEngleEarlyC     -0.4469
+dXUVEngleEarlyD     -0.2985
+
+# Engle (2024) MidLate coefficients (active for M=0.181 < 0.4)
+dXUVEngleMidLateA   -0.1456
+dXUVEngleMidLateB   -2.8876
+dXUVEngleMidLateC   -1.8187
+dXUVEngleMidLateD    0.3545
+
+saOutputOrder Time -Luminosity -LXUVStellar -LXUVTot

@@ -45,6 +45,11 @@
   7 /**< XUV evolution from Engle (2024) for M0-M2 dwarfs */
 #define STELLAR_MODEL_ENGLE24MIDLATE                                           \
   8 /**< XUV evolution from Engle (2024) for M2.6-M6.5 dwarfs */
+#define STELLAR_MODEL_ENGLE24AUTO                                              \
+  9 /**< XUV evolution from Engle (2024) with per-timestep model selection \
+       based on stellar mass.  Both Early and MidLate coefficient sets must \
+       be provided in star.in; dispatch uses Early for dMass >= 0.4 Msun, \
+       MidLate otherwise.  Mass safety bound: 0.075 < dMass < 0.75 Msun. */
 
 #define STELLAR_DJDT_NONE                                                      \
   0 /**< No stellar angular momentum loss via magnetic braking */

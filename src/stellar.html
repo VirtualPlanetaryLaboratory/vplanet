@@ -21,8 +21,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="flare" href="flare.html" />
-    <link rel="prev" title="binary" href="binary.html" /> 
+    <link rel="next" title="halt" href="halt.html" />
+    <link rel="prev" title="system" href="system.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -51,20 +51,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../help.html">Options and Outputs</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../src.html">C API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
-<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
-<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
-<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
-<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
-<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
-<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="evolve.html">evolve</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
-<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="verify.html">verify</a></li>
 <li class="toctree-l2"><a class="reference internal" href="binary.html">binary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system.html">system</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">stellar</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#stellar-c">stellar.c</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv415BodyCopyStellarP4BODYP4BODYiii"><code class="docutils literal notranslate"><span class="pre">BodyCopyStellar()</span></code></a></li>
@@ -132,6 +122,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv418VerifyRotRateEngleP4BODYP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyRotRateEngle()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv419VerifyXUVEngleEarlyP4BODYP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyXUVEngleEarly()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv421VerifyXUVEngleMidLateP4BODYP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyXUVEngleMidLate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv418VerifyXUVEngleAutoP4BODYP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyXUVEngleAuto()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv414VerifyXUVEngleP4BODYP7CONTROLP5FILESP7OPTIONSi"><code class="docutils literal notranslate"><span class="pre">VerifyXUVEngle()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv413VerifyStellarP4BODYP7CONTROLP5FILESP7OPTIONSP6OUTPUTP6SYSTEMP6UPDATEii"><code class="docutils literal notranslate"><span class="pre">VerifyStellar()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv423InitializeModuleStellarP7CONTROLP6MODULE"><code class="docutils literal notranslate"><span class="pre">InitializeModuleStellar()</span></code></a></li>
@@ -220,6 +211,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_MODEL_SINEWAVE"><code class="docutils literal notranslate"><span class="pre">STELLAR_MODEL_SINEWAVE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_MODEL_ENGLE24EARLY"><code class="docutils literal notranslate"><span class="pre">STELLAR_MODEL_ENGLE24EARLY</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_MODEL_ENGLE24MIDLATE"><code class="docutils literal notranslate"><span class="pre">STELLAR_MODEL_ENGLE24MIDLATE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_MODEL_ENGLE24AUTO"><code class="docutils literal notranslate"><span class="pre">STELLAR_MODEL_ENGLE24AUTO</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_DJDT_NONE"><code class="docutils literal notranslate"><span class="pre">STELLAR_DJDT_NONE</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_DJDT_RM12"><code class="docutils literal notranslate"><span class="pre">STELLAR_DJDT_RM12</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#c.STELLAR_DJDT_SK72"><code class="docutils literal notranslate"><span class="pre">STELLAR_DJDT_SK72</span></code></a></li>
@@ -281,15 +273,25 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
-<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
-<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="halt.html">halt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="body.html">body</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="poise.html">poise</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spinbody.html">spinbody</a></li>
 <li class="toctree-l2"><a class="reference internal" href="distorb.html">distorb</a></li>
-<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="distrot.html">distrot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="eqtide.html">eqtide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="module.html">module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update.html">update</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vplanet.html">vplanet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="output.html">output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="radheat.html">radheat</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermint.html">thermint</a></li>
+<li class="toctree-l2"><a class="reference internal" href="flare.html">flare</a></li>
+<li class="toctree-l2"><a class="reference internal" href="galhabit.html">galhabit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="magmoc.html">magmoc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atmesc.html">atmesc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control.html">control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="options.html">options</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../vplot.html">VPLOT</a></li>
@@ -676,6 +678,11 @@ and a simple wind/magnetic braking model.</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv421VerifyXUVEngleMidLateP4BODYP7CONTROLP5FILESP7OPTIONSi">
 <span id="_CPPv321VerifyXUVEngleMidLateP4BODYP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv221VerifyXUVEngleMidLateP4BODYP7CONTROLP5FILESP7OPTIONSi"></span><span id="VerifyXUVEngleMidLate__BODYP.CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1af38461aa973a4f78b72a4a957625295e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyXUVEngleMidLate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv421VerifyXUVEngleMidLateP4BODYP7CONTROLP5FILESP7OPTIONSi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418VerifyXUVEngleAutoP4BODYP7CONTROLP5FILESP7OPTIONSi">
+<span id="_CPPv318VerifyXUVEngleAutoP4BODYP7CONTROLP5FILESP7OPTIONSi"></span><span id="_CPPv218VerifyXUVEngleAutoP4BODYP7CONTROLP5FILESP7OPTIONSi"></span><span id="VerifyXUVEngleAuto__BODYP.CONTROLP.FILESP.OPTIONSP.i"></span><span class="target" id="stellar_8c_1a87f6c1509ff7f6e2657e9b4101dcf483"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VerifyXUVEngleAuto</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="vplanet.html#_CPPv44BODY" title="BODY"><span class="n"><span class="pre">BODY</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">body</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47CONTROL" title="CONTROL"><span class="n"><span class="pre">CONTROL</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">control</span></span>, <a class="reference internal" href="vplanet.html#_CPPv45FILES" title="FILES"><span class="n"><span class="pre">FILES</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">files</span></span>, <a class="reference internal" href="vplanet.html#_CPPv47OPTIONS" title="OPTIONS"><span class="n"><span class="pre">OPTIONS</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">options</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iBody</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418VerifyXUVEngleAutoP4BODYP7CONTROLP5FILESP7OPTIONSi" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -1150,6 +1157,12 @@ and a simple wind/magnetic braking model.</p>
 </dd></dl>
 
 <dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.STELLAR_MODEL_ENGLE24AUTO">
+<span class="target" id="stellar_8h_1af404698ff1c6a9d36b0a86c2f37e1bde"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_MODEL_ENGLE24AUTO</span></span></span><a class="headerlink" href="#c.STELLAR_MODEL_ENGLE24AUTO" title="Link to this definition"></a><br /></dt>
+<dd><p>XUV evolution from Engle (2024) with per-timestep model selection \ based on stellar mass. Both Early and MidLate coefficient sets must \ be provided in star.in; dispatch uses Early for dMass &gt;= 0.4 Msun, \ MidLate otherwise. Mass safety bound: 0.075 &lt; dMass &lt; 0.75 Msun. </p>
+</dd></dl>
+
+<dl class="cpp macro">
 <dt class="sig sig-object cpp" id="c.STELLAR_DJDT_NONE">
 <span class="target" id="stellar_8h_1a21463feda666f763a4e5d915b5f42981"></span><span class="sig-name descname"><span class="n"><span class="pre">STELLAR_DJDT_NONE</span></span></span><a class="headerlink" href="#c.STELLAR_DJDT_NONE" title="Link to this definition"></a><br /></dt>
 <dd><p>No stellar angular momentum loss via magnetic braking </p>
@@ -1463,8 +1476,8 @@ and a simple wind/magnetic braking model.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="binary.html" class="btn btn-neutral float-left" title="binary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="flare.html" class="btn btn-neutral float-right" title="flare" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="system.html" class="btn btn-neutral float-left" title="system" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="halt.html" class="btn btn-neutral float-right" title="halt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

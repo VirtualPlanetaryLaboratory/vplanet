@@ -12,47 +12,47 @@ directory of the :code:`VPLanet` repository.
 
 
 
-   examples/AbioticO2
-   examples/ApseLock
-   examples/CircumbinaryOrbit
-   examples/ParameterSweep
-   examples/AtmEscFlareProxCen
+   examples/EarthInterior
+   examples/CassiniStates
+   examples/FfdProxCen
    examples/STEEP
-   examples/GalaxyEffects
-   examples/SS_NBody
-   examples/MagmOc_Earth
-   examples/MDwarfLuminosity
-   examples/CassiniMulti
-   examples/SSDistOrbDistRot
-   examples/HLossTides
+   examples/AbioticO2
+   examples/MagmOc_Trappist1g
+   examples/CosmicShoreline
    examples/BinaryTides
    examples/TidalEarth
-   examples/LuminosityCycle
-   examples/IceBelts
-   examples/VenusWaterLoss
-   examples/WaterLossTides
-   examples/FfdProxCen
-   examples/DiffLimWaterEscape
+   examples/GalaxyEffects
    examples/HabEvapCore
-   examples/TideLock
-   examples/ChaoticResonances
-   examples/CassiniStates
-   examples/AtmEscRegimes
-   examples/MagmOc_GJ1132b
-   examples/MiniNeptuneEvap
-   examples/AtmEscKepler-36
-   examples/MagneticBraking
-   examples/EarthInterior
-   examples/CosmicShoreline
-   examples/IoHeat
-   examples/MagmOc_Trappist1g
-   examples/DampedCBP
-   examples/EarthClimate
-   examples/VenusApproxInterior
    examples/HabitableZone
-   examples/RadHeat
-   examples/StellarEvol
+   examples/DampedCBP
+   examples/AtmEscKepler-36
    examples/NBodyAtmEsc
+   examples/SSDistOrbDistRot
+   examples/ApseLock
+   examples/HLossTides
+   examples/MiniNeptuneEvap
+   examples/VenusApproxInterior
+   examples/DiffLimWaterEscape
+   examples/AtmEscRegimes
+   examples/ChaoticResonances
+   examples/CircumbinaryOrbit
+   examples/MagmOc_Earth
+   examples/WaterLossTides
+   examples/EarthClimate
+   examples/IceBelts
+   examples/IoHeat
+   examples/CassiniMulti
+   examples/RadHeat
+   examples/MagneticBraking
+   examples/VenusWaterLoss
+   examples/ParameterSweep
+   examples/LuminosityCycle
+   examples/TideLock
+   examples/AtmEscFlareProxCen
+   examples/SS_NBody
+   examples/MagmOc_GJ1132b
+   examples/StellarEvol
+   examples/MDwarfLuminosity
 
 
 Broken

@@ -1265,6 +1265,295 @@ void fsUnitsTempRate(int iType, char **cUnit) {
   }
 }
 
+/* Return proper velocity conversion (numeric version) */
+double fdUnitsVel(UNITS *units) {
+  double dConversion =
+        fdUnitsLength(units->iLength) / fdUnitsTime(units->iTime);
+  return dConversion;
+}
+
+/* Particle flux units */
+void fsUnitsParticleFlux(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s^-2 %s^-1", cUnitLength, cUnitTime);
+  free(cUnitLength);
+  free(cUnitTime);
+}
+
+double fdUnitsParticleFlux(UNITS *units) {
+  double dTmp;
+
+  dTmp = 1. / (fdUnitsLength(units->iLength) * fdUnitsLength(units->iLength) *
+               fdUnitsTime(units->iTime));
+  return dTmp;
+}
+
+/* Volume rate (meter cubed per second) units */
+void fsUnitsMeterCubedPerSecond(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s^3/%s", cUnitLength, cUnitTime);
+  free(cUnitLength);
+  free(cUnitTime);
+}
+
+double fdUnitsMeterCubedPerSecond(UNITS *units) {
+  double dConversion =
+        pow(fdUnitsLength(units->iLength), 3) / fdUnitsTime(units->iTime);
+  return dConversion;
+}
+
+/* Pressure units */
+double fdUnitsPressure(UNITS *units) {
+  double dConversion = fdUnitsMass(units->iMass) /
+                       fdUnitsLength(units->iLength) /
+                       (fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime));
+  return dConversion;
+}
+
+void fsUnitsPressure(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitMass = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s/%s/%s^2", cUnitMass, cUnitLength, cUnitTime);
+  free(cUnitLength);
+  free(cUnitMass);
+  free(cUnitTime);
+}
+
+/* Charge units */
+void fsUnitsCharge(char **cUnit) {
+  fvFormattedString(cUnit, "C");
+}
+
+double fdUnitsCharge(void) {
+  return 1;
+}
+
+/* Mass rate units */
+void fsUnitsMassRate(UNITS *units, char **cUnit) {
+  char *cUnitMass = NULL, *cUnitTime = NULL;
+
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s/%s", cUnitMass, cUnitTime);
+  free(cUnitTime);
+  free(cUnitMass);
+}
+
+double fdUnitsMassRate(UNITS *units) {
+  double dConversion = fdUnitsMass(units->iMass) / fdUnitsTime(units->iTime);
+  return dConversion;
+}
+
+/* Length per temperature units */
+void fsUnitsLengthPerTemperature(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitTemp = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTemp(units->iTemp, &cUnitTemp);
+  fvFormattedString(cUnit, "%s/%s", cUnitLength, cUnitTemp);
+  free(cUnitTemp);
+  free(cUnitLength);
+}
+
+double fdUnitsLengthPerTemperature(UNITS *units, double dTemp) {
+  double dTempFactor;
+
+  if (units->iTemp == U_CELSIUS || units->iTemp == U_KELVIN) {
+    dTempFactor = 1;
+  } else if (units->iTemp == U_FARENHEIT) {
+    dTempFactor = 5. / 9;
+  } else {
+    fprintf(stderr, "Unknown temperature unit.\n");
+    exit(EXIT_UNITS);
+  }
+  double dConversion = fdUnitsLength(units->iLength) / dTempFactor;
+  return dConversion;
+}
+
+/* Force units */
+void fsUnitsForce(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitMass = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s*%s/%s^2", cUnitMass, cUnitLength, cUnitTime);
+  free(cUnitMass);
+  free(cUnitTime);
+  free(cUnitLength);
+}
+
+double fdUnitsForce(UNITS *units) {
+  double dConversion = fdUnitsLength(units->iLength) *
+                       fdUnitsMass(units->iMass) /
+                       (fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime));
+  return dConversion;
+}
+
+/* Power per length per temperature (thermal conductivity) units */
+void fsUnitsPowerPerLengthPerTemperature(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitPower = NULL, *cUnitTemp = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsPower(units, &cUnitPower);
+  fsUnitsTemp(units->iTemp, &cUnitTemp);
+  fvFormattedString(cUnit, "%s/%s/%s", cUnitPower, cUnitLength, cUnitTemp);
+  free(cUnitPower);
+  free(cUnitTemp);
+  free(cUnitLength);
+}
+
+double fdUnitsPowerPerLengthPerTemperature(UNITS *units, double dTemp) {
+  double dConversion =
+        fdUnitsPower(units->iTime, units->iMass, units->iLength) /
+        fdUnitsLength(units->iLength) /
+        fdUnitsTemp(dTemp, U_KELVIN, units->iTemp);
+  return dConversion;
+}
+
+/* Length squared per time cubed units */
+void fsUnitsLengthSquaredPerTimeCubed(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s^2/%s^3", cUnitLength, cUnitTime);
+  free(cUnitTime);
+  free(cUnitLength);
+}
+
+double fdUnitsLengthSquaredPerTimeCubed(UNITS *units) {
+  double dConversion = fdUnitsLength(units->iLength) *
+                       fdUnitsLength(units->iLength) /
+                       pow(fdUnitsTime(units->iTime), 3);
+  return dConversion;
+}
+
+/* Acceleration units */
+void fsUnitsAcceleration(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s/%s^2", cUnitLength, cUnitTime);
+  free(cUnitTime);
+  free(cUnitLength);
+}
+
+double fdUnitsAcceleration(UNITS *units) {
+  double dConversion = fdUnitsLength(units->iLength) /
+                       (fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime));
+  return dConversion;
+}
+
+/* Charge per time per length squared (current density) units */
+void fsUnitsChargePerTimePerLengthSquared(UNITS *units, char **cUnit) {
+  char *cUnitCharge = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsCharge(&cUnitCharge);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s/%s/%s^2", cUnitCharge, cUnitLength, cUnitTime);
+  free(cUnitTime);
+  free(cUnitLength);
+  free(cUnitCharge);
+}
+
+double fdUnitsChargePerTimePerLengthSquared(UNITS *units) {
+  double dConversion = fdUnitsCharge() / fdUnitsLength(units->iLength) /
+                       (fdUnitsTime(units->iTime) * fdUnitsTime(units->iTime));
+  return dConversion;
+}
+
+/* Energy per temperature per mass (specific heat) units */
+void fsUnitsEnergyPerTemperaturePerMass(UNITS *units, char **cUnit) {
+  char *cUnitMass = NULL, *cUnitEnergy = NULL, *cUnitTemp = NULL;
+
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsEnergy(units, &cUnitEnergy);
+  fsUnitsTemp(units->iTemp, &cUnitTemp);
+  fvFormattedString(cUnit, "%s/%s/%s", cUnitEnergy, cUnitTemp, cUnitMass);
+  free(cUnitEnergy);
+  free(cUnitTemp);
+  free(cUnitMass);
+}
+
+double fdUnitsEnergyPerTemperaturePerMass(UNITS *units, double dTemp) {
+  double dConversion =
+        fdUnitsEnergy(units->iTime, units->iMass, units->iLength) /
+        fdUnitsMass(units->iMass) / fdUnitsTemp(dTemp, U_KELVIN, units->iTemp);
+  return dConversion;
+}
+
+/* Angular momentum units (expanded version) */
+void fsUnitsAngularMomentum(UNITS *units, char **cUnit) {
+  char *cUnitMass = NULL, *cUnitLength = NULL, *cUnitTime = NULL;
+
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTime(units->iTime, &cUnitTime);
+  fvFormattedString(cUnit, "%s*%s^2/%s", cUnitMass, cUnitLength, cUnitTime);
+  free(cUnitMass);
+  free(cUnitLength);
+  free(cUnitTime);
+}
+
+double fdUnitsAngularMomentum(UNITS *units) {
+  double dConversion =
+        fdUnitsMass(units->iMass) * fdUnitsLength(units->iLength) *
+        fdUnitsLength(units->iLength) / fdUnitsTime(units->iTime);
+  return dConversion;
+}
+
+/* Mass per area (surface density) units */
+void fsUnitsMassPerArea(UNITS *units, char **cUnit) {
+  char *cUnitLength = NULL, *cUnitMass = NULL;
+
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsMass(units->iMass, &cUnitMass);
+  fvFormattedString(cUnit, "%s/%s^2", cUnitMass, cUnitLength);
+  free(cUnitMass);
+  free(cUnitLength);
+}
+
+double fdUnitsMassPerArea(UNITS *units) {
+  double dConversion =
+        fdUnitsMass(units->iMass) /
+        (fdUnitsLength(units->iLength) * fdUnitsLength(units->iLength));
+  return dConversion;
+}
+
+/* Energy flux per temperature units */
+void fsUnitsEnergyFluxPerTemperature(UNITS *units, char **cUnit) {
+  char *cUnitPower = NULL, *cUnitLength = NULL, *cUnitTemp = NULL;
+
+  fsUnitsPower(units, &cUnitPower);
+  fsUnitsLength(units->iLength, &cUnitLength);
+  fsUnitsTemp(units->iTemp, &cUnitTemp);
+  fvFormattedString(cUnit, "%s/%s^2/%s", cUnitPower, cUnitLength, cUnitTemp);
+  free(cUnitPower);
+  free(cUnitLength);
+  free(cUnitTemp);
+}
+
+double fdUnitsEnergyFluxPerTemperature(UNITS *units, int iOldTemp, int iNewTemp,
+                                       double dTemp) {
+  double dConversion =
+        fdUnitsPower(units->iTime, units->iMass, units->iLength) /
+        (fdUnitsLength(units->iLength) * fdUnitsLength(units->iLength)) /
+        fdUnitsTemp(dTemp, iOldTemp, iNewTemp);
+  return dConversion;
+}
+
 /*
  * FILES struct functions
  */

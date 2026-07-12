@@ -1798,7 +1798,10 @@ double fdBandPassXUV(BODY *body, int iBody, double dInputEnergy) {
     dLogEnergyXUV = log10(dInputEnergy * 5);
   } else if (body[iBody].iFlareBandPass ==
              FLARE_SXR) { // Band pass 1.24 - 1239.85 Å
-    dLogEnergyXUV = log10(dInputEnergy);
+    // Port of vplanet-private v3.0: in DAVENPORT mode the input flare energy is
+    // in the Kepler bandpass, so convert Kepler -> SXR/XUV with the Osten &
+    // Wolk 2015 factor 30/16 = 1.875 (SXR is 30% of bolometric, Kepler 16%).
+    dLogEnergyXUV = log10(dInputEnergy * 1.875);
   }
   /* TODO: Leave it here for when the data in the future allows for the
     conversion of a kepler bandpass to these another bandpass. else if
@@ -2035,15 +2038,27 @@ double fdLXUVFlare(BODY *body, double dDeltaTime, int iBody) {
     // ########################################################################
     //  double daLXUVFlare[iEnergyBin];
 
-    // Calculating the luminosity by flares for DAVENPORT or LACY mode
-    // if the user select to calculate the luminosity using a FFD model
-    for (i = 0; i < body[iBody].iEnergyBin; i++) {
+    // Calculating the luminosity by flares for DAVENPORT or LACY mode.
+    // Port of vplanet-private v3.0: evaluate the FFD at the SXR/XUV energy
+    // grid (daFFDXUV) rather than the Kepler grid (daFFD). The XUV energy in
+    // log10(erg) is dLogEnergyMinXUV + 7 + i*dEnergyStep (fdFFD expects ergs).
+    // The luminosity integral then multiplies the XUV energy widths by the
+    // XUV-band flare frequencies. The upper bound is iEnergyBin - 1, matching
+    // private's top-bin handling.
+    double dLogEnergyMinXUVERG = dLogEnergyMinXUV + 7.0;
+    double *daFFDXUV = malloc((body[iBody].iEnergyBin + 1) * sizeof(double));
+    for (i = 0; i < body[iBody].iEnergyBin + 1; i++) {
+      daFFDXUV[i] = fdFFD(body, iBody, dLogEnergyMinXUVERG + i * dEnergyStep,
+                          dFlareSlope, dFlareYInt);
+    }
+    for (i = 0; i < body[iBody].iEnergyBin - 1; i++) {
       body[iBody].daLXUVFlare[i] =
             (body[iBody].daEnergyJOUXUV[i + 1] -
              body[iBody].daEnergyJOUXUV[i]) *
-            ((body[iBody].daFFD[i + 1] + body[iBody].daFFD[i]) / 2);
+            ((daFFDXUV[i + 1] + daFFDXUV[i]) / 2);
       dLXUVFlare += body[iBody].daLXUVFlare[i];
     }
+    free(daFFDXUV);
   }
   // If the FFD model is set to NONE, the luminosity remains constant over the
   // time evolution of the system and receives the value given by the user in

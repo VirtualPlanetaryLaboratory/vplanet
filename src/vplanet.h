@@ -632,6 +632,15 @@ struct BODY {
   double dXUVEngleMidLateC;
   double dXUVEngleMidLateD;
 
+  /* Engle XUV intrinsic-scatter law: L_XUV is multiplied by
+     10^(z*sigma(tau)), sigma(tau) = exp(e + f*(tau - pivot)/scale),
+     tau = log10(age/Gyr). z = 0 disables the term exactly. */
+  double dXUVEngleScatterIntercept; /**< e: log sigma_int at the pivot */
+  double dXUVEngleScatterSlope;     /**< f: d(log sigma_int)/d(scaled tau) */
+  double dXUVEngleScatterPivot;     /**< tau pivot [log10(age/Gyr)] */
+  double dXUVEngleScatterScale;     /**< tau scale for conditioning */
+  double dXUVEngleScatterZ;         /**< z: per-realization offset */
+
   /* Engle & Guinan (2023) rotation-evolution coefficients */
   double dRotEngleEarlyA;
   double dRotEngleEarlyB;

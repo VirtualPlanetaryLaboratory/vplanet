@@ -44,6 +44,13 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dXUVEngleMidLateC = src[iBody].dXUVEngleMidLateC;
   dest[iBody].dXUVEngleMidLateD = src[iBody].dXUVEngleMidLateD;
 
+  dest[iBody].dXUVEngleScatterIntercept =
+        src[iBody].dXUVEngleScatterIntercept;
+  dest[iBody].dXUVEngleScatterSlope = src[iBody].dXUVEngleScatterSlope;
+  dest[iBody].dXUVEngleScatterPivot = src[iBody].dXUVEngleScatterPivot;
+  dest[iBody].dXUVEngleScatterScale = src[iBody].dXUVEngleScatterScale;
+  dest[iBody].dXUVEngleScatterZ     = src[iBody].dXUVEngleScatterZ;
+
   dest[iBody].dRotEngleEarlyA = src[iBody].dRotEngleEarlyA;
   dest[iBody].dRotEngleEarlyB = src[iBody].dRotEngleEarlyB;
   dest[iBody].dRotEngleEarlyC = src[iBody].dRotEngleEarlyC;
@@ -568,6 +575,91 @@ void ReadXUVEngleMidLateD(BODY *body, CONTROL *control, FILES *files,
     UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
   } else if (iFile > 0) {
     body[iFile - 1].dXUVEngleMidLateD = options->dDefault;
+  }
+}
+
+void ReadXUVEngleScatterIntercept(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dXUVEngleScatterIntercept = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVEngleScatterIntercept = options->dDefault;
+  }
+}
+
+void ReadXUVEngleScatterSlope(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dXUVEngleScatterSlope = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVEngleScatterSlope = options->dDefault;
+  }
+}
+
+void ReadXUVEngleScatterPivot(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dXUVEngleScatterPivot = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVEngleScatterPivot = options->dDefault;
+  }
+}
+
+void ReadXUVEngleScatterScale(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dXUVEngleScatterScale = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVEngleScatterScale = options->dDefault;
+  }
+}
+
+void ReadXUVEngleScatterZ(BODY *body, CONTROL *control, FILES *files,
+                          OPTIONS *options, SYSTEM *system, int iFile) {
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].dXUVEngleScatterZ = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVEngleScatterZ = options->dDefault;
   }
 }
 
@@ -1126,6 +1218,71 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
   options[iOpt].iModuleBit = STELLAR;
   options[iOpt].bNeg       = 0;
   fnRead[iOpt]             = &ReadXUVEngleMidLateD;
+
+  iOpt = OPT_XUVENGLESCATTERINTERCEPT;
+  fvFormattedString(&options[iOpt].cName, "dXUVEngleScatterIntercept");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "log of the Engle XUV intrinsic-scatter law at the pivot age");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 0.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  options[iOpt].bNeg       = 0;
+  fnRead[iOpt]             = &ReadXUVEngleScatterIntercept;
+
+  iOpt = OPT_XUVENGLESCATTERSLOPE;
+  fvFormattedString(&options[iOpt].cName, "dXUVEngleScatterSlope");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Slope of the Engle XUV intrinsic-scatter law in scaled log age");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 0.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  options[iOpt].bNeg       = 0;
+  fnRead[iOpt]             = &ReadXUVEngleScatterSlope;
+
+  iOpt = OPT_XUVENGLESCATTERPIVOT;
+  fvFormattedString(&options[iOpt].cName, "dXUVEngleScatterPivot");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Pivot [log10(age/Gyr)] of the Engle XUV intrinsic-scatter law");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 0.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  options[iOpt].bNeg       = 0;
+  fnRead[iOpt]             = &ReadXUVEngleScatterPivot;
+
+  iOpt = OPT_XUVENGLESCATTERSCALE;
+  fvFormattedString(&options[iOpt].cName, "dXUVEngleScatterScale");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Abscissa scale of the Engle XUV intrinsic-scatter law");
+  fvFormattedString(&options[iOpt].cDefault, "1");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 1.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  options[iOpt].bNeg       = 0;
+  fnRead[iOpt]             = &ReadXUVEngleScatterScale;
+
+  iOpt = OPT_XUVENGLESCATTERZ;
+  fvFormattedString(&options[iOpt].cName, "dXUVEngleScatterZ");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Per-realization offset within the Engle XUV intrinsic scatter (0 disables the scatter term exactly)");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 0.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  options[iOpt].bNeg       = 0;
+  fnRead[iOpt]             = &ReadXUVEngleScatterZ;
 
   iOpt = OPT_ROTENGLEEARLYA;
   fvFormattedString(&options[iOpt].cName, "dRotEngleEarlyA");
@@ -3042,6 +3199,14 @@ double fdLXUVEngle(BODY *body, double dA, double dB, double dC, double dD,
     dLXUV = pow(10., (dA * dLogAge + dB + dC * (dLogAge - dD)));
   } else {
     dLXUV = pow(10., (dA * dLogAge + dB));
+  }
+  if (body[iBody].dXUVEngleScatterZ != 0) {
+    double dSigmaInt =
+          exp(body[iBody].dXUVEngleScatterIntercept +
+              body[iBody].dXUVEngleScatterSlope *
+                    (dLogAge - body[iBody].dXUVEngleScatterPivot) /
+                    body[iBody].dXUVEngleScatterScale);
+    dLXUV *= pow(10., body[iBody].dXUVEngleScatterZ * dSigmaInt);
   }
   dLXUV *= body[iBody].dLuminosity;
 

@@ -1,0 +1,28 @@
+# Engle24 MidLate XUV model with the intrinsic-scatter law active.
+# sigma_int(tau) = exp(-1.2 + 0.2 (tau - 0.5)), z = -0.5, tau = log10(age/Gyr):
+# L_XUV is multiplied by 10^(z sigma_int(tau)). With z = 0 the model reduces
+# bit-exactly to the EngleXUV test's configuration.
+
+sName               star
+saModules           stellar
+
+dMass               0.181
+dRotPeriod          -122
+dAge                1e9
+
+sStellarModel       baraffe
+sXUVModel           Engle24MidLate
+sMagBrakingModel    reiners
+
+dXUVEngleMidLateA   -0.1456
+dXUVEngleMidLateB   -2.8876
+dXUVEngleMidLateC   -1.8187
+dXUVEngleMidLateD    0.3545
+
+dXUVEngleScatterIntercept  -1.2
+dXUVEngleScatterSlope       0.2
+dXUVEngleScatterPivot       0.5
+dXUVEngleScatterScale       1.0
+dXUVEngleScatterZ          -0.5
+
+saOutputOrder Time -Luminosity -LXUVStellar -LXUVTot

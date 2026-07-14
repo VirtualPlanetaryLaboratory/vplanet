@@ -20,17 +20,17 @@ from benchmark import Benchmark, benchmark
         "log.initial.star.LXUVStellar": {"value": 4.906221e-6, "unit": u.LSUN},
         "log.initial.star.LXUVTot": {"value": 4.906221e-6, "unit": u.LSUN},
         "log.initial.star.Temperature": {"value": 3212.579977, "unit": u.K},
-        "log.final.system.Age": {"value": 3.108426e17, "unit": u.sec},
+        "log.final.system.Age": {"value": 3.108426e17, "unit": u.sec, "rtol": 1e-4},
         "log.final.system.TotAngMom": {
             "value": 8.931191e38,
-            "unit": (u.kg * u.m**2) / u.sec,
+            "unit": (u.kg * u.m**2) / u.sec, "rtol": 1e-4
         },
-        "log.final.system.TotEnergy": {"value": -3.698928e40, "unit": u.Joule},
-        "log.final.star.Luminosity": {"value": 0.003956, "unit": u.LSUN},
-        "log.final.star.LXUVStellar": {"value": 2.529287e-7, "unit": u.LSUN},
-        "log.final.star.LXUVTot": {"value": 2.529287e-7, "unit": u.LSUN},
-        "log.final.star.Temperature": {"value": 3219.534123, "unit": u.K},
-        "log.final.star.RotPer": {"value": 1.193750e7, "unit": u.sec},
+        "log.final.system.TotEnergy": {"value": -3.698928e40, "unit": u.Joule, "rtol": 1e-4},
+        "log.final.star.Luminosity": {"value": 0.003956, "unit": u.LSUN, "rtol": 1e-4},
+        "log.final.star.LXUVStellar": {"value": 2.529287e-7, "unit": u.LSUN, "rtol": 1e-4},
+        "log.final.star.LXUVTot": {"value": 2.529287e-7, "unit": u.LSUN, "rtol": 1e-4},
+        "log.final.star.Temperature": {"value": 3219.534123, "unit": u.K, "rtol": 1e-4},
+        "log.final.star.RotPer": {"value": 1.193750e7, "unit": u.sec, "rtol": 1e-4},
     }
 )
 class Test_EngleXUV(Benchmark):

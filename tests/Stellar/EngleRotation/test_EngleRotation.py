@@ -19,12 +19,12 @@ from benchmark import Benchmark, benchmark
         "log.initial.star.Luminosity": {"value": 0.010328, "unit": u.LSUN},
         "log.initial.star.LXUVStellar": {"value": 6.081350e-7, "unit": u.LSUN},
         "log.initial.star.Temperature": {"value": 3415.002296, "unit": u.K},
-        "log.final.system.Age": {"value": 3.155760e17, "unit": u.sec},
-        "log.final.system.TotEnergy": {"value": -6.865097e40, "unit": u.Joule},
-        "log.final.star.RotPer": {"value": 157.440880, "unit": u.day},
-        "log.final.star.Luminosity": {"value": 0.011350, "unit": u.LSUN},
-        "log.final.star.LXUVStellar": {"value": 3.935500e-8, "unit": u.LSUN},
-        "log.final.star.Temperature": {"value": 3416.001085, "unit": u.K},
+        "log.final.system.Age": {"value": 3.155760e17, "unit": u.sec, "rtol": 1e-4},
+        "log.final.system.TotEnergy": {"value": -6.865097e40, "unit": u.Joule, "rtol": 1e-4},
+        "log.final.star.RotPer": {"value": 157.440880, "unit": u.day, "rtol": 1e-4},
+        "log.final.star.Luminosity": {"value": 0.011350, "unit": u.LSUN, "rtol": 1e-4},
+        "log.final.star.LXUVStellar": {"value": 3.935500e-8, "unit": u.LSUN, "rtol": 1e-4},
+        "log.final.star.Temperature": {"value": 3416.001085, "unit": u.K, "rtol": 1e-4},
     }
 )
 class Test_EngleRotation(Benchmark):

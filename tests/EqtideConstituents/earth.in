@@ -1,0 +1,39 @@
+# The Earth
+#
+# Rotation period is the SIDEREAL day (0.99726968 d), not the solar day.
+# This matters: the principal semi-diurnal constituent has frequency
+# 2*(Omega - n), and it is precisely the difference between the sidereal
+# rotation rate and the annual mean motion that turns 23.934 h into the
+# 24.000 h mean solar day, and hence puts S2 at exactly 12.000 h.
+
+sName         earth        # Body's name
+saModules     eqtide       # Modules to apply to this body
+
+# Physical Parameters
+dMass         -1           # Mass, negative -> Earth masses
+dRadius       -1           # Radius, negative -> Earth radii
+dRadGyra      0.3308       # Radius of gyration
+dRotPeriod    -0.99726968  # Sidereal rotation period (-1 -> days)
+dObliquity    23.439281    # Obliquity
+
+# Orbital Parameters (J2000)
+dEcc          0.0167086    # Eccentricity
+dSemi         1.00000102   # Semi-major axis, in AU
+
+# EQTIDE Parameters
+dTidalQ       12           # Tidal Q (ocean-dominated)
+dK2           0.298        # Love number of degree 2
+saTidePerts   sun          # Name of tidal perturber
+
+saOutputOrder Time -RotPer $
+              # Constituent frequencies, in rad/day
+              TidalFreqSemiDiurn TidalFreqEccPlus TidalFreqEccMinus $
+              TidalFreqRadial TidalFreqOblDiurn TidalFreqOblSid $
+              # Equilibrium tide amplitudes, in m (negative option; the
+              # default length unit here is AU, which is useless for tides)
+              -TidalAmpSemiDiurn -TidalAmpEccPlus -TidalAmpEccMinus $
+              -TidalAmpRadial -TidalAmpOblDiurn -TidalAmpOblSid $
+              # Power dissipated per constituent, in TW, and the total
+              -TidalPowerSemiDiurn -TidalPowerEccPlus -TidalPowerEccMinus $
+              -TidalPowerRadial -TidalPowerOblDiurn -TidalPowerOblSid $
+              -PowerEqtide

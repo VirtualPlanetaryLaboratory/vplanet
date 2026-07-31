@@ -1497,6 +1497,8 @@ void VerifyCTL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   output[OUT_GAMMAROT].iNum          = 0;
   output[OUT_GAMMAORB].iNum          = 0;
   output[OUT_TIDALQ].iNum            = 0;
+  /* CTL is a continuous-lag model: it has no discrete constituents. */
+  fvDisableConstituentOutputs(output);
 }
 
 void VerifyCPL(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
@@ -2392,6 +2394,167 @@ void WriteTidalRadius(BODY *body, CONTROL *control, OUTPUT *output,
     *dTmp /= fdUnitsLength(units->iLength);
     fsUnitsLength(units->iLength, cUnit);
   }
+}
+
+/* Per-constituent tidal diagnostics. Three generic writers do the work; the
+   eighteen named outputs below are thin wrappers that pin the constituent. */
+
+void fvWriteTidalFreq(BODY *body, OUTPUT *output, UNITS *units, int iBody,
+                      int iConst, double *dTmp, char **cUnit) {
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
+
+  *dTmp = fdCPLTidalFreq(body, iBody, iOrbiter, iConst);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp *= fdUnitsTime(units->iTime);
+    fsUnitsRate(units->iTime, cUnit);
+  }
+}
+
+void fvWriteTidalAmp(BODY *body, OUTPUT *output, UNITS *units, int iBody,
+                     int iConst, double *dTmp, char **cUnit) {
+  int iOrbiter = fiAssignTidalOrbiter(body, iBody);
+  int iPert;
+
+  /* The amplitude is that of a single raising body, so unlike the power it
+     cannot be summed over perturbers. Report the first one. */
+  if (body[iBody].iTidePerts < 1) {
+    *dTmp = -1;
+    fvFormattedString(cUnit, output->cNeg);
+    return;
+  }
+  iPert = body[iBody].iaTidePerts[0];
+
+  *dTmp = fdCPLTidalAmp(body, iBody, iPert, iOrbiter, iConst);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsLength(units->iLength);
+    fsUnitsLength(units->iLength, cUnit);
+  }
+}
+
+void fvWriteTidalPower(BODY *body, OUTPUT *output, UNITS *units, int iBody,
+                       int iConst, double *dTmp, char **cUnit) {
+  *dTmp = fdCPLTidalPowerConst(body, iBody, iConst);
+  if (output->bDoNeg[iBody]) {
+    *dTmp *= output->dNeg;
+    fvFormattedString(cUnit, output->cNeg);
+  } else {
+    *dTmp /= fdUnitsPower(units->iTime, units->iMass, units->iLength);
+    fsUnitsPower(units, cUnit);
+  }
+}
+
+void WriteTidalFreqSemiDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                             SYSTEM *system, UNITS *units, UPDATE *update,
+                             int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_SEMIDIURN, dTmp, cUnit);
+}
+
+void WriteTidalFreqEccPlus(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_ECCPLUS, dTmp, cUnit);
+}
+
+void WriteTidalFreqEccMinus(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_ECCMINUS, dTmp, cUnit);
+}
+
+void WriteTidalFreqRadial(BODY *body, CONTROL *control, OUTPUT *output,
+                          SYSTEM *system, UNITS *units, UPDATE *update,
+                          int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_RADIAL, dTmp, cUnit);
+}
+
+void WriteTidalFreqOblDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_OBLDIURN, dTmp, cUnit);
+}
+
+void WriteTidalFreqOblSid(BODY *body, CONTROL *control, OUTPUT *output,
+                          SYSTEM *system, UNITS *units, UPDATE *update,
+                          int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalFreq(body, output, units, iBody, TIDE_OBLSID, dTmp, cUnit);
+}
+
+void WriteTidalAmpSemiDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_SEMIDIURN, dTmp, cUnit);
+}
+
+void WriteTidalAmpEccPlus(BODY *body, CONTROL *control, OUTPUT *output,
+                          SYSTEM *system, UNITS *units, UPDATE *update,
+                          int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_ECCPLUS, dTmp, cUnit);
+}
+
+void WriteTidalAmpEccMinus(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_ECCMINUS, dTmp, cUnit);
+}
+
+void WriteTidalAmpRadial(BODY *body, CONTROL *control, OUTPUT *output,
+                         SYSTEM *system, UNITS *units, UPDATE *update,
+                         int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_RADIAL, dTmp, cUnit);
+}
+
+void WriteTidalAmpOblDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_OBLDIURN, dTmp, cUnit);
+}
+
+void WriteTidalAmpOblSid(BODY *body, CONTROL *control, OUTPUT *output,
+                         SYSTEM *system, UNITS *units, UPDATE *update,
+                         int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalAmp(body, output, units, iBody, TIDE_OBLSID, dTmp, cUnit);
+}
+
+void WriteTidalPowerSemiDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                              SYSTEM *system, UNITS *units, UPDATE *update,
+                              int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_SEMIDIURN, dTmp, cUnit);
+}
+
+void WriteTidalPowerEccPlus(BODY *body, CONTROL *control, OUTPUT *output,
+                            SYSTEM *system, UNITS *units, UPDATE *update,
+                            int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_ECCPLUS, dTmp, cUnit);
+}
+
+void WriteTidalPowerEccMinus(BODY *body, CONTROL *control, OUTPUT *output,
+                             SYSTEM *system, UNITS *units, UPDATE *update,
+                             int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_ECCMINUS, dTmp, cUnit);
+}
+
+void WriteTidalPowerRadial(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_RADIAL, dTmp, cUnit);
+}
+
+void WriteTidalPowerOblDiurn(BODY *body, CONTROL *control, OUTPUT *output,
+                             SYSTEM *system, UNITS *units, UPDATE *update,
+                             int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_OBLDIURN, dTmp, cUnit);
+}
+
+void WriteTidalPowerOblSid(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  fvWriteTidalPower(body, output, units, iBody, TIDE_OBLSID, dTmp, cUnit);
 }
 
 void WriteDOblDtEqtide(BODY *body, CONTROL *control, OUTPUT *output,
@@ -3430,6 +3593,289 @@ void InitializeOutputEqtide(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_LOCKTIME].iNum       = 1;
   output[OUT_LOCKTIME].iModuleBit = EQTIDE;
   fnWrite[OUT_LOCKTIME]           = &WriteLockTime;
+
+  InitializeOutputEqtideConstituents(output, fnWrite);
+}
+
+/** Register the per-constituent CPL diagnostics.
+
+    Split out of InitializeOutputEqtide() only to keep that routine readable;
+    these eighteen outputs are meaningless under CTL and DB15 and are disabled
+    there by fvDisableConstituentOutputs(). */
+void InitializeOutputEqtideConstituents(OUTPUT *output,
+                                        fnWriteOutput fnWrite[]) {
+
+  fvFormattedString(&output[OUT_TIDALFREQSEMIDIURN].cName,
+                    "TidalFreqSemiDiurn");
+  fvFormattedString(&output[OUT_TIDALFREQSEMIDIURN].cDescr,
+                    "Semi-Diurnal Tidal Frequency |2*RotRate - 2*MeanMotion|");
+  fvFormattedString(&output[OUT_TIDALFREQSEMIDIURN].cLongDescr,
+                    "Frequency of the principal semi-diurnal tidal "
+                    "constituent, the Darwin-Kaula (l,m,p,q) = (2,2,0,0) "
+                    "term. For the Earth-Sun system this is the S2 "
+                    "constituent, period 12.0000 h. Divide 2*pi by this "
+                    "value to recover the constituent period.");
+  fvFormattedString(&output[OUT_TIDALFREQSEMIDIURN].cNeg, "/day");
+  output[OUT_TIDALFREQSEMIDIURN].bNeg       = 1;
+  output[OUT_TIDALFREQSEMIDIURN].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQSEMIDIURN].iNum       = 1;
+  output[OUT_TIDALFREQSEMIDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQSEMIDIURN]           = &WriteTidalFreqSemiDiurn;
+
+  fvFormattedString(&output[OUT_TIDALFREQECCPLUS].cName, "TidalFreqEccPlus");
+  fvFormattedString(&output[OUT_TIDALFREQECCPLUS].cDescr,
+                    "Eccentricity Tidal Frequency |2*RotRate - 3*MeanMotion|");
+  fvFormattedString(&output[OUT_TIDALFREQECCPLUS].cLongDescr,
+                    "Frequency of the upper eccentricity sideband of the "
+                    "semi-diurnal band, the (2,2,0,+1) term. For the "
+                    "Earth-Sun system this is the T2 constituent, period "
+                    "12.0164 h.");
+  fvFormattedString(&output[OUT_TIDALFREQECCPLUS].cNeg, "/day");
+  output[OUT_TIDALFREQECCPLUS].bNeg       = 1;
+  output[OUT_TIDALFREQECCPLUS].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQECCPLUS].iNum       = 1;
+  output[OUT_TIDALFREQECCPLUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQECCPLUS]           = &WriteTidalFreqEccPlus;
+
+  fvFormattedString(&output[OUT_TIDALFREQECCMINUS].cName, "TidalFreqEccMinus");
+  fvFormattedString(&output[OUT_TIDALFREQECCMINUS].cDescr,
+                    "Eccentricity Tidal Frequency |2*RotRate - MeanMotion|");
+  fvFormattedString(&output[OUT_TIDALFREQECCMINUS].cLongDescr,
+                    "Frequency of the lower eccentricity sideband of the "
+                    "semi-diurnal band, the (2,2,0,-1) term. For the "
+                    "Earth-Sun system this is the R2 constituent, period "
+                    "11.9836 h.");
+  fvFormattedString(&output[OUT_TIDALFREQECCMINUS].cNeg, "/day");
+  output[OUT_TIDALFREQECCMINUS].bNeg       = 1;
+  output[OUT_TIDALFREQECCMINUS].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQECCMINUS].iNum       = 1;
+  output[OUT_TIDALFREQECCMINUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQECCMINUS]           = &WriteTidalFreqEccMinus;
+
+  fvFormattedString(&output[OUT_TIDALFREQRADIAL].cName, "TidalFreqRadial");
+  fvFormattedString(&output[OUT_TIDALFREQRADIAL].cDescr,
+                    "Radial Tidal Frequency |MeanMotion|");
+  fvFormattedString(&output[OUT_TIDALFREQRADIAL].cLongDescr,
+                    "Frequency of the zonal (radial, or breathing) tide, the "
+                    "(2,0,1,+1) term. For the Earth-Sun system this is the "
+                    "Sa constituent, period 365.26 d. For a synchronous "
+                    "rotator such as Enceladus this is the dominant "
+                    "time-variable tide.");
+  fvFormattedString(&output[OUT_TIDALFREQRADIAL].cNeg, "/day");
+  output[OUT_TIDALFREQRADIAL].bNeg       = 1;
+  output[OUT_TIDALFREQRADIAL].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQRADIAL].iNum       = 1;
+  output[OUT_TIDALFREQRADIAL].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQRADIAL]           = &WriteTidalFreqRadial;
+
+  fvFormattedString(&output[OUT_TIDALFREQOBLDIURN].cName, "TidalFreqOblDiurn");
+  fvFormattedString(&output[OUT_TIDALFREQOBLDIURN].cDescr,
+                    "Obliquity Tidal Frequency |RotRate - 2*MeanMotion|");
+  fvFormattedString(&output[OUT_TIDALFREQOBLDIURN].cLongDescr,
+                    "Frequency of the lower diurnal obliquity tide, the "
+                    "(2,1,0,0) term. For the Earth-Sun system this is the P1 "
+                    "constituent, period 24.0659 h. Vanishes at zero "
+                    "obliquity.");
+  fvFormattedString(&output[OUT_TIDALFREQOBLDIURN].cNeg, "/day");
+  output[OUT_TIDALFREQOBLDIURN].bNeg       = 1;
+  output[OUT_TIDALFREQOBLDIURN].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQOBLDIURN].iNum       = 1;
+  output[OUT_TIDALFREQOBLDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQOBLDIURN]           = &WriteTidalFreqOblDiurn;
+
+  fvFormattedString(&output[OUT_TIDALFREQOBLSID].cName, "TidalFreqOblSid");
+  fvFormattedString(&output[OUT_TIDALFREQOBLSID].cDescr,
+                    "Obliquity Tidal Frequency |RotRate|");
+  fvFormattedString(&output[OUT_TIDALFREQOBLSID].cLongDescr,
+                    "Frequency of the sidereal diurnal obliquity tide, the "
+                    "(2,1,1,0) term. For the Earth-Sun system this is the "
+                    "solar part of the K1 constituent, period 23.9345 h "
+                    "(one sidereal day). Vanishes at zero obliquity.");
+  fvFormattedString(&output[OUT_TIDALFREQOBLSID].cNeg, "/day");
+  output[OUT_TIDALFREQOBLSID].bNeg       = 1;
+  output[OUT_TIDALFREQOBLSID].dNeg       = DAYSEC;
+  output[OUT_TIDALFREQOBLSID].iNum       = 1;
+  output[OUT_TIDALFREQOBLSID].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALFREQOBLSID]           = &WriteTidalFreqOblSid;
+
+  fvFormattedString(&output[OUT_TIDALAMPSEMIDIURN].cName, "TidalAmpSemiDiurn");
+  fvFormattedString(&output[OUT_TIDALAMPSEMIDIURN].cDescr,
+                    "Semi-Diurnal Equilibrium Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPSEMIDIURN].cLongDescr,
+                    "Equilibrium tide amplitude of the principal "
+                    "semi-diurnal constituent, expressed as a surface "
+                    "displacement: zeta = (M_pert/M_body)*(R^4/a^3)*F*G, "
+                    "where F and G are the Kaula inclination and "
+                    "eccentricity functions. This is the amplitude of the "
+                    "raising potential; the observed ocean tide carries an "
+                    "additional factor (1 + k_2 - h_2).");
+  fvFormattedString(&output[OUT_TIDALAMPSEMIDIURN].cNeg, "m");
+  output[OUT_TIDALAMPSEMIDIURN].bNeg       = 1;
+  output[OUT_TIDALAMPSEMIDIURN].dNeg       = 1;
+  output[OUT_TIDALAMPSEMIDIURN].iNum       = 1;
+  output[OUT_TIDALAMPSEMIDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPSEMIDIURN]           = &WriteTidalAmpSemiDiurn;
+
+  fvFormattedString(&output[OUT_TIDALAMPECCPLUS].cName, "TidalAmpEccPlus");
+  fvFormattedString(&output[OUT_TIDALAMPECCPLUS].cDescr,
+                    "Upper Eccentricity Sideband Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPECCPLUS].cLongDescr,
+                    "Equilibrium tide amplitude of the (2,2,0,+1) term "
+                    "(Earth-Sun: T2). Scales as 7e/2 relative to the "
+                    "principal semi-diurnal amplitude.");
+  fvFormattedString(&output[OUT_TIDALAMPECCPLUS].cNeg, "m");
+  output[OUT_TIDALAMPECCPLUS].bNeg       = 1;
+  output[OUT_TIDALAMPECCPLUS].dNeg       = 1;
+  output[OUT_TIDALAMPECCPLUS].iNum       = 1;
+  output[OUT_TIDALAMPECCPLUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPECCPLUS]           = &WriteTidalAmpEccPlus;
+
+  fvFormattedString(&output[OUT_TIDALAMPECCMINUS].cName, "TidalAmpEccMinus");
+  fvFormattedString(&output[OUT_TIDALAMPECCMINUS].cDescr,
+                    "Lower Eccentricity Sideband Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPECCMINUS].cLongDescr,
+                    "Equilibrium tide amplitude of the (2,2,0,-1) term "
+                    "(Earth-Sun: R2). Scales as e/2 relative to the "
+                    "principal semi-diurnal amplitude.");
+  fvFormattedString(&output[OUT_TIDALAMPECCMINUS].cNeg, "m");
+  output[OUT_TIDALAMPECCMINUS].bNeg       = 1;
+  output[OUT_TIDALAMPECCMINUS].dNeg       = 1;
+  output[OUT_TIDALAMPECCMINUS].iNum       = 1;
+  output[OUT_TIDALAMPECCMINUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPECCMINUS]           = &WriteTidalAmpEccMinus;
+
+  fvFormattedString(&output[OUT_TIDALAMPRADIAL].cName, "TidalAmpRadial");
+  fvFormattedString(&output[OUT_TIDALAMPRADIAL].cDescr,
+                    "Radial (Zonal) Equilibrium Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPRADIAL].cLongDescr,
+                    "Equilibrium tide amplitude of the zonal (2,0,1,+1) term "
+                    "(Earth-Sun: Sa). Note that the observed Sa constituent "
+                    "on Earth is dominated by radiational, not "
+                    "gravitational, forcing.");
+  fvFormattedString(&output[OUT_TIDALAMPRADIAL].cNeg, "m");
+  output[OUT_TIDALAMPRADIAL].bNeg       = 1;
+  output[OUT_TIDALAMPRADIAL].dNeg       = 1;
+  output[OUT_TIDALAMPRADIAL].iNum       = 1;
+  output[OUT_TIDALAMPRADIAL].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPRADIAL]           = &WriteTidalAmpRadial;
+
+  fvFormattedString(&output[OUT_TIDALAMPOBLDIURN].cName, "TidalAmpOblDiurn");
+  fvFormattedString(&output[OUT_TIDALAMPOBLDIURN].cDescr,
+                    "Lower Diurnal Obliquity Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPOBLDIURN].cLongDescr,
+                    "Equilibrium tide amplitude of the (2,1,0,0) term "
+                    "(Earth-Sun: P1). Proportional to sin(obliquity).");
+  fvFormattedString(&output[OUT_TIDALAMPOBLDIURN].cNeg, "m");
+  output[OUT_TIDALAMPOBLDIURN].bNeg       = 1;
+  output[OUT_TIDALAMPOBLDIURN].dNeg       = 1;
+  output[OUT_TIDALAMPOBLDIURN].iNum       = 1;
+  output[OUT_TIDALAMPOBLDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPOBLDIURN]           = &WriteTidalAmpOblDiurn;
+
+  fvFormattedString(&output[OUT_TIDALAMPOBLSID].cName, "TidalAmpOblSid");
+  fvFormattedString(&output[OUT_TIDALAMPOBLSID].cDescr,
+                    "Sidereal Diurnal Obliquity Tide Amplitude");
+  fvFormattedString(&output[OUT_TIDALAMPOBLSID].cLongDescr,
+                    "Equilibrium tide amplitude of the (2,1,1,0) term "
+                    "(Earth-Sun: solar K1). Proportional to sin(obliquity).");
+  fvFormattedString(&output[OUT_TIDALAMPOBLSID].cNeg, "m");
+  output[OUT_TIDALAMPOBLSID].bNeg       = 1;
+  output[OUT_TIDALAMPOBLSID].dNeg       = 1;
+  output[OUT_TIDALAMPOBLSID].iNum       = 1;
+  output[OUT_TIDALAMPOBLSID].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALAMPOBLSID]           = &WriteTidalAmpOblSid;
+
+  fvFormattedString(&output[OUT_TIDALPOWERSEMIDIURN].cName,
+                    "TidalPowerSemiDiurn");
+  fvFormattedString(&output[OUT_TIDALPOWERSEMIDIURN].cDescr,
+                    "Power Dissipated in the Semi-Diurnal Constituent");
+  fvFormattedString(&output[OUT_TIDALPOWERSEMIDIURN].cLongDescr,
+                    "Share of the total tidal power carried by the principal "
+                    "semi-diurnal constituent. Summing the six TidalPower "
+                    "outputs reproduces PowerEqtide exactly.");
+  fvFormattedString(&output[OUT_TIDALPOWERSEMIDIURN].cNeg, "TW");
+  output[OUT_TIDALPOWERSEMIDIURN].bNeg       = 1;
+  output[OUT_TIDALPOWERSEMIDIURN].dNeg       = 1e-12;
+  output[OUT_TIDALPOWERSEMIDIURN].iNum       = 1;
+  output[OUT_TIDALPOWERSEMIDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWERSEMIDIURN]           = &WriteTidalPowerSemiDiurn;
+
+  fvFormattedString(&output[OUT_TIDALPOWERECCPLUS].cName, "TidalPowerEccPlus");
+  fvFormattedString(&output[OUT_TIDALPOWERECCPLUS].cDescr,
+                    "Power Dissipated in the Upper Eccentricity Sideband");
+  fvFormattedString(&output[OUT_TIDALPOWERECCPLUS].cNeg, "TW");
+  output[OUT_TIDALPOWERECCPLUS].bNeg       = 1;
+  output[OUT_TIDALPOWERECCPLUS].dNeg       = 1e-12;
+  output[OUT_TIDALPOWERECCPLUS].iNum       = 1;
+  output[OUT_TIDALPOWERECCPLUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWERECCPLUS]           = &WriteTidalPowerEccPlus;
+
+  fvFormattedString(&output[OUT_TIDALPOWERECCMINUS].cName,
+                    "TidalPowerEccMinus");
+  fvFormattedString(&output[OUT_TIDALPOWERECCMINUS].cDescr,
+                    "Power Dissipated in the Lower Eccentricity Sideband");
+  fvFormattedString(&output[OUT_TIDALPOWERECCMINUS].cNeg, "TW");
+  output[OUT_TIDALPOWERECCMINUS].bNeg       = 1;
+  output[OUT_TIDALPOWERECCMINUS].dNeg       = 1e-12;
+  output[OUT_TIDALPOWERECCMINUS].iNum       = 1;
+  output[OUT_TIDALPOWERECCMINUS].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWERECCMINUS]           = &WriteTidalPowerEccMinus;
+
+  fvFormattedString(&output[OUT_TIDALPOWERRADIAL].cName, "TidalPowerRadial");
+  fvFormattedString(&output[OUT_TIDALPOWERRADIAL].cDescr,
+                    "Power Dissipated in the Radial (Zonal) Constituent");
+  fvFormattedString(&output[OUT_TIDALPOWERRADIAL].cNeg, "TW");
+  output[OUT_TIDALPOWERRADIAL].bNeg       = 1;
+  output[OUT_TIDALPOWERRADIAL].dNeg       = 1e-12;
+  output[OUT_TIDALPOWERRADIAL].iNum       = 1;
+  output[OUT_TIDALPOWERRADIAL].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWERRADIAL]           = &WriteTidalPowerRadial;
+
+  fvFormattedString(&output[OUT_TIDALPOWEROBLDIURN].cName,
+                    "TidalPowerOblDiurn");
+  fvFormattedString(&output[OUT_TIDALPOWEROBLDIURN].cDescr,
+                    "Power Dissipated in the Lower Diurnal Obliquity Tide");
+  fvFormattedString(&output[OUT_TIDALPOWEROBLDIURN].cNeg, "TW");
+  output[OUT_TIDALPOWEROBLDIURN].bNeg       = 1;
+  output[OUT_TIDALPOWEROBLDIURN].dNeg       = 1e-12;
+  output[OUT_TIDALPOWEROBLDIURN].iNum       = 1;
+  output[OUT_TIDALPOWEROBLDIURN].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWEROBLDIURN]           = &WriteTidalPowerOblDiurn;
+
+  fvFormattedString(&output[OUT_TIDALPOWEROBLSID].cName, "TidalPowerOblSid");
+  fvFormattedString(&output[OUT_TIDALPOWEROBLSID].cDescr,
+                    "Power Dissipated in the Sidereal Diurnal Obliquity Tide");
+  fvFormattedString(&output[OUT_TIDALPOWEROBLSID].cNeg, "TW");
+  output[OUT_TIDALPOWEROBLSID].bNeg       = 1;
+  output[OUT_TIDALPOWEROBLSID].dNeg       = 1e-12;
+  output[OUT_TIDALPOWEROBLSID].iNum       = 1;
+  output[OUT_TIDALPOWEROBLSID].iModuleBit = EQTIDE;
+  fnWrite[OUT_TIDALPOWEROBLSID]           = &WriteTidalPowerOblSid;
+}
+
+/** Disable the per-constituent outputs.
+
+    The CPL phase-lag array they read is allocated only by VerifyCPL(), so
+    leaving them enabled under CTL or DB15 would dereference NULL. */
+void fvDisableConstituentOutputs(OUTPUT *output) {
+  output[OUT_TIDALFREQSEMIDIURN].iNum  = 0;
+  output[OUT_TIDALFREQECCPLUS].iNum    = 0;
+  output[OUT_TIDALFREQECCMINUS].iNum   = 0;
+  output[OUT_TIDALFREQRADIAL].iNum     = 0;
+  output[OUT_TIDALFREQOBLDIURN].iNum   = 0;
+  output[OUT_TIDALFREQOBLSID].iNum     = 0;
+  output[OUT_TIDALAMPSEMIDIURN].iNum   = 0;
+  output[OUT_TIDALAMPECCPLUS].iNum     = 0;
+  output[OUT_TIDALAMPECCMINUS].iNum    = 0;
+  output[OUT_TIDALAMPRADIAL].iNum      = 0;
+  output[OUT_TIDALAMPOBLDIURN].iNum    = 0;
+  output[OUT_TIDALAMPOBLSID].iNum      = 0;
+  output[OUT_TIDALPOWERSEMIDIURN].iNum = 0;
+  output[OUT_TIDALPOWERECCPLUS].iNum   = 0;
+  output[OUT_TIDALPOWERECCMINUS].iNum  = 0;
+  output[OUT_TIDALPOWERRADIAL].iNum    = 0;
+  output[OUT_TIDALPOWEROBLDIURN].iNum  = 0;
+  output[OUT_TIDALPOWEROBLSID].iNum    = 0;
 }
 
 /************ EQTIDE Logging Functions **************/
@@ -4096,6 +4542,182 @@ void fiaCPLEpsilon(double dRotRate, double dMeanMotion, double dObliquity,
   iEpsilon[5] = fiSign(dMeanMotion);
   iEpsilon[8] = fiSign(dRotRate - 2 * dMeanMotion);
   iEpsilon[9] = fiSign(dRotRate);
+}
+
+/*
+ ************* Darwin-Kaula Constituent Decomposition ****************
+ *
+ * CPL expands the degree-2 tide-raising potential into discrete harmonics
+ * indexed by the Kaula integers (l=2,m,p,q). fiaCPLEpsilon() above evaluates
+ * the frequency of each harmonic but keeps only its sign, because that is all
+ * the constant-phase-lag model needs. The routines below recover the discarded
+ * information: the frequency magnitude, the amplitude, and the share of the
+ * total dissipated power carried by each constituent.
+ *
+ * These are diagnostics only -- nothing here feeds the derivatives, so they
+ * are evaluated on demand at output time rather than stored on BODY.
+ */
+
+/** Map a TIDE_* constituent onto its index in the sparse iTidalEpsilon array */
+int fiTidalEpsilonIndex(int iConst) {
+  const int iaEps[NUM_TIDE_CONSTITUENTS] = {0, 1, 2, 5, 8, 9};
+
+  if (iConst < 0 || iConst >= NUM_TIDE_CONSTITUENTS) {
+    return -1;
+  }
+  return iaEps[iConst];
+}
+
+/** Tidal frequency of a constituent, in rad/s.
+
+    Returned as a magnitude: a tidal frequency is positive by convention, and
+    the sign of the forcing argument is already carried by iTidalEpsilon. */
+double fdCPLTidalFreq(BODY *body, int iBody, int iOrbiter, int iConst) {
+  double dOmega = body[iBody].dRotRate;
+  double dMM    = body[iOrbiter].dMeanMotion;
+
+  switch (iConst) {
+    case TIDE_SEMIDIURN:
+      return fabs(2 * dOmega - 2 * dMM);
+    case TIDE_ECCPLUS:
+      return fabs(2 * dOmega - 3 * dMM);
+    case TIDE_ECCMINUS:
+      return fabs(2 * dOmega - dMM);
+    case TIDE_RADIAL:
+      return fabs(dMM);
+    case TIDE_OBLDIURN:
+      return fabs(dOmega - 2 * dMM);
+    case TIDE_OBLSID:
+      return fabs(dOmega);
+  }
+  return 0;
+}
+
+/** Dimensionless amplitude coefficient of a constituent.
+
+    This is the Kaula product F_2mp(psi) * G_2pq(e), with every inclination
+    function divided by 3 so that the principal semidiurnal term reduces to
+    unity at zero obliquity and zero eccentricity. That normalization makes
+    fdCPLTidalAmp() return the textbook equilibrium tide height directly,
+    and leaves all constituent ratios -- within and across species -- equal
+    to those of the unnormalized Kaula expansion.
+
+    Truncated at the order CPL itself retains: O(e) in amplitude (hence O(e^2)
+    in power) and first order in the inclination functions. */
+double fdCPLTidalAmpCoeff(BODY *body, int iBody, int iOrbiter, int iConst) {
+  double dPsi    = body[iBody].dObliquity;
+  double dEccSq  = body[iOrbiter].dEccSq;
+  double dEcc    = sqrt(dEccSq);
+  double dSinPsi = sin(dPsi), dCosPsi = cos(dPsi);
+  /* F_220/3 = cos^4(psi/2) = ((1+cos psi)/2)^2 */
+  double dHalf = 0.5 * (1 + dCosPsi);
+  double dF220 = dHalf * dHalf;
+  /* F_201/3 and F_210/3, F_211/3 */
+  double dF201 = 0.5 * dSinPsi * dSinPsi - 1. / 3;
+  double dF210 = 0.5 * dSinPsi * (1 + dCosPsi);
+  double dF211 = dSinPsi * dCosPsi;
+
+  switch (iConst) {
+    case TIDE_SEMIDIURN: /* m=2,p=0,q=0:  G_200  = 1 - 5e^2/2 */
+      return dF220 * (1 - 2.5 * dEccSq);
+    case TIDE_ECCPLUS: /* m=2,p=0,q=+1: G_201  = 7e/2 */
+      return dF220 * 3.5 * dEcc;
+    case TIDE_ECCMINUS: /* m=2,p=0,q=-1: G_20-1 = -e/2 */
+      return dF220 * 0.5 * dEcc;
+    case TIDE_RADIAL: /* m=0,p=1,q=+1: G_211  = 3e/2 */
+      return fabs(dF201) * 1.5 * dEcc;
+    case TIDE_OBLDIURN: /* m=1,p=0,q=0:  G_200 ~ 1 */
+      return fabs(dF210);
+    case TIDE_OBLSID: /* m=1,p=1,q=0:  G_210 ~ 1 */
+      return fabs(dF211);
+  }
+  return 0;
+}
+
+/** Equilibrium tide amplitude of a constituent, in meters.
+
+    The degree-2 potential raised on iBody by iPert has amplitude
+    Psi = (G*M_pert*R^2/a^3)*A, so the equilibrium surface displacement is
+    zeta = Psi/g = (M_pert/M_body)*(R^4/a^3)*A.
+
+    This is the amplitude of the raising potential expressed as a height. The
+    observed ocean tide additionally carries the Love number combination
+    (1 + k_2 - h_2); EQTIDE tracks k_2 but not h_2, so that correction is left
+    to the user. */
+double fdCPLTidalAmp(BODY *body, int iBody, int iPert, int iOrbiter,
+                     int iConst) {
+  double dRad = body[iBody].dTidalRadius;
+  double dSemi = body[iOrbiter].dSemi;
+
+  return (body[iPert].dMass / body[iBody].dMass) * pow(dRad, 4) /
+         pow(dSemi, 3) * fdCPLTidalAmpCoeff(body, iBody, iOrbiter, iConst);
+}
+
+/** Power dissipated in iBody by a single tidal constituent, in Watts.
+
+    fdCPLTidePower() sums two contributions, an orbital and a rotational term,
+    each a Z-scaled linear combination of the phase lags. Splitting those sums
+    by phase lag rather than by term gives the power carried by each
+    constituent; summing over all NUM_TIDE_CONSTITUENTS reproduces
+    fdCPLTidePower() exactly. */
+double fdCPLTidalPowerConst(BODY *body, int iBody, int iConst) {
+  int iPert, iOrbiter, iIndex, iEps;
+  double dPower = 0, dOrbWeight, dRotWeight, dEccSq, dSinSq;
+
+  iEps = fiTidalEpsilonIndex(iConst);
+  if (iEps < 0) {
+    return 0;
+  }
+
+  for (iPert = 0; iPert < body[iBody].iTidePerts; iPert++) {
+    if (iBody == 0) {
+      iOrbiter = body[iBody].iaTidePerts[iPert];
+    } else {
+      iOrbiter = iBody;
+    }
+    iIndex = body[iBody].iaTidePerts[iPert];
+
+    dEccSq = body[iOrbiter].dEccSq;
+    dSinSq = sin(body[iBody].dObliquity) * sin(body[iBody].dObliquity);
+
+    /* Weights lifted term-by-term from fdGammaOrb() and fdGammaRot() */
+    dOrbWeight = 0;
+    dRotWeight = 0;
+    switch (iConst) {
+      case TIDE_SEMIDIURN:
+        dOrbWeight = 4 - 20 * dEccSq - 4 * dSinSq;
+        dRotWeight = 4 - 20 * dEccSq - 4 * dSinSq;
+        break;
+      case TIDE_ECCPLUS:
+        dOrbWeight = 147. / 2 * dEccSq;
+        dRotWeight = 49 * dEccSq;
+        break;
+      case TIDE_ECCMINUS:
+        dOrbWeight = 0.5 * dEccSq;
+        dRotWeight = dEccSq;
+        break;
+      case TIDE_RADIAL:
+        dOrbWeight = -3 * dEccSq;
+        dRotWeight = 0;
+        break;
+      case TIDE_OBLDIURN:
+        dOrbWeight = 4 * dSinSq;
+        dRotWeight = 2 * dSinSq;
+        break;
+      case TIDE_OBLSID:
+        dOrbWeight = 0;
+        dRotWeight = 2 * dSinSq;
+        break;
+    }
+
+    dPower += -body[iBody].dTidalZ[iIndex] / 8 * dOrbWeight *
+              body[iBody].iTidalEpsilon[iIndex][iEps];
+    dPower += body[iBody].dTidalZ[iIndex] * body[iBody].dRotRate /
+              (8 * body[iOrbiter].dMeanMotion) * dRotWeight *
+              body[iBody].iTidalEpsilon[iIndex][iEps];
+  }
+
+  return dPower;
 }
 
 void fdCPLZ(BODY *body, double dMeanMotion, double dSemi, int iBody,
@@ -4777,6 +5399,10 @@ void VerifyDB15(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
   }
 
   control->fnPropsAux[iBody][iModule] = &PropsAuxDB15;
+
+  /* DB15 does not allocate iTidalEpsilon, so the per-constituent diagnostics
+     would dereference NULL. */
+  fvDisableConstituentOutputs(output);
 
   /* Note that the mantle k_2 and Im(k_2) are calculated in
     VerifyEqtideThermint. This choice is made because they depend on mantle

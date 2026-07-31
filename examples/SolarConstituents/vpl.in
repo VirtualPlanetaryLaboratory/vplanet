@@ -1,0 +1,35 @@
+# Earth-Sun tidal constituents
+#
+# Validates EQTIDE's Darwin-Kaula constituent decomposition against the
+# named solar constituents of the classical oceanographic tide tables.
+# See README.rst.
+
+sSystemName   solarconst   # System Name
+iVerbose      5            # Verbosity level
+bOverwrite    1            # Allow file overwrites?
+
+saBodyFiles   sun.in $     # The Sun
+              earth.in     # The Earth
+
+# Input/Output Units
+sUnitMass     solar        # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength   AU           # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime     day          # Options: sec, day, year, Myr, Gyr
+sUnitAngle    d            # Options: deg, rad
+sUnitTemp     K            # Options: Kelvin, Celsius, Farenheit
+
+# Input/Output
+bDoLog        1            # Write a log file?
+iDigits       8            # Maximum number of digits to right of decimal
+
+# The constituent frequencies depend only on the rotation rate and mean
+# motion, so a short integration suffices: we only need the t=0 state to
+# compare against the tide tables. A longer run would let EQTIDE despin the
+# Earth and shift the constituents, which is itself worth plotting.
+
+sIntegrationMethod Runge-Kutta4
+bDoForward    1            # Perform a forward evolution?
+bVarDt        1            # Use variable timestepping?
+dEta          0.01         # Coefficient for variable timestepping
+dStopTime     3.65e2       # Stop time, in days (1 year)
+dOutputTime   3.65e1       # Output interval, in days

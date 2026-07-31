@@ -1,0 +1,22 @@
+# The Sun
+#
+# The Sun is present only to raise tides on the Earth; its own tidal
+# response is irrelevant here and is given a large Q so that it does
+# essentially nothing.
+
+sName         sun          # Body's name
+saModules     eqtide       # List of modules to apply to this body
+
+# Physical Parameters
+dMass         1            # Mass, in solar masses
+# sUnitLength is AU, so a positive radius would be read as AU. Negative
+# values are always interpreted as Earth radii.
+dRadius       -109.076     # Radius, negative -> Earth radii
+dRadGyra      0.27         # Radius of gyration
+dRotPeriod    -25.05       # Sidereal rotation period at the equator (-1 -> days)
+dObliquity    7.25         # Obliquity to the ecliptic
+
+# EQTIDE Parameters
+dTidalQ       1e7          # Tidal Q (large: solar dissipation is negligible here)
+dK2           0.01         # Love number of degree 2
+saTidePerts   earth        # Names of perturbing bodies

@@ -16,6 +16,34 @@
 #define CTL 1
 #define DB15 2
 
+/* Darwin-Kaula tidal constituents resolved by the CPL model.
+
+   CPL expands the tide-raising potential into a discrete set of harmonics,
+   each with its own frequency sigma_i and phase lag epsilon_i. The code has
+   always computed the sigma_i inside fiaCPLEpsilon(), but retained only
+   fiSign(sigma_i); the indices below name the six constituents so that their
+   frequencies, amplitudes and dissipated powers can be reported individually.
+
+   The TIDE_ index is the constituent number used by the output routines; the
+   epsilon index is the (sparse, historical) index into iTidalEpsilon.
+
+   Doodson analogues below are for the Earth-Sun system, where Omega is the
+   sidereal rotation rate and n the annual mean motion; see
+   examples/SolarConstituents. They are NOT general: a synchronous rotator
+   such as Enceladus has Omega = n, which collapses every constituent onto
+   the orbital frequency. */
+
+#define TIDE_SEMIDIURN 0 /* eps_0: 2*Omega - 2*n   Earth-Sun: S2 (12.0000 h) */
+#define TIDE_ECCPLUS 1   /* eps_1: 2*Omega - 3*n   Earth-Sun: T2 (12.0164 h) */
+#define TIDE_ECCMINUS 2  /* eps_2: 2*Omega -   n   Earth-Sun: R2 (11.9836 h) */
+/* Sa is a loose match: this line sits at the Keplerian mean motion (the
+   sidereal year), whereas Doodson's Sa is defined on the tropical year. */
+#define TIDE_RADIAL 3    /* eps_5:              n  Earth-Sun: Sa (365.26 d)  */
+#define TIDE_OBLDIURN 4  /* eps_8:   Omega  - 2*n  Earth-Sun: P1 (24.0659 h) */
+#define TIDE_OBLSID 5    /* eps_9:   Omega         Earth-Sun: K1 (23.9345 h) */
+
+#define NUM_TIDE_CONSTITUENTS 6
+
 /* Options Info */
 
 #define OPTSTARTEQTIDE 1000 /* Start of Eqtide options */
@@ -87,7 +115,10 @@
 #define OUT_EQROTPERCONT 1070
 #define OUT_EQROTPER 1072
 #define OUT_EQROTRATE 1074
-#define OUT_EQTIDEPOWER 1074
+/* Was also 1074, which silently shadowed OUT_EQROTRATE: both IDs index
+   output[], so whichever was registered second in InitializeOutputEqtide()
+   overwrote the first and the EqRotRate column emitted EqTidePower. */
+#define OUT_EQTIDEPOWER 1056
 
 #define OUT_GAMMAROT 1078
 #define OUT_GAMMAORB 1080
@@ -107,6 +138,33 @@
 //#define OUT_TIDALQ              1097
 #define OUT_BENV 1098
 #define OUT_BOCEAN 1099
+
+/* Per-constituent tidal diagnostics (CPL only). Ordered to match the
+   TIDE_* indices above. The IDs are scattered because they occupy the gaps
+   left in the 1050-1099 body range; that range is now full except for 1050,
+   and extending it means renumbering RADHEAT (OUTSTARTRADHEAT 1100) and
+   every module after it. */
+
+#define OUT_TIDALFREQSEMIDIURN 1061
+#define OUT_TIDALFREQECCPLUS 1063
+#define OUT_TIDALFREQECCMINUS 1065
+#define OUT_TIDALFREQRADIAL 1067
+#define OUT_TIDALFREQOBLDIURN 1069
+#define OUT_TIDALFREQOBLSID 1071
+
+#define OUT_TIDALAMPSEMIDIURN 1073
+#define OUT_TIDALAMPECCPLUS 1075
+#define OUT_TIDALAMPECCMINUS 1076
+#define OUT_TIDALAMPRADIAL 1077
+#define OUT_TIDALAMPOBLDIURN 1079
+#define OUT_TIDALAMPOBLSID 1081
+
+#define OUT_TIDALPOWERSEMIDIURN 1082
+#define OUT_TIDALPOWERECCPLUS 1087
+#define OUT_TIDALPOWERECCMINUS 1089
+#define OUT_TIDALPOWERRADIAL 1093
+#define OUT_TIDALPOWEROBLDIURN 1095
+#define OUT_TIDALPOWEROBLSID 1097
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -254,8 +312,53 @@ void WriteTidalQOcean(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
 void WriteTidalQEnv(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                     int, double *, char**);
 void InitializeOutputEqtide(OUTPUT *, fnWriteOutput[]);
+void InitializeOutputEqtideConstituents(OUTPUT *, fnWriteOutput[]);
+void fvDisableConstituentOutputs(OUTPUT *);
 void WriteTidalRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                       int, double *, char**);
+
+/* Per-constituent diagnostics */
+void fvWriteTidalFreq(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
+void fvWriteTidalAmp(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
+void fvWriteTidalPower(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
+void WriteTidalFreqSemiDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                             UPDATE *, int, double *, char**);
+void WriteTidalFreqEccPlus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
+void WriteTidalFreqEccMinus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                            UPDATE *, int, double *, char**);
+void WriteTidalFreqRadial(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char**);
+void WriteTidalFreqOblDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                            UPDATE *, int, double *, char**);
+void WriteTidalFreqOblSid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char**);
+
+void WriteTidalAmpSemiDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                            UPDATE *, int, double *, char**);
+void WriteTidalAmpEccPlus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                          UPDATE *, int, double *, char**);
+void WriteTidalAmpEccMinus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
+void WriteTidalAmpRadial(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                         UPDATE *, int, double *, char**);
+void WriteTidalAmpOblDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
+void WriteTidalAmpOblSid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                         UPDATE *, int, double *, char**);
+
+void WriteTidalPowerSemiDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                              UPDATE *, int, double *, char**);
+void WriteTidalPowerEccPlus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                            UPDATE *, int, double *, char**);
+void WriteTidalPowerEccMinus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                             UPDATE *, int, double *, char**);
+void WriteTidalPowerRadial(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
+void WriteTidalPowerOblDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                             UPDATE *, int, double *, char**);
+void WriteTidalPowerOblSid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char**);
 
 /* Logging Functions */
 void LogOptionsEqtide(CONTROL *, FILE *);
@@ -288,6 +391,13 @@ double fdGammaRot(double, double, int *);
 double fdGammaOrb(double, double, int *);
 double fdCPLTidePower(BODY *, int);
 void PropsAuxCPL(BODY *, EVOLVE *, IO *, UPDATE *, int);
+
+/* Darwin-Kaula constituent decomposition */
+double fdCPLTidalFreq(BODY *, int, int, int);
+double fdCPLTidalAmpCoeff(BODY *, int, int, int);
+double fdCPLTidalAmp(BODY *, int, int, int, int);
+double fdCPLTidalPowerConst(BODY *, int, int);
+int fiTidalEpsilonIndex(int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double, double, int);

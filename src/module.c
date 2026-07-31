@@ -1431,14 +1431,21 @@ body[iBody].dTidalQOcean;
 }
 /** Register the ATMESC<->THERMINT coupling that overrides ATMESC's
     user-supplied magnetic field with the thermint geodynamo prediction
-    when both modules are active and Gunell escape is enabled. Skipped if
-    EQTIDE is also active so we don't conflict with the 3-module hook. */
+    when both modules are active and Gunell escape is enabled.
+
+    This must register whenever ATMESC and THERMINT are both active,
+    including alongside EQTIDE. The 3-module ATMESC+EQTIDE+THERMINT hook
+    registers PropsAuxEqtideThermint, which sets the tidal quantities but
+    never touches dMagField -- so gating this on !bEqtide left dMagField
+    pinned at its input value and froze the Gunell escape rates. The
+    bMagLimitedEscape check inside PropsAuxAtmescThermint keeps this a
+    no-op for runs that don't use magnetic-limited escape. */
 void VerifyModuleMultiAtmescThermint(BODY *body, UPDATE *update,
                                      CONTROL *control, FILES *files,
                                      MODULE *module, OPTIONS *options,
                                      int iBody, int *iModuleProps,
                                      int *iModuleForce) {
-  if (body[iBody].bAtmEsc && body[iBody].bThermint && !body[iBody].bEqtide) {
+  if (body[iBody].bAtmEsc && body[iBody].bThermint) {
     control->fnPropsAuxMulti[iBody][(*iModuleProps)++] = &PropsAuxAtmescThermint;
   }
 }

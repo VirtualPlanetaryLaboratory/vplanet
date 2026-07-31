@@ -1,0 +1,81 @@
+# Earth coupled to EQTIDE + THERMINT + RADHEAT with Gunell+2018 magnetic-
+# limited escape.
+#
+# Regression coverage for the ATMESC<->THERMINT PropsAuxMulti hook when
+# EQTIDE is also active. VerifyModuleMultiAtmescThermint used to skip
+# registering PropsAuxAtmescThermint whenever bEqtide was set, which left
+# dMagField pinned at its input value: MagMom evolved, MagField did not,
+# and every Gunell escape rate was frozen for the whole run. Nothing else
+# in the suite exercises ATMESC + EQTIDE + THERMINT together, so this is
+# the only test that would catch that regression.
+sName             earth
+saModules         atmesc eqtide radheat thermint
+
+dMass             -1.0
+dRadius           -1.0
+dRotPeriod        -1.0
+dObliquity        23.5
+dRadGyra          0.5
+
+dEcc              0.0167
+dSemi             -1
+
+# EQTIDE: dTidalQEnv/dK2Env rather than dTidalQ/dK2, which VerifyAtmEsc
+# requires once an envelope is present under EQTIDE+THERMINT+ATMESC.
+saTidePerts       sun
+sTideModel        p2
+dTidalQEnv        1e4
+dK2Env            0.01
+bForceEqSpin      1
+dImK2ManOrbModel  2
+dEruptEff         0.2
+dViscJumpMan      2.0
+dTrefLind         5600
+dShModRef         1e5
+dStiffness        1.71e13
+
+# RADHEAT: Earth-default initial radiogenic abundances (negative -> Earth)
+d40KPowerMan      -1
+d40KPowerCore     -1
+d40KPowerCrust    -1
+d232ThPowerMan    -1
+d232ThPowerCore   -1
+d232ThPowerCrust  -1
+d235UPowerMan     -1
+d235UPowerCore    -1
+d235UPowerCrust   -1
+d238UPowerMan     -1
+d238UPowerCore    -1
+d238UPowerCrust   -1
+
+# THERMINT initial state
+dTMan             3000
+dTCore            6000
+dActViscMan       3e5
+
+# AtmEsc baseline (used by photolysis-driven plumbing; Gunell mode replaces
+# the actual derivatives)
+dXFrac            1.0
+dSurfWaterMass    -1
+dEnvelopeMass     -1e-3
+dOxygenMass       0
+dCO2Mass          3.0e15
+dN2Mass           3.9e18
+sWaterLossModel   ls16
+bInstantO2Sink    0
+sAtmXAbsEffH2OModel  bolmont16
+dJeansTime        -10
+bUseEnergyLimited 1
+
+# Gunell+2018 - dMagField overridden by THERMINT each step.
+bMagLimitedEscape       1
+sMagLimitedEscapeModel  Gunell18
+dMagField               -1
+dStellarWindDensity   8.0e6
+dStellarWindVelocity  4.0e5
+dExobaseTemperature   1000
+
+saOutputOrder Time -MagMom -MagField -MagPauseRadAtmEsc -MagPickupRate $
+              -CrossFieldRate -PolarCapRate -CuspRate -DriscollRate $
+              -DMagLimitedMassDt -SurfWaterMass -OxygenMass -EnvelopeMass $
+              -CO2Mass -N2Mass -TMan -TCore -RIC

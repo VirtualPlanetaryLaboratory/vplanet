@@ -1,0 +1,16 @@
+sName           sun
+saModules       stellar eqtide
+
+dMass           1.0
+dAge            1e6
+sStellarModel   baraffe
+dSatXUVFrac     1.e-3
+dSatXUVTime     -0.1
+dXUVBeta        1.23
+
+# EQTIDE: the star must also carry the module for the tidal pair.
+saTidePerts     earth
+dTidalQ         1e6
+dK2             0.5
+
+saOutputOrder   Time -Luminosity -LXUVTot

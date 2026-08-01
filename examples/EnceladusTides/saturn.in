@@ -1,0 +1,19 @@
+# Saturn
+#
+# Present only to raise tides on Enceladus. Saturn's own tidal response does
+# not matter here and is given a large Q so that it does essentially nothing.
+
+sName         saturn       # Body's name
+saModules     eqtide       # List of modules to apply to this body
+
+# Physical Parameters (JPL planetary physical parameters)
+dMass         5.6834e26    # Mass, in kg
+dRadius       58232        # Equatorial radius, in km
+dRadGyra      0.22         # Radius of gyration
+dRotPeriod    0.4440       # Rotation period, in days (10.656 h)
+dObliquity    26.73        # Obliquity
+
+# EQTIDE Parameters
+dTidalQ       1e5          # Tidal Q (Saturn's dissipation is not the subject here)
+dK2           0.39         # Love number of degree 2
+saTidePerts   enceladus    # Names of perturbing bodies

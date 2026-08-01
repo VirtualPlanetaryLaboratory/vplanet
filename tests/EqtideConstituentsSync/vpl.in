@@ -1,0 +1,36 @@
+# Tidal constituents of a synchronous satellite: Enceladus at Saturn
+#
+# Companion to examples/SolarConstituents. That example shows EqTide's six
+# CPL constituents landing on six named Doodson constituents for the
+# Earth-Sun system. This one shows what happens to the same six constituents
+# when the tidally-forced body is synchronously rotating. See README.rst.
+
+sSystemName   syncconst    # System Name
+iVerbose      5            # Verbosity level
+bOverwrite    1            # Allow file overwrites?
+
+saBodyFiles   saturn.in $  # Saturn
+              enceladus.in # Enceladus
+
+# Input/Output Units
+sUnitMass     kg           # Options: gram, kg, Earth, Neptune, Jupiter, solar
+sUnitLength   km           # Options: cm, m, km, Earth, Jupiter, solar, AU
+sUnitTime     day          # Options: sec, day, year, Myr, Gyr
+sUnitAngle    d            # Options: deg, rad
+sUnitTemp     K            # Options: Kelvin, Celsius, Farenheit
+
+# Input/Output
+bDoLog        1            # Write a log file?
+iDigits       8            # Maximum number of digits to right of decimal
+
+# bDiscreteRot defaults to 1, so with e well below sqrt(1/19) the equilibrium
+# spin is exactly the mean motion. That is what drives the semi-diurnal
+# constituent to zero frequency. Set bDiscreteRot to 0 to use the continuous
+# equilibrium rate (1 + 9.5e^2)n instead; see README.rst.
+
+sIntegrationMethod Runge-Kutta4
+bDoForward    1            # Perform a forward evolution?
+bVarDt        1            # Use variable timestepping?
+dEta          0.01         # Coefficient for variable timestepping
+dStopTime     1.37e1       # Stop time, in days (10 orbits)
+dOutputTime   1.37e0       # Output interval, in days (1 orbit)

@@ -1,0 +1,45 @@
+# Enceladus
+#
+# Synchronously rotating, so bForceEqSpin holds the spin at the equilibrium
+# rate. With bDiscreteRot = 1 (the default) and e far below sqrt(1/19), that
+# rate is exactly the mean motion, which is what collapses the constituent
+# spectrum. See README.rst.
+
+sName         enceladus    # Body's name
+saModules     eqtide       # Modules to apply to this body
+
+# Physical Parameters (JPL satellite physical parameters)
+dMass         1.0802e20    # Mass, in kg
+dRadius       252.1        # Mean radius, in km
+dRadGyra      0.335        # Radius of gyration
+# Obliquity is poorly constrained and probably of order a milliradian or
+# less. A small nonzero value is used so that the obliquity constituents are
+# visible rather than identically zero; they are negligible either way.
+dObliquity    0.0005       # Obliquity, in degrees
+
+# Orbital Parameters (JPL satellite mean elements)
+dEcc          0.0047       # Eccentricity
+dSemi         237948       # Semi-major axis, in km
+
+# EQTIDE Parameters
+# k_2 and Q for Enceladus are not well determined. Tidal power scales as
+# k_2/Q, so only the ratio matters here; 0.1/20 = 5e-3 puts the total in the
+# range of the observed south-polar heat flow. See README.rst for caveats.
+dTidalQ       20           # Tidal Q
+dK2           0.1          # Love number of degree 2
+saTidePerts   saturn       # Name of tidal perturber
+bForceEqSpin  1            # Hold rotation at the equilibrium (synchronous) rate
+
+saOutputOrder Time -RotPer -OrbPeriod $
+              # Constituent frequencies, in rad/day
+              TidalFreqSemiDiurn TidalFreqEccPlus TidalFreqEccMinus $
+              TidalFreqRadial TidalFreqOblDiurn TidalFreqOblSid $
+              # Equilibrium tide amplitudes, in m
+              -TidalAmpSemiDiurn -TidalAmpEccPlus -TidalAmpEccMinus $
+              -TidalAmpRadial -TidalAmpOblDiurn -TidalAmpOblSid $
+              # Power dissipated per constituent, and the total. Unlike the
+              # example, these use the positive (SI) form: the log echoes the
+              # negative-option unit, and the test wants Watts.
+              TidalPowerSemiDiurn TidalPowerEccPlus TidalPowerEccMinus $
+              TidalPowerRadial TidalPowerOblDiurn TidalPowerOblSid $
+              PowerEqtide

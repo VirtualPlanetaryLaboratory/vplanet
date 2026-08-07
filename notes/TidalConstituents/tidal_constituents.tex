@@ -1,0 +1,601 @@
+% Technical note: EqTide Darwin-Kaula constituent decomposition
+% Compile: pdflatex tidal_constituents.tex
+
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
+
+\newcommand{\eqtide}{\textsc{EqTide}}
+\newcommand{\Om}{\Omega}
+
+\title{Resolving the Darwin--Kaula Tidal Constituents in \eqtide:\\
+Frequencies, Amplitudes, and Dissipated Power}
+\author{Rory Barnes\\\small University of Washington}
+\date{7 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+\eqtide's constant-phase-lag (CPL) tidal model expands the degree-2
+tide-raising potential into six discrete Darwin--Kaula harmonics, but it has
+only ever used the \emph{sign} of each harmonic's frequency, since that is all
+the secular equations of motion require. Everything else about the individual
+constituents was computed internally and discarded. This note documents a
+modification that recovers it and reports, for each of the six constituents,
+its forcing frequency, its tide height, and the power it dissipates. These are
+the quantities physical oceanography works with, and exposing them is a
+prerequisite for coupling an orbital evolution model to an ocean-response
+model --- the motivating application being Enceladus. Alongside the
+decomposition we introduce the displacement Love number $h_2$, which \eqtide\
+has never carried; without it the code can report the tide of the raising
+potential but not the tide a gauge would measure. The decomposition of the
+power is exact, being a regrouping of terms already present, and neither it
+nor $h_2$ alters any orbital or rotational evolution. We validate in two
+opposite dynamical limits. For the fast-rotating Earth the six constituents
+land on named solar Doodson lines (S$_2$, T$_2$, R$_2$, P$_1$, K$_1$,
+S$_\mathrm{a}$), with periods matching the tide tables to $\sim\!10^{-7}$
+relative and within-species amplitude ratios matching the Cartwright--Tayler
+expansion to a few parts in $10^3$. For synchronously locked Enceladus the
+constituent structure collapses onto a single frequency, the heating
+partitions in exact rational proportions $7/8$, $3/28$, $1/56$, and the summed
+constituent power reproduces the textbook closed form
+$\tfrac{21}{2}(k_2/Q)GM_p^2R^5ne^2/a^6$ to $1.4\times10^{-7}$.
+\textbf{This is preliminary work circulated for independent verification};
+\S\ref{sec:caveats} lists the points where a second opinion would be most
+valuable.
+\end{abstract}
+
+\section{Motivation and scope}
+
+Physical oceanography describes a tide as a superposition of harmonic
+constituents, each with its own frequency, amplitude, and phase. Tidal
+prediction, ocean-resonance analysis, and dissipation budgets in subsurface
+oceans are all organized around that decomposition. \eqtide, by contrast, is
+built to evolve orbits and spins: it needs only the secular, orbit-averaged
+torques and the total dissipated power, so its representation of the tide has
+never been expressed in constituent form.
+
+The two descriptions are not in conflict --- \eqtide's CPL model \emph{is} a
+constituent model internally. The purpose of this modification is to make that
+structure explicit, so that a run can hand an ocean model a list of
+(frequency, amplitude) pairs rather than a single bulk heating rate.
+
+Scope is deliberately narrow. The new quantities are diagnostics: they are
+derived from the model state at the moment they are reported, and nothing
+computed here feeds back into the equations of motion. No orbit, spin, or
+obliquity evolves differently than it did before. The one genuinely new
+physical ingredient is the Love number $h_2$ (\S\ref{sec:h2}), and it too
+enters only the reported tide heights.
+
+\section{The CPL model and its constituents}
+
+\subsection{Kaula expansion of the tide-raising potential}
+
+The potential raised on a body of radius $R$ by a perturber of mass $M_p$ at
+semi-major axis $a$ is expanded, at degree $l=2$, in the Kaula form
+\begin{equation}
+  U = \frac{GM_p}{a}\sum_{m=0}^{2}\sum_{p=0}^{2}\sum_{q=-\infty}^{\infty}
+  \left(\frac{R}{a}\right)^{2} F_{2mp}(\psi)\,G_{2pq}(e)\,
+  \cos\!\big(\sigma_{mpq}t + \phi_{mpq}\big),
+\end{equation}
+where $\psi$ is the obliquity, $e$ the eccentricity, $F_{2mp}$ the inclination
+functions and $G_{2pq}$ the eccentricity functions. Each harmonic is forced at
+\begin{equation}
+  \sigma_{mpq} = (2-2p+q)\,n - m\,\Om ,
+  \label{eq:sigma}
+\end{equation}
+with $n$ the mean motion and $\Om$ the rotation rate.
+
+In a constant-phase-lag model each harmonic is assigned a lag
+$\varepsilon_{mpq}$ whose \emph{magnitude} is fixed by the quality factor $Q$
+and whose \emph{sign} follows the sign of $\sigma_{mpq}$:
+\begin{equation}
+  \varepsilon_i = \operatorname{sgn}(\sigma_i),
+  \qquad
+  \varepsilon_i \in \{-1,0,+1\}.
+  \label{eq:eps}
+\end{equation}
+The zero case is not a rounding artifact but a physical statement: a harmonic
+at exactly zero frequency is a permanent, unlagged bulge. It matters at
+Enceladus (\S\ref{sec:enceladus}).
+
+\subsection{The six retained harmonics}
+
+Truncated at $\mathcal{O}(e)$ in amplitude and first order in the inclination
+functions --- the order CPL itself retains --- six harmonics survive.
+Table~\ref{tab:constituents} lists them with the names used throughout this
+note. Doodson analogues are for the Earth--Sun system only and are \emph{not}
+general (see \S\ref{sec:enceladus}).
+
+\begin{table}[h]
+\centering
+\caption{The six Darwin--Kaula constituents resolved by \eqtide's CPL model.}
+\label{tab:constituents}
+\begin{tabular}{llccl}
+\toprule
+Name & $(m,p,q)$ & Frequency $\sigma$ & $G_{2pq}$ & Earth--Sun \\
+\midrule
+Semi-diurnal        & $(2,0,0)$  & $2\Om-2n$ & $1-\tfrac52 e^2$ & S$_2$ \\
+Ecc.\ upper         & $(2,0,+1)$ & $2\Om-3n$ & $\tfrac72 e$     & T$_2$ \\
+Ecc.\ lower         & $(2,0,-1)$ & $2\Om-n$  & $-\tfrac12 e$    & R$_2$ \\
+Radial (zonal)      & $(0,1,+1)$ & $n$       & $\tfrac32 e$     & S$_\mathrm{a}$* \\
+Obliquity, diurnal  & $(1,0,0)$  & $\Om-2n$  & $\simeq 1$       & P$_1$ \\
+Obliquity, sidereal & $(1,1,0)$  & $\Om$     & $\simeq 1$       & K$_1$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Frequencies are reported as magnitudes, $|\sigma_i|$: a tidal frequency is
+positive by convention, and the sign of the forcing argument is already
+carried by $\varepsilon_i$.
+
+\section{What is computed}
+
+\subsection{Frequency}
+
+Directly from Eq.~\eqref{eq:sigma}, evaluated at the body's instantaneous
+$\Om$ and the orbit's $n$. This information already existed inside the model
+and was being discarded by the $\operatorname{sgn}$ in Eq.~\eqref{eq:eps};
+recovering it required no new physics.
+
+\subsection{The tide of the raising potential}
+
+The degree-2 potential of constituent $i$ has amplitude
+$\Psi_i = (GM_pR^2/a^3)\,A_i$, so the equilibrium surface displacement,
+$\zeta_i = \Psi_i/g$ with $g = GM_b/R^2$, is
+\begin{equation}
+  \boxed{\;
+  \zeta_i = \frac{M_p}{M_b}\,\frac{R^4}{a^3}\,A_i \;}
+  \qquad
+  A_i \equiv \tfrac{1}{3}F_{2mp}(\psi)\,G_{2pq}(e).
+  \label{eq:amp}
+\end{equation}
+The factor $1/3$ normalizes every inclination function so that the principal
+semi-diurnal term reduces to unity at $\psi=0$, $e=0$; this makes
+Eq.~\eqref{eq:amp} return the textbook equilibrium tide height directly and
+leaves all constituent ratios, within and across species, equal to those of
+the unnormalized Kaula expansion. The normalized inclination functions are
+\begin{align}
+  \tfrac13 F_{220} &= \cos^4(\psi/2), &
+  \tfrac13 F_{201} &= \tfrac12\sin^2\psi - \tfrac13, \\
+  \tfrac13 F_{210} &= \tfrac12\sin\psi\,(1+\cos\psi), &
+  \tfrac13 F_{211} &= \sin\psi\cos\psi .
+\end{align}
+
+Equation~\eqref{eq:amp} is the tide of the \emph{raising potential}. It is not
+yet the tide anything would measure, which is the subject of the next section.
+
+\subsection{Which tide? The role of \texorpdfstring{$h_2$}{h2}}
+\label{sec:h2}
+
+Two Love numbers of degree 2 are needed to turn a forcing potential into an
+observable tide, and \eqtide\ has historically carried only one of them.
+
+\begin{itemize}
+\item $k_2$, the \emph{potential} Love number, is the ratio of the additional
+gravitational potential generated by the deformed body to the raising
+potential. It is what sets the tidal torque and, through $\operatorname{Im}
+(k_2) = -k_2/Q$, the dissipation.
+\item $h_2$, the \emph{displacement} Love number, is the ratio of the radial
+displacement of the solid surface to $\zeta$. It sets how far the ground
+itself moves.
+\end{itemize}
+
+The distinction matters because an ocean is measured against a sea floor that
+is moving too. Three heights follow from the same forcing $\zeta$:
+\begin{align}
+  \text{solid surface rises by} \quad & h_2\,\zeta, \\
+  \text{geoid rises by} \quad & (1+k_2)\,\zeta, \\
+  \text{water depth changes by} \quad & \gamma_2\,\zeta,
+  \qquad \gamma_2 \equiv 1 + k_2 - h_2 .
+  \label{eq:gamma}
+\end{align}
+The middle line includes the self-attraction of the redistributed mass, which
+lifts the equipotential a further $k_2\zeta$ above the raising value. An ocean
+fills to the geoid; a tide gauge measures the gap between the geoid and the
+solid surface beneath it. The difference, $\gamma_2$, is the classical
+diminishing factor. For Earth, with $k_2 = 0.298$ and $h_2 = 0.6103$,
+\begin{equation}
+  \gamma_2 = 1 + 0.298 - 0.6103 = 0.6877,
+\end{equation}
+so the ocean tide is about $31\%$ smaller than the naive equilibrium tide of
+the raising potential. Reporting $\zeta$ alone would overstate every tide
+height by that factor, which is why $h_2$ had to be added before these
+diagnostics could be handed to an oceanographer.
+
+\paragraph{What $h_2$ does \emph{not} affect.} It is worth being explicit,
+because it bounds the risk of the change. The dissipation is governed by
+$\operatorname{Im}(k_2)$; $h_2$ appears nowhere in the energy budget, nowhere
+in Eq.~\eqref{eq:sigma}, and nowhere in the equations of motion. Since
+$\gamma_2$ is also the same for every constituent, applying it rescales the
+whole set uniformly and changes no amplitude \emph{ratio}. Introducing $h_2$
+therefore changes reported tide heights and nothing else --- a claim we verify
+numerically in \S\ref{sec:earth}.
+
+\paragraph{Default value.} When $h_2$ is not supplied we use
+\begin{equation}
+  h_2 = \tfrac53 k_2,
+\end{equation}
+which is exact for a homogeneous incompressible elastic sphere: with effective
+rigidity $\tilde\mu$, $k_2 = (3/2)/(1+\tilde\mu)$ and
+$h_2 = (5/2)/(1+\tilde\mu)$. That is the same idealization a single global
+$k_2$ already assumes, which makes it the self-consistent fallback. It should
+not be mistaken for a measurement: for Earth it gives $h_2 = 0.50$ against the
+observed $0.61$, an $18\%$ error in $h_2$ and a $16\%$ error in $\gamma_2$.
+Where $h_2$ is known it should be set explicitly.
+
+\subsection{Dissipated power, and why the split is exact}
+
+\eqtide\ computes the total tidal power as a sum of an orbital and a
+rotational term,
+\begin{equation}
+  P = \frac{Z}{8}\left[\frac{\Om}{n}\,\Gamma_{\rm rot} - \Gamma_{\rm orb}\right],
+  \label{eq:ptot}
+\end{equation}
+where $\Gamma_{\rm orb}$ and $\Gamma_{\rm rot}$ are each a linear combination
+of the $\varepsilon_i$ and
+\begin{equation}
+  Z = 3\,\frac{k_2}{Q}\,
+      \frac{G^2 M_p^2 (M_b+M_p) R^5}{a^9\,n}.
+  \label{eq:Z}
+\end{equation}
+Written out, the two combinations are
+\begin{align}
+  \Gamma_{\rm orb} &= 4\varepsilon_0
+    + e^2\!\left(-20\varepsilon_0 + \tfrac{147}{2}\varepsilon_1
+      + \tfrac12\varepsilon_2 - 3\varepsilon_5\right)
+    - 4\sin^2\!\psi\,(\varepsilon_0 - \varepsilon_8), \\
+  \Gamma_{\rm rot} &= 4\varepsilon_0
+    + e^2\!\left(-20\varepsilon_0 + 49\varepsilon_1 + \varepsilon_2\right)
+    + 2\sin^2\!\psi\,(-2\varepsilon_0 + \varepsilon_8 + \varepsilon_9),
+\end{align}
+where the subscript on $\varepsilon$ labels the constituent in the order of
+Table~\ref{tab:constituents} ($0$ semi-diurnal, $1$ and $2$ the eccentricity
+sidebands, $5$ radial, $8$ and $9$ the obliquity terms). Both are already sums
+over constituents. Collecting the coefficient of each $\varepsilon_i$
+separately, rather than summing them, gives the power carried by constituent
+$i$:
+\begin{equation}
+  \boxed{\;
+  P_i = \frac{Z}{8}\,\varepsilon_i
+        \left[\frac{\Om}{n}\,w^{\rm rot}_i - w^{\rm orb}_i\right] \;}
+  \label{eq:pi}
+\end{equation}
+with the weights of Table~\ref{tab:weights}. Because Eq.~\eqref{eq:pi} is a
+regrouping of the same terms, $\sum_i P_i \equiv P$ identically --- not
+approximately. This is a strong internal check, and we exercise it in both
+validation cases below, where $P$ is obtained by a completely independent
+route.
+
+\begin{table}[h]
+\centering
+\caption{Weights entering Eq.~\eqref{eq:pi}, read term-by-term out of
+$\Gamma_{\rm orb}$ and $\Gamma_{\rm rot}$.}
+\label{tab:weights}
+\begin{tabular}{lcc}
+\toprule
+Constituent & $w^{\rm orb}_i$ & $w^{\rm rot}_i$ \\
+\midrule
+Semi-diurnal        & $4 - 20e^2 - 4\sin^2\psi$ & $4 - 20e^2 - 4\sin^2\psi$ \\
+Ecc.\ upper         & $\tfrac{147}{2}e^2$       & $49e^2$ \\
+Ecc.\ lower         & $\tfrac12 e^2$            & $e^2$ \\
+Radial              & $-3e^2$                   & $0$ \\
+Obliquity, diurnal  & $4\sin^2\psi$             & $2\sin^2\psi$ \\
+Obliquity, sidereal & $0$                       & $2\sin^2\psi$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Applicability}
+
+The constituent decomposition is defined only for the constant-phase-lag
+model. A constant-time-lag rheology responds continuously across frequency and
+so has no discrete set of constituents to report; asking for one there returns
+a not-applicable sentinel of $-1$, which is unambiguous because a frequency,
+an amplitude and a dissipated power are all non-negative by construction. The
+Love numbers and $\gamma_2$, being properties of the body's elastic response
+rather than of the tidal model, remain meaningful and are reported in every
+case. Note that $\gamma_2$ could not use the same sentinel: it legitimately
+reaches zero for a body in the fluid limit, where $h_2 = 1+k_2$ exactly and a
+freely flowing body raises no tide relative to its own deforming surface.
+
+\section{Validation I: Earth--Sun, the fast-rotator limit}
+\label{sec:earth}
+
+Earth rotates $\sim\!365$ times per orbit, so $\Om \gg n$, every
+$\varepsilon_i = +1$, and the six constituents separate cleanly into three
+species. This is the regime the classical tide tables were built for, so it
+admits a direct external check.
+
+\paragraph{Configuration.} Earth: $M=M_\oplus$, $R=R_\oplus$,
+$P_{\rm rot}=0.99726968$~d (sidereal), $\psi=23.439281^\circ$, $e=0.0167086$,
+$a=1.00000102$~au, $k_2=0.298$, $h_2=0.6103$, $Q=12$ (ocean-dominated). The
+Sun is the sole perturber. \textbf{There is no Moon in this configuration},
+which is why no M$_2$ appears: every line below is solar.
+
+\begin{table}[h]
+\centering
+\caption{Earth--Sun constituent periods and tide heights. ``Reference'' is the
+tabulated Doodson period; ``raising'' is $\zeta$ from Eq.~\eqref{eq:amp} and
+``ocean'' is $\gamma_2\zeta$ from Eq.~\eqref{eq:gamma}.}
+\label{tab:earth}
+\small
+\begin{tabular}{llrrrrr}
+\toprule
+Constituent & Doodson & Period (h) & Reference (h) & Rel.\ err &
+Raising (m) & Ocean (m) \\
+\midrule
+Semi-diurnal & S$_2$ & 12.000000 & 12.000000 & $4.3\times10^{-9}$ & 0.151168 & 0.103959 \\
+Ecc.\ upper  & T$_2$ & 12.016449 & 12.016449 & $3.0\times10^{-8}$ & 0.008847 & 0.006084 \\
+Ecc.\ lower  & R$_2$ & 11.983596 & 11.983596 & $-2.4\times10^{-8}$ & 0.001264 & 0.000869 \\
+Obl., diurnal & P$_1$ & 24.065888 & 24.065890 & $-9.7\times10^{-8}$ & 0.062763 & 0.043162 \\
+Obl., sidereal & K$_1$ & 23.934472 & 23.934470 & $9.7\times10^{-8}$ & 0.060062 & 0.041305 \\
+Radial & S$_\mathrm{a}$* & 8766.165025 & 8766.152700 & $1.4\times10^{-6}$ & 0.001049 & 0.000721 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Five of the six identifications are exact. \textbf{S$_\mathrm{a}$* is a loose
+match and is flagged as such}: \eqtide\ places this line at the Keplerian mean
+motion, i.e.\ the \emph{sidereal} year (365.256363~d), whereas Doodson's
+S$_\mathrm{a}$ is defined on the \emph{tropical} year (365.2422~d). The two
+differ by the precession of the equinoxes, which \eqtide\ does not model. The
+reference quoted is therefore the sidereal year, and the residual
+$1.4\times10^{-6}$ is not a physical discrepancy.
+
+The semi-diurnal ocean tide of 0.104~m is the right size for the solar
+equilibrium tide, and is the number an ocean model should be given; the
+0.151~m raising value is not.
+
+\paragraph{Amplitude ratios.} Amplitudes are compared as ratios \emph{within}
+each species, because the harmonic tables carry a different geodetic
+normalization for the long-period, diurnal, and semi-diurnal species; a
+cross-species ratio would be meaningless. Table~\ref{tab:earthratios} compares
+against Cartwright \& Tayler (1971). Agreement is a few parts in $10^3$,
+consistent with the truncation of the eccentricity functions at
+$\mathcal{O}(e)$ plus rounding in the published tables. These ratios are
+identical whether formed from the raising or the ocean column, which is the
+numerical statement that $\gamma_2$ is constituent-independent.
+
+\begin{table}[h]
+\centering
+\caption{Earth--Sun within-species amplitude ratios against the
+Cartwright \& Tayler (1971) expansion.}
+\label{tab:earthratios}
+\begin{tabular}{lrrr}
+\toprule
+Ratio & \eqtide & Cartwright--Tayler & Rel.\ err \\
+\midrule
+T$_2$/S$_2$ & 0.058521 & 0.058459 & $1.1\times10^{-3}$ \\
+R$_2$/S$_2$ & 0.008360 & 0.008372 & $-1.4\times10^{-3}$ \\
+K$_1$/P$_1$ & 0.956965 & 0.958616 & $-1.7\times10^{-3}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Power closure.} Table~\ref{tab:earthpower} gives the power budget.
+The six constituent powers close against the independently computed total to
+$2.4\times10^{-9}$ relative, confirming the exactness of Eq.~\eqref{eq:pi} in
+the fast-rotator regime. The budget is numerically unchanged by the
+introduction of $h_2$, as \S\ref{sec:h2} requires.
+
+\begin{table}[h]
+\centering
+\caption{Earth--Sun power budget. The six constituent powers sum to the total
+tidal power, which is obtained by an independent route.}
+\label{tab:earthpower}
+\begin{tabular}{lr}
+\toprule
+Constituent & Power (TW) \\
+\midrule
+S$_2$ & 0.56570142 \\
+T$_2$ & 0.00229897 \\
+R$_2$ & 0.00004705 \\
+P$_1$ & 0.05310941 \\
+K$_1$ & 0.05340102 \\
+S$_\mathrm{a}$* & 0.00000039 \\
+\midrule
+Sum & 0.67455825 \\
+Independent total & 0.67455825 \\
+Residual & $2.4\times10^{-9}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Validation II: Enceladus--Saturn, the synchronous limit}
+\label{sec:enceladus}
+
+Enceladus is the opposite dynamical limit and the case of interest. It is
+synchronously locked, $\Om = n$, and the constituent structure
+\emph{collapses}.
+
+\paragraph{Configuration.} Enceladus: $M=1.0802\times10^{20}$~kg,
+$R=252.1$~km, $\psi=0.0005^\circ$, $e=0.0047$, $a=237{,}948$~km, $k_2=0.1$,
+$Q=20$. Saturn: $M=5.6834\times10^{26}$~kg. Rotation is held at the
+equilibrium (synchronous) rate. Here $h_2$ is left at its default,
+$\tfrac53 k_2 = 0.1667$, giving $\gamma_2 = 0.9333$ --- a number we report but
+deliberately do not use, for reasons given below.
+
+\paragraph{Frequency collapse.} Substituting $\Om=n$ into
+Table~\ref{tab:constituents}: the semi-diurnal frequency $2\Om-2n$ goes to
+\emph{exactly} zero, and all five remaining constituents land on $n$.
+
+\begin{table}[h]
+\centering
+\caption{Enceladus constituents. The orbital period is 32.8923~h. Heights are
+those of the raising potential, Eq.~\eqref{eq:amp}.}
+\label{tab:enceladus}
+\begin{tabular}{llrrr}
+\toprule
+Constituent & Character & Period (h) & Height (m) & Power (GW) \\
+\midrule
+Semi-diurnal        & permanent & $\infty$ & 1577.3398 & 0.000000 \\
+Ecc.\ upper         & ecc $+$   & 32.8923 & 25.9487 & 6.512370 \\
+Ecc.\ lower         & ecc $-$   & 32.8923 & 3.7070  & 0.132910 \\
+Radial              & radial    & 32.8923 & 3.7070  & 0.797430 \\
+Obliquity, diurnal  & obliquity & 32.8923 & 0.0138  & 0.000002 \\
+Obliquity, sidereal & obliquity & 32.8923 & 0.0138  & 0.000002 \\
+\midrule
+\multicolumn{4}{l}{Total} & 7.442710 \\
+\multicolumn{4}{l}{Sum of constituents} & 7.442714 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{There is no M$_2$/S$_2$ doublet here, and there cannot be.} This
+point is worth stating plainly for an oceanographic reader. The semi-diurnal
+splitting familiar from Earth arises from a \emph{fast} rotator sampling
+\emph{two} perturbers. Enceladus is a slow synchronous rotator with one
+dominant perturber; everything time-variable happens at a single frequency.
+Any ocean-response model built on an Earth-like constituent list will be
+mis-specified for a synchronous satellite.
+
+\paragraph{The permanent tide does no work.} At exactly zero frequency,
+Eq.~\eqref{eq:eps} gives $\varepsilon_0=0$, so by Eq.~\eqref{eq:pi} the
+semi-diurnal constituent carries \emph{no} dissipation. Its 1577~m height is
+the static tidal bulge of the raising potential, not an oscillation --- the
+right order of magnitude, given that Enceladus is measurably triaxial at the
+kilometre level.
+
+\paragraph{The heating splits in exact rationals.} With $\Om=n$ and
+$\psi\to0$, the lags are $\varepsilon_0=0$, $\varepsilon_1=-1$,
+$\varepsilon_2=+1$, $\varepsilon_5=+1$, $\varepsilon_8=-1$,
+$\varepsilon_9=+1$. Equation~\eqref{eq:pi} then gives, in units of $Ze^2/8$,
+\begin{equation}
+  P_{\rm ecc+} = 24.5, \qquad
+  P_{\rm radial} = 3, \qquad
+  P_{\rm ecc-} = 0.5, \qquad
+  \sum_i P_i = 28,
+\end{equation}
+so the shares are exactly
+\begin{equation}
+  \frac{24.5}{28} = \frac{7}{8}, \qquad
+  \frac{3}{28}, \qquad
+  \frac{0.5}{28} = \frac{1}{56},
+\end{equation}
+i.e.\ $87.5000\%$, $10.7142\%$, $1.7858\%$ --- reproduced numerically to the
+precision of the reported values. The eccentricity tide does essentially all
+the work; the obliquity tides are negligible for any plausible Enceladus
+obliquity.
+
+\paragraph{The total reproduces the textbook closed form.} Setting
+$\sum_i P_i = \tfrac{28}{8}Ze^2 = \tfrac72 Ze^2$, substituting
+Eq.~\eqref{eq:Z}, and eliminating $G(M_b+M_p) = n^2a^3$ via Kepler's third law
+gives
+\begin{equation}
+  P = \frac{21}{2}\,\frac{k_2}{Q}\,
+      \frac{G M_p^2 R^5 n e^2}{a^6},
+  \label{eq:closed}
+\end{equation}
+the standard result for a synchronous satellite.
+Table~\ref{tab:enceladusclosed} gives the numerical comparison. This is a
+genuine external check, not a tautology: the factor $21/2$ emerges from the
+CPL phase-lag weights summed over constituents, while the comparison value is
+built from the physical parameters alone. The residual is limited by the
+precision of the reported inputs.
+
+\begin{table}[h]
+\centering
+\caption{Enceladus total tidal power against the closed-form synchronous
+result, Eq.~\eqref{eq:closed}.}
+\label{tab:enceladusclosed}
+\begin{tabular}{lr}
+\toprule
+Source & Power (GW) \\
+\midrule
+\eqtide & 7.442710 \\
+Eq.~\eqref{eq:closed}, computed independently & 7.442709 \\
+Relative difference & $1.35\times10^{-7}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Why no ocean column for Enceladus.} Equation~\eqref{eq:gamma} is a
+\emph{surface}-ocean construction: it measures water depth against the solid
+surface directly beneath it. Enceladus' ocean lies between a silicate interior
+and a floating ice shell, so the geometry that makes $1+k_2-h_2$ the right
+reduction does not apply, and the shell's own deformation --- not the sea
+floor's --- sets the boundary the ocean responds to. Enceladus' $h_2$ has
+never been measured in any case. We therefore report $k_2$, $h_2$ and
+$\gamma_2$ for completeness but quote heights in Table~\ref{tab:enceladus} as
+raising-potential values only. Supplying the correct reduction for a
+subsurface ocean is the single largest piece of unfinished physics here, and
+is the first item in \S\ref{sec:caveats}.
+
+\section{Caveats and points for verification}
+\label{sec:caveats}
+
+The following are the places where independent scrutiny would be most useful.
+
+\begin{enumerate}
+\item \textbf{The subsurface-ocean reduction.} As above, $\gamma_2 = 1+k_2-h_2$
+is derived for an ocean resting on a deforming solid surface. For an ocean
+confined beneath a floating elastic shell the appropriate combination is
+different, and depends on shell thickness and rigidity. Getting this right is
+the prerequisite for using these amplitudes at Enceladus at all. \emph{This is
+the item where we would most value a correction.}
+
+\item \textbf{Amplitude normalization.} Equation~\eqref{eq:amp} uses a Kaula
+normalization with every inclination function divided by 3. The icy-satellite
+literature's familiar ``$3e$ radial, $4e$ librational'' shorthand is a
+\emph{different} convention --- it is the coefficient of specific Legendre
+terms --- so those numbers should not be compared directly without conversion.
+Ratios within a species are exact under our convention. The frequencies and
+powers carry no such ambiguity.
+
+\item \textbf{Equilibrium tides only.} Even for Earth, Eq.~\eqref{eq:gamma}
+gives the \emph{equilibrium} ocean tide. Real ocean tides depart from it by
+large factors through basin resonance, coastline geometry, and self-attraction
+and loading of the water itself, the last of which brings in the load Love
+numbers $k_2'$ and $h_2'$ that are not modelled here.
+
+\item \textbf{The default $h_2$.} Where $h_2$ is unmeasured we fall back on
+$h_2 = \tfrac53 k_2$, exact for a homogeneous incompressible elastic sphere.
+Earth shows the size of the error this can carry: $0.50$ against an observed
+$0.61$. Any body with a differentiated interior or a decoupling ocean will
+depart from it, plausibly by more.
+
+\item \textbf{Dependence on the equilibrium-rotation convention.} The clean
+collapse at Enceladus depends on taking the equilibrium spin to be exactly
+synchronous, which holds in the discrete-lag treatment for $e < \sqrt{1/19}$.
+Under the alternative convention the equilibrium rate is $(1+9.5e^2)n$ and the
+semi-diurnal constituent moves off zero to a long-period line rather than a
+permanent bulge. Which is physical depends on how one reads the CPL
+truncation, and reasonable people may disagree.
+
+\item \textbf{Enceladus $k_2$ and $Q$ are not well determined.} Tidal power
+scales as $k_2/Q$; the values used ($0.1/20$) were chosen to land in the range
+of the observed south-polar heat flow, roughly 5--16~GW. They are
+illustrative, not a measurement. Reproducing the observed output from
+equilibrium tidal heating alone is the well-known Enceladus heat-budget
+problem and is \emph{not} claimed here.
+
+\item \textbf{Truncation order.} The expansion is $\mathcal{O}(e)$ in
+amplitude, hence $\mathcal{O}(e^2)$ in power, and first order in the
+inclination functions. This is the order CPL itself retains; the constituent
+decomposition inherits it and does not extend it. For Enceladus' $e=0.0047$
+this is comfortable; for a high-eccentricity application it would not be.
+
+\item \textbf{Obliquity in the Enceladus run} is set to a small nonzero value
+($0.0005^\circ$) purely so the obliquity constituents are visible rather than
+identically zero. Enceladus' obliquity is poorly constrained.
+\end{enumerate}
+
+\section*{Reproducing these results}
+
+Every number in this note is produced by two example configurations
+distributed with the code, one for each validation case, and each accompanied
+by a script that regenerates its tables in the form shown here. Both cases are
+also asserted as automated regression tests, covering the Doodson periods, the
+frequency collapse, the zero-dissipation permanent tide, the exact rational
+heating shares, the closed-form total, and the requirement that $h_2$ leave
+the power budget untouched.
+
+\end{document}

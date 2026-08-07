@@ -68,6 +68,7 @@
 #define OUT_TIDALQ 581
 #define OUT_IMK2 582
 #define OUT_K2 583
+#define OUT_H2 584
 
 #define OUT_K2MAN 590   // Mantle k2 love number
 #define OUT_IMK2MAN 592 // Mantle Im(k2) love number

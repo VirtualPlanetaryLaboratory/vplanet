@@ -57,6 +57,7 @@
 #define OPT_HALTDBLSYNC 1015
 #define OPT_HALTTIDELOCK 1020
 #define OPT_HALTSYNCROT 1025
+#define OPT_H2 1026 /* Displacement Love number h_2 */
 #define OPT_K2 1027 /* Change to LOVEK2 */
 #define OPT_K2OCEAN 1028
 #define OPT_K2ENV 1029
@@ -79,10 +80,16 @@
 #define EQTIDEHALTBODYEND 5
 
 /* EQTIDE 1000 - 1999 */
-/* System properties 1000-1049, body properties 1050-1099 */
+/* System properties 1000-1039, body properties 1040-1099 */
 #define OUTSTARTEQTIDE 1000
 #define OUT_TIDALRADIUS 1005
-#define OUTBODYSTARTEQTIDE 1050
+/* The body sub-range was widened from 1050 to 1040 to make room for the
+   per-constituent ocean diagnostics; the three obliquity-derivative system
+   outputs that used to sit at 1045-1047 moved down to 1032-1034 to stay
+   below the boundary. These IDs are internal array indices only -- input
+   files and log files refer to outputs by name -- so the renumbering is not
+   user-visible. */
+#define OUTBODYSTARTEQTIDE 1040
 #define OUTENDEQTIDE 1100
 
 #define OUT_DSEMIDTEQTIDE 1010
@@ -95,9 +102,9 @@
 #define OUT_DHECCDTEQTIDE 1028
 #define OUT_DKECCDTEQTIDE 1030
 
-#define OUT_DXOBLDTEQTIDE 1045
-#define OUT_DYOBLDTEQTIDE 1046
-#define OUT_DZOBLDTEQTIDE 1047
+#define OUT_DXOBLDTEQTIDE 1032
+#define OUT_DYOBLDTEQTIDE 1033
+#define OUT_DZOBLDTEQTIDE 1034
 
 /* Body Properties due to tidal evolution */
 
@@ -139,11 +146,14 @@
 #define OUT_BENV 1098
 #define OUT_BOCEAN 1099
 
+/* Ratio of the ocean tide to the equilibrium tide of the raising potential,
+   gamma_2 = 1 + k_2 - h_2. Rheology-independent, so unlike the constituent
+   diagnostics below it is registered for every tidal model. */
+#define OUT_TIDALDIMINISH 1040
+
 /* Per-constituent tidal diagnostics (CPL only). Ordered to match the
    TIDE_* indices above. The IDs are scattered because they occupy the gaps
-   left in the 1050-1099 body range; that range is now full except for 1050,
-   and extending it means renumbering RADHEAT (OUTSTARTRADHEAT 1100) and
-   every module after it. */
+   left in the body range. */
 
 #define OUT_TIDALFREQSEMIDIURN 1061
 #define OUT_TIDALFREQECCPLUS 1063
@@ -165,6 +175,17 @@
 #define OUT_TIDALPOWERRADIAL 1093
 #define OUT_TIDALPOWEROBLDIURN 1095
 #define OUT_TIDALPOWEROBLSID 1097
+
+/* Ocean tide amplitude of each constituent: the equilibrium tide relative to
+   the deforming solid surface, i.e. TidalAmp scaled by gamma_2. This is the
+   quantity a tide gauge measures, and the one to hand an ocean model. */
+
+#define OUT_TIDALOCEANAMPSEMIDIURN 1041
+#define OUT_TIDALOCEANAMPECCPLUS 1042
+#define OUT_TIDALOCEANAMPECCMINUS 1043
+#define OUT_TIDALOCEANAMPRADIAL 1044
+#define OUT_TIDALOCEANAMPOBLDIURN 1045
+#define OUT_TIDALOCEANAMPOBLSID 1046
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -313,14 +334,17 @@ void WriteTidalQEnv(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                     int, double *, char**);
 void InitializeOutputEqtide(OUTPUT *, fnWriteOutput[]);
 void InitializeOutputEqtideConstituents(OUTPUT *, fnWriteOutput[]);
-void fvDisableConstituentOutputs(OUTPUT *);
 void WriteTidalRadius(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                       int, double *, char**);
 
 /* Per-constituent diagnostics */
-void fvWriteTidalFreq(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
-void fvWriteTidalAmp(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
-void fvWriteTidalPower(BODY *, OUTPUT *, UNITS *, int, int, double *, char**);
+int fbTidalConstituentNA(CONTROL *, OUTPUT *, double *, char **);
+void fvWriteTidalFreq(BODY *, CONTROL *, OUTPUT *, UNITS *, int, int, double *,
+                      char **);
+void fvWriteTidalAmp(BODY *, CONTROL *, OUTPUT *, UNITS *, int, int, double *,
+                     char **);
+void fvWriteTidalPower(BODY *, CONTROL *, OUTPUT *, UNITS *, int, int, double *,
+                       char **);
 void WriteTidalFreqSemiDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                              UPDATE *, int, double *, char**);
 void WriteTidalFreqEccPlus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
@@ -360,6 +384,23 @@ void WriteTidalPowerOblDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
 void WriteTidalPowerOblSid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char**);
 
+void fvWriteTidalOceanAmp(BODY *, CONTROL *, OUTPUT *, UNITS *, int, int,
+                          double *, char **);
+void WriteTidalOceanAmpSemiDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                                 UPDATE *, int, double *, char **);
+void WriteTidalOceanAmpEccPlus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                               UPDATE *, int, double *, char **);
+void WriteTidalOceanAmpEccMinus(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                                UPDATE *, int, double *, char **);
+void WriteTidalOceanAmpRadial(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                              UPDATE *, int, double *, char **);
+void WriteTidalOceanAmpOblDiurn(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                                UPDATE *, int, double *, char **);
+void WriteTidalOceanAmpOblSid(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                              UPDATE *, int, double *, char **);
+void WriteTidalDiminish(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                        UPDATE *, int, double *, char **);
+
 /* Logging Functions */
 void LogOptionsEqtide(CONTROL *, FILE *);
 void LogEqtide(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UPDATE *, fnWriteOutput[],
@@ -396,8 +437,13 @@ void PropsAuxCPL(BODY *, EVOLVE *, IO *, UPDATE *, int);
 double fdCPLTidalFreq(BODY *, int, int, int);
 double fdCPLTidalAmpCoeff(BODY *, int, int, int);
 double fdCPLTidalAmp(BODY *, int, int, int, int);
+double fdCPLTidalAmpOcean(BODY *, int, int, int, int);
 double fdCPLTidalPowerConst(BODY *, int, int);
 int fiTidalEpsilonIndex(int);
+
+/* Love numbers */
+double fdLoveH2(BODY *, int);
+double fdTidalDiminish(BODY *, int);
 
 /* Equilibrium parameters */
 double fdCPLEqSpinRate(double, double, int);

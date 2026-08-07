@@ -1190,6 +1190,16 @@ void WriteK2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
   fvFormattedString(cUnit, "");
 }
 
+void WriteH2(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
+             UNITS *units, UPDATE *update, int iBody, double *dTmp,
+             char **cUnit) {
+
+  /* Resolved through fdLoveH2() so that an unset dH2 reports the homogeneous
+     elastic default actually used, not the negative sentinel. */
+  *dTmp = fdLoveH2(body, iBody);
+  fvFormattedString(cUnit, "");
+}
+
 void WriteXobl(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
                UNITS *units, UPDATE *update, int iBody, double *dTmp,
                char **cUnit) {
@@ -1879,6 +1889,18 @@ void InitializeOutputGeneral(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_K2].iNum       = 1;
   output[OUT_K2].iModuleBit = EQTIDE + THERMINT;
   fnWrite[OUT_K2]           = &WriteK2;
+
+  fvFormattedString(&output[OUT_H2].cName, "H2");
+  fvFormattedString(&output[OUT_H2].cDescr, "h_2");
+  fvFormattedString(&output[OUT_H2].cLongDescr,
+                    "Displacement Love number of degree 2. Set with dH2; if "
+                    "unset, reports the homogeneous incompressible elastic "
+                    "value (5/3)k_2 that the code uses in its place. Affects "
+                    "reported tide heights only, never a dissipation rate.");
+  output[OUT_H2].bNeg       = 0;
+  output[OUT_H2].iNum       = 1;
+  output[OUT_H2].iModuleBit = EQTIDE;
+  fnWrite[OUT_H2]           = &WriteH2;
 
   fvFormattedString(&output[OUT_TIDALQ].cName, "TidalQ");
   fvFormattedString(&output[OUT_TIDALQ].cDescr, "Tidal Q");

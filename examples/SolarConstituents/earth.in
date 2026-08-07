@@ -23,6 +23,10 @@ dSemi         1.00000102   # Semi-major axis, in AU
 # EQTIDE Parameters
 dTidalQ       12           # Tidal Q (ocean-dominated)
 dK2           0.298        # Love number of degree 2
+dH2           0.6103       # Displacement Love number (IERS body-tide value).
+                           # Gives 1 + k2 - h2 = 0.6877, the diminishing
+                           # factor that converts the equilibrium tide of the
+                           # raising potential into the tide a gauge sees.
 saTidePerts   sun          # Name of tidal perturber
 
 saOutputOrder Time -RotPer $
@@ -33,6 +37,12 @@ saOutputOrder Time -RotPer $
               # default length unit here is AU, which is useless for tides)
               -TidalAmpSemiDiurn -TidalAmpEccPlus -TidalAmpEccMinus $
               -TidalAmpRadial -TidalAmpOblDiurn -TidalAmpOblSid $
+              # The same tides measured against the deforming solid surface,
+              # in m, plus the Love numbers that set the conversion
+              -TidalOceanAmpSemiDiurn -TidalOceanAmpEccPlus $
+              -TidalOceanAmpEccMinus -TidalOceanAmpRadial $
+              -TidalOceanAmpOblDiurn -TidalOceanAmpOblSid $
+              K2 H2 TidalDiminish $
               # Power dissipated per constituent, in TW, and the total
               -TidalPowerSemiDiurn -TidalPowerEccPlus -TidalPowerEccMinus $
               -TidalPowerRadial -TidalPowerOblDiurn -TidalPowerOblSid $

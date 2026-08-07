@@ -94,10 +94,14 @@ computed by a completely separate code path::
 Caveats
 -------
 
-* The amplitude reported is that of the **raising potential**, expressed as an
-  equilibrium surface displacement. The observed ocean tide additionally
-  carries the Love number combination ``(1 + k_2 - h_2)``; **EqTide** tracks
-  ``k_2`` but not ``h_2``, so that correction is left to the user.
+* Two amplitudes are reported and they are not interchangeable. ``TidalAmp``
+  is the **raising potential** expressed as an equilibrium surface
+  displacement; ``TidalOceanAmp`` applies the diminishing factor
+  ``1 + k_2 - h_2`` and is the tide measured against the deforming solid
+  surface, i.e. what a gauge records. For Earth the factor is 0.6877, so the
+  two differ by about 31%. Hand an ocean model the latter. Note that both are
+  *equilibrium* tides: a real ocean departs from equilibrium through basin
+  resonance and loading, which this model does not contain.
 * The tabulated ``Sa`` amplitude is dominated by radiational (thermal and
   meteorological) forcing rather than gravity, so it is listed for
   completeness and is not a test of this expansion. See also the note above

@@ -145,6 +145,25 @@ def fvPrintClosedForm(output):
     print(f"{'relative difference':22s} {(dTotal - dClosedForm) / dClosedForm:12.2e}")
 
 
+def fvPrintLoveNumbers(output):
+    """Report the Love numbers, with the subsurface-ocean caveat attached."""
+    enceladus = output.log.initial.enceladus
+
+    print("\nLove numbers")
+    print("-" * 78)
+    print(f"{'k_2':16s} {float(enceladus.K2):10.6f}")
+    print(f"{'h_2':16s} {float(enceladus.H2):10.6f}   (unset: default (5/3)k_2)")
+    print(f"{'1 + k_2 - h_2':16s} {float(enceladus.TidalDiminish):10.6f}")
+    print(
+        "\nThe diminishing factor is printed for completeness only. It converts\n"
+        "a raising tide into the tide of a SURFACE ocean, measured against the\n"
+        "solid surface beneath it. Enceladus' ocean is beneath its ice shell,\n"
+        "so this is not the reduction that applies there, and h_2 has in any\n"
+        "case never been measured for Enceladus. Neither number affects the\n"
+        "heating above, which is fixed by k_2/Q alone."
+    )
+
+
 def flistGroupByPeriod(dictPeriods, dTolerance=0.02):
     """Collapse constituents whose periods agree to within dTolerance.
 
@@ -269,5 +288,6 @@ dOrbPerHr = fdFirst(enceladus, "OrbPeriod") * 24
 if not args.quiet:
     fvPrintTable(listRows, dTotalPower, dOrbPerHr)
     fvPrintClosedForm(output)
+    fvPrintLoveNumbers(output)
 
 fvPlot(listRows, dOrbPerHr, args.ext)

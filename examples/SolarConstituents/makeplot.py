@@ -57,6 +57,7 @@ def flistLoadConstituents(output):
     for sConst in CONSTITUENTS:
         dFreq = np.atleast_1d(getattr(earth, "TidalFreq" + sConst))[0]
         dAmp = np.atleast_1d(getattr(earth, "TidalAmp" + sConst))[0]
+        dOceanAmp = np.atleast_1d(getattr(earth, "TidalOceanAmp" + sConst))[0]
         dPower = np.atleast_1d(getattr(earth, "TidalPower" + sConst))[0]
         listRows.append(
             dict(
@@ -64,10 +65,27 @@ def flistLoadConstituents(output):
                 freq=float(dFreq),
                 period=fdPeriodHours(float(dFreq)),
                 amp=float(dAmp),
+                ocean=float(dOceanAmp),
                 power=float(dPower),
             )
         )
     return listRows
+
+
+def fvPrintLoveNumbers(output):
+    """Print the Love numbers that convert a raising tide into an ocean tide."""
+    earth = output.log.initial.earth
+    print("\nLove numbers and the diminishing factor")
+    print("-" * 78)
+    print(f"{'k_2':14s} {float(earth.K2):12.6f}")
+    print(f"{'h_2':14s} {float(earth.H2):12.6f}")
+    print(f"{'1 + k_2 - h_2':14s} {float(earth.TidalDiminish):12.6f}")
+    print(
+        "\nThe ocean column above is the equilibrium tide measured against the\n"
+        "deforming solid surface, i.e. amp times (1 + k_2 - h_2). It is what a\n"
+        "tide gauge records. Ratios are unchanged: the factor is the same for\n"
+        "every constituent."
+    )
 
 
 def fvPrintValidation(listRows, dTotalPower):
@@ -78,7 +96,7 @@ def fvPrintValidation(listRows, dTotalPower):
     print("=" * 78)
     print(
         f"{'':10s} {'Doodson':8s} {'period (h)':>12s} {'reference':>12s} "
-        f"{'err':>9s} {'amp (m)':>11s}"
+        f"{'err':>9s} {'amp (m)':>11s} {'ocean (m)':>11s}"
     )
     print("-" * 78)
     for sConst in CONSTITUENTS:
@@ -87,7 +105,8 @@ def fvPrintValidation(listRows, dTotalPower):
         dErr = (r["period"] - ref["period_hr"]) / ref["period_hr"]
         print(
             f"{sConst:10s} {ref['name']:8s} {r['period']:12.6f} "
-            f"{ref['period_hr']:12.6f} {dErr:9.2e} {r['amp']:11.6f}"
+            f"{ref['period_hr']:12.6f} {dErr:9.2e} {r['amp']:11.6f} "
+            f"{r['ocean']:11.6f}"
         )
 
     print("\nAmplitude ratios within each species (cross-species ratios are")
@@ -175,5 +194,6 @@ dTotalPower = float(np.atleast_1d(output.bodies[1].PowerEqtide)[0])
 
 if not args.quiet:
     fvPrintValidation(listRows, dTotalPower)
+    fvPrintLoveNumbers(output)
 
 fvPlot(listRows, args.ext)

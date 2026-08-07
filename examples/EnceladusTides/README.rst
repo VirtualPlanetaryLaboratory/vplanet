@@ -114,10 +114,19 @@ Caveats
   obliquity constituents are visible rather than identically zero. Enceladus'
   obliquity is poorly constrained; the obliquity tides are negligible for any
   plausible value.
-* **This is the equilibrium tide of the raising potential.** The observed
-  ocean tide additionally carries the Love number combination
-  ``(1 + k_2 - h_2)``, and a real ocean response involves resonances this
-  model does not contain.
+* **The amplitudes above are the equilibrium tide of the raising potential,
+  deliberately.** For a surface ocean the tide a gauge sees is smaller by the
+  diminishing factor ``1 + k_2 - h_2``, which **EqTide** now reports as
+  ``TidalDiminish`` and applies in ``TidalOceanAmp``. That construction does
+  **not** transfer to Enceladus: it measures water depth against the solid
+  surface directly beneath the ocean, whereas Enceladus' ocean sits between a
+  silicate interior and a floating ice shell, so the shell's deformation
+  rather than the sea floor's sets the relevant boundary. Enceladus' ``h_2``
+  has never been measured either, so ``dH2`` is left unset here and falls back
+  to the homogeneous elastic value ``(5/3)k_2 = 0.1667``. The Love numbers are
+  printed for completeness; the correct reduction for a subsurface ocean is
+  unfinished work. None of this touches the heating, which is set by
+  ``k_2/Q``.
 
 
 To run this example

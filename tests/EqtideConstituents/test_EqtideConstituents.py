@@ -102,3 +102,60 @@ def test_semidiurnal_dominates(output):
     dSemi = fdFirst(earth, "TidalPowerSemiDiurn")
     dTotal = fdFirst(earth, "PowerEqtide")
     assert dSemi / dTotal > 0.5
+
+
+def test_diminishing_factor(output):
+    """1 + k_2 - h_2 must be built from the requested Love numbers.
+
+    earth.in sets k_2 = 0.298 and h_2 = 0.6103, the IERS body-tide value, so
+    the diminishing factor is 0.6877 -- close to the textbook Earth value.
+    """
+    earth = output.log.initial.earth
+    assert float(earth.H2) == pytest.approx(0.6103, rel=1e-6)
+    assert float(earth.TidalDiminish) == pytest.approx(
+        1 + 0.298 - 0.6103, rel=1e-6
+    )
+
+
+def test_h2_defaults_to_homogeneous_elastic(output):
+    """A body with no dH2 must fall back to h_2 = (5/3)k_2.
+
+    sun.in sets k_2 but not h_2, so this exercises the default path. The
+    relation is exact for a homogeneous incompressible elastic sphere. Read
+    from the log because the Sun requests no output columns of its own.
+    """
+    sun = output.log.initial.sun
+    assert float(sun.H2) == pytest.approx(5.0 / 3 * float(sun.K2), rel=1e-6)
+
+
+def test_ocean_amplitude_is_uniformly_scaled(output):
+    """Every ocean amplitude is its raising-potential value times gamma_2.
+
+    Because gamma_2 does not depend on the constituent, applying it must not
+    disturb any amplitude ratio -- the whole set rescales together.
+    """
+    earth = output.log.initial.earth
+    dGamma = float(earth.TidalDiminish)
+    for sConst in DOODSON_PERIOD_HR:
+        dOcean = float(getattr(earth, "TidalOceanAmp" + sConst))
+        dRaising = float(getattr(earth, "TidalAmp" + sConst))
+        # The log carries 8 decimal places, so the millimetre-scale
+        # constituents have only a few significant figures; the absolute
+        # tolerance is what binds for those.
+        assert dOcean == pytest.approx(
+            dGamma * dRaising, rel=1e-5, abs=2e-8
+        ), sConst
+
+
+def test_h2_does_not_touch_power(output):
+    """h_2 is a displacement Love number: it must not enter the dissipation.
+
+    The power budget is fixed by k_2/Q alone, so it must still close after
+    h_2 has been introduced. A regression here would mean h_2 had leaked into
+    an energy pathway it has no business in.
+    """
+    earth = output.bodies[1]
+    dSum = sum(
+        fdFirst(earth, "TidalPower" + sConst) for sConst in DOODSON_PERIOD_HR
+    )
+    assert dSum == pytest.approx(fdFirst(earth, "PowerEqtide"), rel=1e-6)

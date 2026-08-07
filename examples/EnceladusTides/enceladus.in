@@ -27,6 +27,11 @@ dSemi         237948       # Semi-major axis, in km
 # range of the observed south-polar heat flow. See README.rst for caveats.
 dTidalQ       20           # Tidal Q
 dK2           0.1          # Love number of degree 2
+# dH2 is deliberately left unset, so h_2 falls back to (5/3)k_2 = 0.1667 and
+# 1 + k_2 - h_2 = 0.9333. Enceladus' h_2 is not measured, and the diminishing
+# factor is in any case a SURFACE-ocean construction: Enceladus' ocean lies
+# beneath the ice shell, so the number below is reported for completeness,
+# not as a prediction of a tide under the shell. See README.rst.
 saTidePerts   saturn       # Name of tidal perturber
 bForceEqSpin  1            # Hold rotation at the equilibrium (synchronous) rate
 
@@ -37,6 +42,8 @@ saOutputOrder Time -RotPer -OrbPeriod $
               # Equilibrium tide amplitudes, in m
               -TidalAmpSemiDiurn -TidalAmpEccPlus -TidalAmpEccMinus $
               -TidalAmpRadial -TidalAmpOblDiurn -TidalAmpOblSid $
+              # Love numbers and the diminishing factor
+              K2 H2 TidalDiminish $
               # Power dissipated per constituent, in TW, and the total
               -TidalPowerSemiDiurn -TidalPowerEccPlus -TidalPowerEccMinus $
               -TidalPowerRadial -TidalPowerOblDiurn -TidalPowerOblSid $

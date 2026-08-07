@@ -197,6 +197,9 @@ struct BODY {
   double dGravAccel; /**< Body's gravitational acceleration */
   double dK2;        /**< Body's Total Love number */
   double dImK2;      /**< Imaginary part of Love's k_2 (total) */
+  double dH2; /**< Displacement Love number h_2. Negative means "not set by
+                 the user": fdLoveH2() then falls back to the homogeneous
+                 incompressible elastic relation h_2 = (5/3) k_2. */
   double dObliquity; /**< Body's Obliquity */
   double dCosObl;    /**< Cosine of body's obliquity */
   double dRotRate;   /**< Body's Rotation Rate */

@@ -2079,6 +2079,35 @@ void ForceBehaviorWaterEscape(BODY *body, MODULE *module, EVOLVE *evolve,
 }
 
 /**
+Floor the five well-mixed reservoirs at zero under magnetic-limited escape.
+
+The derivatives in fdD*DtMagLim return 0 once a reservoir is empty, but the
+integrator step that crosses zero can still land slightly negative before
+that guard engages. This zeroes the overshoot so no species reports a
+negative mass.
+
+@param body A pointer to the current BODY instance
+@param iBody The current BODY number
+*/
+void ForceBehaviorMagLimitedEscape(BODY *body, int iBody) {
+  if (body[iBody].dSurfaceWaterMass < 0.) {
+    body[iBody].dSurfaceWaterMass = 0.;
+  }
+  if (body[iBody].dOxygenMass < 0.) {
+    body[iBody].dOxygenMass = 0.;
+  }
+  if (body[iBody].dEnvelopeMass < 0.) {
+    body[iBody].dEnvelopeMass = 0.;
+  }
+  if (body[iBody].dCO2Mass < 0.) {
+    body[iBody].dCO2Mass = 0.;
+  }
+  if (body[iBody].dN2Mass < 0.) {
+    body[iBody].dN2Mass = 0.;
+  }
+}
+
+/**
 This function is run during every step of the integrator to
 perform checks and force certain non-diffeq behavior.
 
@@ -2103,6 +2132,10 @@ void fnForceBehaviorAtmEsc(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
   } else if (body[iBody].dSurfaceWaterMass > 0) {
     ForceBehaviorWaterEscape(body, module, evolve, io, system, update, fnUpdate,
                              iBody, iModule);
+  }
+
+  if (body[iBody].bMagLimitedEscape) {
+    ForceBehaviorMagLimitedEscape(body, iBody);
   }
 }
 
@@ -3343,8 +3376,16 @@ double fdMagLimitedEscapeDtDriscoll13(BODY *body, int iBody) {
 Surface-water derivative under Gunell magnetic-limited escape: 1/N of the
 total bulk loss rate. fnMagLimitedRates is called once per step in
 fnPropsAuxAtmEsc, so derivatives just read the cached rate.
+
+Each species derivative is clamped to zero once its own reservoir is
+exhausted. The magnetic-limited rates are pure sinks with no source term,
+and the derivatives are wired once in AssignAtmEscDerivatives, so without
+the clamp an emptied reservoir keeps draining into negative mass.
 */
 double fdDSurfaceWaterMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dSurfaceWaterMass <= 0) {
+    return 0.;
+  }
   return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
@@ -3352,6 +3393,9 @@ double fdDSurfaceWaterMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
 Atmospheric oxygen derivative under Gunell magnetic-limited escape.
 */
 double fdDOxygenMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dOxygenMass <= 0) {
+    return 0.;
+  }
   return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
@@ -3359,6 +3403,10 @@ double fdDOxygenMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
 Envelope-mass (hydrogen) derivative under Gunell magnetic-limited escape.
 */
 double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dEnvelopeMass <= 0) {
+    body[iaBody[0]].dEnvMassDt = 0.;
+    return 0.;
+  }
   body[iaBody[0]].dEnvMassDt =
         -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
   return body[iaBody[0]].dEnvMassDt;
@@ -3368,6 +3416,9 @@ double fdDEnvelopeMassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
 Atmospheric CO2 derivative under Gunell magnetic-limited escape.
 */
 double fdDCO2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dCO2Mass <= 0) {
+    return 0.;
+  }
   return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 
@@ -3375,6 +3426,9 @@ double fdDCO2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
 Atmospheric N2 derivative under Gunell magnetic-limited escape.
 */
 double fdDN2MassDtMagLim(BODY *body, SYSTEM *system, int *iaBody) {
+  if (body[iaBody[0]].dN2Mass <= 0) {
+    return 0.;
+  }
   return -body[iaBody[0]].dDMagLimitedMassDt / MAG_NUM_WELL_MIXED_SPECIES;
 }
 

@@ -335,6 +335,13 @@ def ProcessUnits(data):
         # v[0] = str(u.Unit(v[0]))
         # print(u.Unit(units))
 
+        # Unitless outputs (e.g. PresXUV, AtmGasConst) are logged with a NULL
+        # unit string, which prints as "(null)". Blank it so WriteTestFile
+        # takes its no-unit branch instead of emitting a bare (null) token.
+        if units == "(null)":
+            v[0] = ""
+            continue
+
         ##units that need to be converted
         if units == "kg*m^2/sec^3":
             v[0] = "u.W"

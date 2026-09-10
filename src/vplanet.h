@@ -622,6 +622,19 @@ struct BODY {
   double dLuminosityFrequency;
   double dLuminosityPhase;
 
+  /* Weakened magnetic braking (Metcalfe+2025) */
+  int iWeakMagBrakingModel; /**< Which WMB prescription, if any */
+  double dRossbyCrit;       /**< Critical Rossby number for dynamo excitation,
+                               in units of the solar Rossby number */
+  double dWeakMagBrakingNorm;    /**< Normalization constant N */
+  int bNormalizeWeakMagBraking; /**< Set N so the suppression is unity at zero
+                                   Rossby number */
+  double dWeakMagBrakingExp;  /**< Exponent of the suppression factor */
+  double dXUVWeakMagBrakingExp;   /**< Power of the suppression applied to LXUV
+                                   */
+  double dXUVWeakMagBrakingFloor; /**< Minimum LXUV as a fraction of the Ribas
+                                     prediction */
+
   /* Engle (2024) XUV-evolution coefficients */
   double dXUVEngleEarlyA;
   double dXUVEngleEarlyB;

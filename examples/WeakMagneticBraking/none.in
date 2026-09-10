@@ -1,0 +1,14 @@
+# Standard spin-down: no weakened magnetic braking
+sName                 none
+saModules             stellar
+
+dMass                 1.0
+dAge                  5.0e6
+dRotPeriod            -1.0
+
+sStellarModel         baraffe
+sMagBrakingModel      matt
+sXUVModel             ribas
+bHaltEndBaraffeGrid   0
+
+saOutputOrder Time -RotPer RossbyNumberNorm WeakMagBrakingFactor -LXUVStellar WindTorque Temperature -Luminosity

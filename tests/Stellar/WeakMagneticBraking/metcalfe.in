@@ -1,0 +1,16 @@
+# Weakened magnetic braking, Metcalfe et al. (2025)
+sName                 metcalfe
+saModules             stellar
+
+dMass                 1.0
+dAge                  5.0e6
+dRotPeriod            -1.0
+
+sStellarModel         baraffe
+sMagBrakingModel      matt
+sXUVModel             ribas
+bHaltEndBaraffeGrid   0
+
+sWeakMagBrakingModel  metcalfe25
+
+saOutputOrder Time -RotPer RossbyNumberNorm WeakMagBrakingFactor -LXUVStellar WindTorque Temperature -Luminosity

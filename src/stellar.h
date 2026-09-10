@@ -34,6 +34,32 @@
 #define ROSSBYCRIT                                                             \
   2.08 /**< Critical Rossby number above which magnetic braking shuts off      \
           according to van Saders+2018 */
+#define STELLAR_ROSUN                                                          \
+  MATT15R0SUN /**< Solar Rossby number on the Cranmer & Saar (2011) turnover   \
+                 timescale used throughout this module. Rossby numbers from    \
+                 the literature are only comparable to VPLanet's after         \
+                 dividing by this, because every author adopts a different     \
+                 definition of the convective turnover timescale. */
+#define WMB_ROCRIT                                                             \
+  1.014 /**< Metcalfe+2025 critical Rossby number for dynamo excitation, in    \
+           units of the solar Rossby number */
+#define WMB_NORM 0.354 /**< Metcalfe+2025 normalization constant N */
+#define WMB_EXP                                                                \
+  0.5 /**< Metcalfe+2025 exponent: the amplitude of a weakly nonlinear dynamo  \
+         near a supercritical Hopf bifurcation goes as the square root of the  \
+         distance from threshold */
+#define WMB_LXUVFLOOR                                                          \
+  0.04 /**< Minimum XUV luminosity under weakened magnetic braking, as a       \
+          fraction of the Ribas+2005 prediction. Basal coronal emission        \
+          survives the collapse of the large-scale field. */
+
+#define STELLAR_WMB_NONE 0 /**< No weakened magnetic braking */
+#define STELLAR_WMB_VANSADERS                                                  \
+  1 /**< van Saders+2016 hard Rossby cutoff: braking ceases entirely above     \
+       the critical Rossby number */
+#define STELLAR_WMB_METCALFE25                                                 \
+  2 /**< Metcalfe+2025 smooth dynamo-collapse suppression */
+
 #define STELLAR_MODEL_NONE 0
 #define STELLAR_MODEL_BARAFFE 1
 #define STELLAR_MODEL_REINERS 2
@@ -83,6 +109,20 @@
 #define OPT_EVOVLERG                                                           \
   1522 /**< Whether or not to evolve stellar radius of gyration */
 
+#define OPT_WEAKMAGBRAKINGMODEL 1523 /**< Weakened magnetic braking model */
+#define OPT_ROSSBYCRIT                                                         \
+  1524 /**< Critical Rossby number for dynamo excitation, in solar units */
+#define OPT_WEAKMAGBRAKINGNORM                                                 \
+  1525 /**< Normalization constant N of the WMB suppression factor */
+#define OPT_WEAKMAGBRAKINGEXP                                                  \
+  1526 /**< Exponent of the WMB suppression factor */
+#define OPT_XUVWEAKMAGBRAKINGEXP                                               \
+  1527 /**< Power of the WMB suppression factor applied to L_XUV */
+#define OPT_XUVWEAKMAGBRAKINGFLOOR                                             \
+  1528 /**< Minimum L_XUV under WMB, as a fraction of the Ribas prediction */
+#define OPT_NORMWEAKMAGBRAKING                                                 \
+  1529 /**< Normalize the WMB suppression to unity at zero Rossby number? */
+
 #define OPT_LUMAMPLITUDE 1550
 #define OPT_LUMPERIOD 1555
 #define OPT_LUMPHASE 1560
@@ -130,6 +170,8 @@
 #define OUT_ROSSBYNUMBER 1514
 #define OUT_DROTPERDTSTELLAR 1515
 #define OUT_WINDTORQUE 1516
+#define OUT_ROSSBYNUMBERNORM 1517
+#define OUT_WEAKMAGBRAKINGFACTOR 1518
 
 /* @cond DOXYGEN_OVERRIDE */
 
@@ -152,6 +194,7 @@ void CountHaltsStellar(HALT *, int *);
 void VerifyStellar(BODY *, CONTROL *, FILES *, OPTIONS *, OUTPUT *, SYSTEM *,
                    UPDATE *, int, int);
 void VerifyRotationStellar(BODY *, CONTROL *, OPTIONS *, char[], int);
+void VerifyWeakMagBraking(BODY *, CONTROL *, OPTIONS *, int);
 void InitializeVplanetStellar(CONTROL *, MODULE *);
 void fnPropsAuxStellar(BODY *, EVOLVE *, IO *, UPDATE *, int);
 void VerifyHaltStellar(BODY *, CONTROL *, OPTIONS *, int, int *);
@@ -184,6 +227,10 @@ void WriteRossbyNumber(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char**);
 void WriteWindTorque(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *, UPDATE *,
                        int, double *, char**);
+void WriteRossbyNumberNorm(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                           UPDATE *, int, double *, char **);
+void WriteWeakMagBrakingFactor(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
+                               UPDATE *, int, double *, char **);
 void WriteDRotPerDtStellar(BODY *, CONTROL *, OUTPUT *, SYSTEM *, UNITS *,
                            UPDATE *, int, double *, char**);
 
@@ -222,6 +269,12 @@ double fdDEDtRotRadGyraStellar(BODY *, SYSTEM *, int *);
 double fdDEDtRotBrakeStellar(BODY *, SYSTEM *, int *);
 double fdDEDtStellar(BODY *, SYSTEM *, int *);
 double fdCranmerSaar2011TauCZ(double);
+double fdRossbyNumber(BODY *, int);
+double fdRossbyNumberNorm(BODY *, int);
+double fdWeakMagBrakingFactor(BODY *, int);
+double fdLXUVRibas(BODY *, int);
+void fvApplyWeakMagBrakingToLXUV(BODY *, int);
+double fdDJDtMagBrakingStandard(BODY *, SYSTEM *, int *);
 double fdRotationPeriodEngle(BODY *, int);
 double fdLXUVEngle(BODY *, double, double, double, double, int);
 

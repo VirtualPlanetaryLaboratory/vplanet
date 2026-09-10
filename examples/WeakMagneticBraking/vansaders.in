@@ -1,0 +1,16 @@
+# Weakened magnetic braking, van Saders et al. (2016) hard Rossby cutoff
+sName                 vansaders
+saModules             stellar
+
+dMass                 1.0
+dAge                  5.0e6
+dRotPeriod            -1.0
+
+sStellarModel         baraffe
+sMagBrakingModel      matt
+sXUVModel             ribas
+bHaltEndBaraffeGrid   0
+
+sWeakMagBrakingModel  vansaders
+
+saOutputOrder Time -RotPer RossbyNumberNorm WeakMagBrakingFactor -LXUVStellar WindTorque Temperature -Luminosity

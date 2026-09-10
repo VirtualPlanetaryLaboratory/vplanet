@@ -1,0 +1,21 @@
+#
+sSystemName   wmb
+iVerbose      0
+bOverwrite    1
+
+saBodyFiles   none.in vansaders.in metcalfe.in metcalfenorm.in
+
+sUnitMass     solar
+sUnitLength   solar
+sUnitTime     YEARS
+sUnitAngle    d
+
+bDoLog        1
+iDigits       6
+dMinValue     1e-10
+
+bDoForward    1
+bVarDt        1
+dEta          0.01
+dStopTime     1e10
+dOutputTime   1e10

@@ -1,0 +1,17 @@
+# Metcalfe et al. (2025) renormalized so the suppression is unity at Ro = 0
+sName                 metcalfenorm
+saModules             stellar
+
+dMass                 1.0
+dAge                  5.0e6
+dRotPeriod            -1.0
+
+sStellarModel         baraffe
+sMagBrakingModel      matt
+sXUVModel             ribas
+bHaltEndBaraffeGrid   0
+
+sWeakMagBrakingModel  metcalfe25
+bNormalizeWeakMagBraking  1
+
+saOutputOrder Time -RotPer RossbyNumberNorm WeakMagBrakingFactor -LXUVStellar WindTorque Temperature -Luminosity

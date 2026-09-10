@@ -34,6 +34,14 @@ void BodyCopyStellar(BODY *dest, BODY *src, int foo, int iNumBodies,
   dest[iBody].dLuminosityFrequency = src[iBody].dLuminosityFrequency;
   dest[iBody].dLuminosityPhase     = src[iBody].dLuminosityPhase;
 
+  dest[iBody].iWeakMagBrakingModel   = src[iBody].iWeakMagBrakingModel;
+  dest[iBody].dRossbyCrit            = src[iBody].dRossbyCrit;
+  dest[iBody].dWeakMagBrakingNorm    = src[iBody].dWeakMagBrakingNorm;
+  dest[iBody].bNormalizeWeakMagBraking = src[iBody].bNormalizeWeakMagBraking;
+  dest[iBody].dWeakMagBrakingExp     = src[iBody].dWeakMagBrakingExp;
+  dest[iBody].dXUVWeakMagBrakingExp  = src[iBody].dXUVWeakMagBrakingExp;
+  dest[iBody].dXUVWeakMagBrakingFloor = src[iBody].dXUVWeakMagBrakingFloor;
+
   dest[iBody].dXUVEngleEarlyA = src[iBody].dXUVEngleEarlyA;
   dest[iBody].dXUVEngleEarlyB = src[iBody].dXUVEngleEarlyB;
   dest[iBody].dXUVEngleEarlyC = src[iBody].dXUVEngleEarlyC;
@@ -329,6 +337,178 @@ void ReadRossbyCut(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
     if (iFile > 0) {
       body[iFile - 1].bRossbyCut = 0; // Default to NOT using Rossby cut model
     }
+  }
+}
+
+void ReadWeakMagBrakingModel(BODY *body, CONTROL *control, FILES *files,
+                             OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  char cTmp[OPTLEN];
+
+  AddOptionString(files->Infile[iFile].cIn, options->cName, cTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (!memcmp(sLower(cTmp), "none", 4)) {
+      body[iFile - 1].iWeakMagBrakingModel = STELLAR_WMB_NONE;
+    } else if (!memcmp(sLower(cTmp), "vansaders", 9)) {
+      body[iFile - 1].iWeakMagBrakingModel = STELLAR_WMB_VANSADERS;
+    } else if (!memcmp(sLower(cTmp), "metcalfe", 8)) {
+      body[iFile - 1].iWeakMagBrakingModel = STELLAR_WMB_METCALFE25;
+    } else {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Unknown argument to %s: %s. Options are NONE, "
+                "VANSADERS, or METCALFE25.\n",
+                options->cName, cTmp);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].iWeakMagBrakingModel = STELLAR_WMB_NONE;
+  }
+}
+
+void ReadRossbyCrit(BODY *body, CONTROL *control, FILES *files,
+                    OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be > 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dRossbyCrit = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    /* Left negative so VerifyWeakMagBraking can substitute the default that
+       belongs to the selected model. */
+    body[iFile - 1].dRossbyCrit = -1;
+  }
+}
+
+void ReadWeakMagBrakingNorm(BODY *body, CONTROL *control, FILES *files,
+                            OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be > 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dWeakMagBrakingNorm = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dWeakMagBrakingNorm = options->dDefault;
+  }
+}
+
+void ReadNormalizeWeakMagBraking(BODY *body, CONTROL *control, FILES *files,
+                                 OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  int bTmp;
+
+  AddOptionBool(files->Infile[iFile].cIn, options->cName, &bTmp, &lTmp,
+                control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    body[iFile - 1].bNormalizeWeakMagBraking = bTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].bNormalizeWeakMagBraking = 0;
+  }
+}
+
+void ReadWeakMagBrakingExp(BODY *body, CONTROL *control, FILES *files,
+                           OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp <= 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be > 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dWeakMagBrakingExp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dWeakMagBrakingExp = options->dDefault;
+  }
+}
+
+void ReadXUVWeakMagBrakingExp(BODY *body, CONTROL *control, FILES *files,
+                              OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be >= 0.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dXUVWeakMagBrakingExp = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVWeakMagBrakingExp = options->dDefault;
+  }
+}
+
+void ReadXUVWeakMagBrakingFloor(BODY *body, CONTROL *control, FILES *files,
+                                OPTIONS *options, SYSTEM *system, int iFile) {
+  /* This parameter cannot exist in primary file */
+  int lTmp = -1;
+  double dTmp;
+
+  AddOptionDouble(files->Infile[iFile].cIn, options->cName, &dTmp, &lTmp,
+                  control->Io.iVerbose);
+  if (lTmp >= 0) {
+    NotPrimaryInput(iFile, options->cName, files->Infile[iFile].cIn, lTmp,
+                    control->Io.iVerbose);
+    if (dTmp < 0 || dTmp > 1) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr, "ERROR: %s must be between 0 and 1.\n", options->cName);
+      }
+      LineExit(files->Infile[iFile].cIn, lTmp);
+    }
+    body[iFile - 1].dXUVWeakMagBrakingFloor = dTmp;
+    UpdateFoundOption(&files->Infile[iFile], options, lTmp, iFile);
+  } else if (iFile > 0) {
+    body[iFile - 1].dXUVWeakMagBrakingFloor = options->dDefault;
   }
 }
 
@@ -958,7 +1138,183 @@ void InitializeOptionsStellar(OPTIONS *options, fnReadOption fnRead[]) {
         "stellar\n"
         "Rossby number exceeds 2.08, then the magnetic braking is quenched. "
         "This\n"
-        "flag enforces that behavior.");
+        "flag enforces that behavior. It is superseded by "
+        "sWeakMagBrakingModel VANSADERS, which does the same thing but lets "
+        "you set the threshold; setting both is an error.");
+
+  iOpt = OPT_WEAKMAGBRAKINGMODEL;
+  fvFormattedString(&options[iOpt].cName, "sWeakMagBrakingModel");
+  fvFormattedString(&options[iOpt].cDescr, "Weakened magnetic braking model");
+  fvFormattedString(&options[iOpt].cDefault, "NONE");
+  fvFormattedString(&options[iOpt].cValues, "NONE VANSADERS METCALFE25");
+  options[iOpt].iType      = 3;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadWeakMagBrakingModel;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "Old, slowly rotating stars spin down more slowly than standard "
+        "models\n"
+        "predict. VANSADERS shuts magnetic braking off entirely once the "
+        "Rossby\n"
+        "number exceeds dRossbyCrit, reproducing bRossbyCut. METCALFE25 "
+        "applies\n"
+        "the smooth suppression of Metcalfe et al. (2025, ApJL), in which the "
+        "global\n"
+        "stellar dynamo is a weakly nonlinear system near a supercritical "
+        "Hopf\n"
+        "bifurcation, so dynamo-driven observables scale as\n"
+        "N*sqrt(Ro_crit - Ro) and switch off above Ro_crit. The suppression "
+        "is\n"
+        "applied to the wind braking torque and, raised to the power\n"
+        "dXUVWeakMagBrakingExp, to the XUV luminosity.");
+
+  iOpt = OPT_ROSSBYCRIT;
+  fvFormattedString(&options[iOpt].cName, "dRossbyCrit");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Critical Rossby number for dynamo excitation, in units "
+                    "of the solar Rossby number");
+  fvFormattedString(&options[iOpt].cDefault,
+                    "1.014 for METCALFE25, 0.9594 for VANSADERS");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = WMB_ROCRIT;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadRossbyCrit;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "Expressed in units of the solar Rossby number, because every author\n"
+        "adopts a different definition of the convective turnover timescale "
+        "and\n"
+        "only the ratio is portable between them. VPLanet's solar Rossby "
+        "number\n"
+        "is 2.168 on the Cranmer & Saar (2011) scale. The METCALFE25 default "
+        "of\n"
+        "1.014 is their fitted value; the VANSADERS default of 0.9594 is the\n"
+        "2.08 of bRossbyCut expressed in the same units.");
+
+  iOpt = OPT_WEAKMAGBRAKINGNORM;
+  fvFormattedString(&options[iOpt].cName, "dWeakMagBrakingNorm");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Normalization constant N of the weakened magnetic "
+                    "braking suppression factor");
+  fvFormattedString(&options[iOpt].cDefault, "0.354");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = WMB_NORM;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadWeakMagBrakingNorm;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "Only used by METCALFE25. Note that the suppression factor is NOT\n"
+        "normalized to unity at small Rossby number: with the default N and\n"
+        "dRossbyCrit it approaches 0.354*sqrt(1.014) = 0.357 as Ro goes to "
+        "zero,\n"
+        "so switching this model on rescales the torque and XUV history at "
+        "all\n"
+        "ages, not just near the threshold.");
+
+  iOpt = OPT_NORMWEAKMAGBRAKING;
+  fvFormattedString(&options[iOpt].cName, "bNormalizeWeakMagBraking");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Normalize the weakened magnetic braking suppression to "
+                    "unity at zero Rossby number?");
+  fvFormattedString(&options[iOpt].cDefault, "0");
+  options[iOpt].iType      = 0;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadNormalizeWeakMagBraking;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "Metcalfe et al. (2025) quote N = 0.354 from a fit whose vertical\n"
+        "normalization is not stated explicitly. Taken literally the "
+        "suppression\n"
+        "is 0.354 even for the most active stars, where the same paper says\n"
+        "standard spin-down models are correct, so switching the model on "
+        "rescales\n"
+        "the torque and XUV history at every age. Setting this flag instead "
+        "chooses\n"
+        "N = dRossbyCrit^(-dWeakMagBrakingExp), which makes the suppression "
+        "unity\n"
+        "as the Rossby number goes to zero, so that weakened magnetic braking "
+        "is a\n"
+        "departure from the standard model rather than a rescaling of it. "
+        "Cannot\n"
+        "be combined with an explicit dWeakMagBrakingNorm.");
+
+  iOpt = OPT_WEAKMAGBRAKINGEXP;
+  fvFormattedString(&options[iOpt].cName, "dWeakMagBrakingExp");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Exponent of the weakened magnetic braking suppression "
+                    "factor");
+  fvFormattedString(&options[iOpt].cDefault, "0.5");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = WMB_EXP;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadWeakMagBrakingExp;
+  fvFormattedString(&options[iOpt].cLongDescr,
+                    "Only used by METCALFE25. The default of 0.5 is the "
+                    "square root that\n"
+                    "follows from the amplitude of a weakly nonlinear system "
+                    "near a\n"
+                    "supercritical Hopf bifurcation.");
+
+  iOpt = OPT_XUVWEAKMAGBRAKINGEXP;
+  fvFormattedString(&options[iOpt].cName, "dXUVWeakMagBrakingExp");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Power of the weakened magnetic braking suppression "
+                    "factor applied to LXUV");
+  fvFormattedString(&options[iOpt].cDefault, "1.0");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = 1.0;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadXUVWeakMagBrakingExp;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "The suppression factor is applied to the wind braking torque "
+        "directly\n"
+        "and to LXUV raised to this power. Metcalfe et al. (2025) trace the "
+        "torque\n"
+        "deficit to changes in both the large-scale dipole field and the "
+        "mass-loss\n"
+        "rate, so how much of it should land on the XUV alone is not tightly\n"
+        "constrained; values between 0.7 and 1.4 fit their sample equally "
+        "well.\n"
+        "Set to 0 to suppress the torque but leave LXUV untouched.");
+
+  iOpt = OPT_XUVWEAKMAGBRAKINGFLOOR;
+  fvFormattedString(&options[iOpt].cName, "dXUVWeakMagBrakingFloor");
+  fvFormattedString(&options[iOpt].cDescr,
+                    "Minimum LXUV under weakened magnetic braking, as a "
+                    "fraction of the Ribas+2005 prediction");
+  fvFormattedString(&options[iOpt].cDefault, "0.04");
+  fvFormattedString(&options[iOpt].cDimension, "nd");
+  options[iOpt].dDefault   = WMB_LXUVFLOOR;
+  options[iOpt].iType      = 2;
+  options[iOpt].bMultiFile = 1;
+  options[iOpt].iModuleBit = STELLAR;
+  fnRead[iOpt]             = &ReadXUVWeakMagBrakingFloor;
+  fvFormattedString(
+        &options[iOpt].cLongDescr,
+        "The suppression factor reaches zero at dRossbyCrit, but real stars "
+        "at\n"
+        "and above that threshold still emit X-rays: four of the stars in the\n"
+        "Metcalfe et al. (2025) sample sit above Ro_crit with detections "
+        "between\n"
+        "1e26 and 1e27 erg/s. Basal coronal heating from the unstructured "
+        "field\n"
+        "survives the collapse of the global dynamo. This floor is evaluated\n"
+        "against the Ribas et al. (2005) prediction regardless of which "
+        "sXUVModel\n"
+        "is selected, so it is a fixed reference rather than a fraction of "
+        "the\n"
+        "already-suppressed value. Set to 0 to remove the floor entirely.");
 
   fvFormattedString(&options[OPT_EVOVLERG].cName, "bEvolveRG");
   fvFormattedString(&options[OPT_EVOVLERG].cDescr,
@@ -1622,6 +1978,29 @@ void VerifyTemperature(BODY *body, CONTROL *control, OPTIONS *options,
                                        // temperature
 }
 
+/*! Apply the weakened magnetic braking suppression to the XUV luminosity.
+ *  Metcalfe et al. (2025) trace the collapse of the global dynamo to a drop in
+ *  Poynting flux, which starves coronal heating as well as the wind, so the
+ *  same factor that suppresses the torque suppresses the XUV. The floor is the
+ *  basal emission that survives: the unstructured field responsible for it is
+ *  largely untouched when the large-scale dipole disappears.
+ */
+void fvApplyWeakMagBrakingToLXUV(BODY *body, int iBody) {
+  double dPsi, dFloor;
+
+  if (body[iBody].iWeakMagBrakingModel == STELLAR_WMB_NONE) {
+    return;
+  }
+
+  dPsi = fdWeakMagBrakingFactor(body, iBody);
+  body[iBody].dLXUV *= pow(dPsi, body[iBody].dXUVWeakMagBrakingExp);
+
+  dFloor = body[iBody].dXUVWeakMagBrakingFloor * fdLXUVRibas(body, iBody);
+  if (body[iBody].dLXUV < dFloor) {
+    body[iBody].dLXUV = dFloor;
+  }
+}
+
 void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
                        int iBody) {
 
@@ -1659,15 +2038,7 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
   } else if (body[iBody].iXUVModel == STELLAR_MODEL_RIBAS) {
 
     // RIBAS power-law decay model
-    double dAge  = body[iBody].dAge / (1.e9 * YEARSEC);
-    double dTMin = body[iBody].dSatXUVTime / (1.e9 * YEARSEC);
-    if (dAge >= dTMin) {
-      body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity *
-                          pow(dAge / dTMin, -body[iBody].dXUVBeta);
-    } else {
-      /* No evolution at times earlier than dSatXUVTime */
-      body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
-    }
+    body[iBody].dLXUV = fdLXUVRibas(body, iBody);
 
   } else if (body[iBody].iXUVModel == STELLAR_MODEL_ENGLE24EARLY) {
     body[iBody].dLXUV = fdLXUVEngle(
@@ -1682,6 +2053,8 @@ void fnPropsAuxStellar(BODY *body, EVOLVE *evolve, IO *io, UPDATE *update,
     // Constant XUV fraction
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
   }
+
+  fvApplyWeakMagBrakingToLXUV(body, iBody);
 }
 
 void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
@@ -1690,6 +2063,7 @@ void fnForceBehaviorStellar(BODY *body, MODULE *module, EVOLVE *evolve, IO *io,
                             int iModule) {
   if (body[iBody].iStellarModel == STELLAR_MODEL_SINEWAVE) {
     body[iBody].dLXUV = body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+    fvApplyWeakMagBrakingToLXUV(body, iBody);
   }
 
   if (body[iBody].iMagBrakingModel == STELLAR_DJDT_ENGLE23EARLY ||
@@ -1913,6 +2287,74 @@ void VerifyXUVEngle(BODY *body, CONTROL *control, FILES *files,
   }
 }
 
+/*! Resolve the weakened magnetic braking settings: fold the deprecated
+ *  bRossbyCut into the model option, reject contradictory input, and supply the
+ *  critical Rossby number belonging to whichever model was chosen.
+ */
+void VerifyWeakMagBraking(BODY *body, CONTROL *control, OPTIONS *options,
+                          int iBody) {
+  int bModelSet = (options[OPT_WEAKMAGBRAKINGMODEL].iLine[iBody + 1] >= 0);
+
+  if (body[iBody].bRossbyCut) {
+    if (bModelSet) {
+      if (control->Io.iVerbose >= VERBERR) {
+        fprintf(stderr,
+                "ERROR: Cannot set both %s and %s. %s is deprecated; use %s "
+                "VANSADERS instead.\n",
+                options[OPT_ROSSBYCUT].cName,
+                options[OPT_WEAKMAGBRAKINGMODEL].cName,
+                options[OPT_ROSSBYCUT].cName,
+                options[OPT_WEAKMAGBRAKINGMODEL].cName);
+      }
+      DoubleLineExit(options[OPT_ROSSBYCUT].cFile[iBody + 1],
+                     options[OPT_WEAKMAGBRAKINGMODEL].cFile[iBody + 1],
+                     options[OPT_ROSSBYCUT].iLine[iBody + 1],
+                     options[OPT_WEAKMAGBRAKINGMODEL].iLine[iBody + 1]);
+    }
+    if (control->Io.iVerbose >= VERBINPUT) {
+      printf("INFO: %s is deprecated; treating it as %s VANSADERS.\n",
+             options[OPT_ROSSBYCUT].cName,
+             options[OPT_WEAKMAGBRAKINGMODEL].cName);
+    }
+    body[iBody].iWeakMagBrakingModel = STELLAR_WMB_VANSADERS;
+  }
+
+  /* ReadRossbyCrit leaves this negative when the user did not set it, because
+     the sensible default depends on the model. */
+  if (body[iBody].dRossbyCrit < 0) {
+    if (body[iBody].iWeakMagBrakingModel == STELLAR_WMB_VANSADERS) {
+      body[iBody].dRossbyCrit = ROSSBYCRIT / STELLAR_ROSUN;
+    } else {
+      body[iBody].dRossbyCrit = WMB_ROCRIT;
+    }
+  }
+
+  if (!body[iBody].bNormalizeWeakMagBraking) {
+    return;
+  }
+
+  if (options[OPT_WEAKMAGBRAKINGNORM].iLine[iBody + 1] >= 0) {
+    if (control->Io.iVerbose >= VERBERR) {
+      fprintf(stderr,
+              "ERROR: Cannot set both %s and %s. %s chooses the "
+              "normalization for you.\n",
+              options[OPT_WEAKMAGBRAKINGNORM].cName,
+              options[OPT_NORMWEAKMAGBRAKING].cName,
+              options[OPT_NORMWEAKMAGBRAKING].cName);
+    }
+    DoubleLineExit(options[OPT_WEAKMAGBRAKINGNORM].cFile[iBody + 1],
+                   options[OPT_NORMWEAKMAGBRAKING].cFile[iBody + 1],
+                   options[OPT_WEAKMAGBRAKINGNORM].iLine[iBody + 1],
+                   options[OPT_NORMWEAKMAGBRAKING].iLine[iBody + 1]);
+  }
+
+  /* Choose N so that the suppression is unity at zero Rossby number, making
+     weakened magnetic braking a departure from the standard model rather than
+     a rescaling of it. */
+  body[iBody].dWeakMagBrakingNorm =
+        pow(body[iBody].dRossbyCrit, -body[iBody].dWeakMagBrakingExp);
+}
+
 void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
                    OUTPUT *output, SYSTEM *system, UPDATE *update, int iBody,
                    int iModule) {
@@ -1920,6 +2362,7 @@ void VerifyStellar(BODY *body, CONTROL *control, FILES *files, OPTIONS *options,
 
   VerifyXUVEngle(body, control, files, options, iBody);
   VerifyRotRateEngle(body, control, files, options, iBody);
+  VerifyWeakMagBraking(body, control, options, iBody);
 
 
   if (update[iBody].iNumLuminosity > 1) {
@@ -2170,8 +2613,21 @@ void WriteLXUVFrac(BODY *body, CONTROL *control, OUTPUT *output, SYSTEM *system,
 void WriteRossbyNumber(BODY *body, CONTROL *control, OUTPUT *output,
                        SYSTEM *system, UNITS *units, UPDATE *update, int iBody,
                        double *dTmp, char **cUnit) {
-  *dTmp =
-        body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+  *dTmp = fdRossbyNumber(body, iBody);
+  fvFormattedString(cUnit, "");
+}
+
+void WriteRossbyNumberNorm(BODY *body, CONTROL *control, OUTPUT *output,
+                           SYSTEM *system, UNITS *units, UPDATE *update,
+                           int iBody, double *dTmp, char **cUnit) {
+  *dTmp = fdRossbyNumberNorm(body, iBody);
+  fvFormattedString(cUnit, "");
+}
+
+void WriteWeakMagBrakingFactor(BODY *body, CONTROL *control, OUTPUT *output,
+                               SYSTEM *system, UNITS *units, UPDATE *update,
+                               int iBody, double *dTmp, char **cUnit) {
+  *dTmp = fdWeakMagBrakingFactor(body, iBody);
   fvFormattedString(cUnit, "");
 }
 
@@ -2250,6 +2706,23 @@ void InitializeOutputStellar(OUTPUT *output, fnWriteOutput fnWrite[]) {
   output[OUT_WINDTORQUE].iNum       = 1;
   output[OUT_WINDTORQUE].iModuleBit = STELLAR;
   fnWrite[OUT_WINDTORQUE]           = &WriteWindTorque;
+
+  fvFormattedString(&output[OUT_ROSSBYNUMBERNORM].cName, "RossbyNumberNorm");
+  fvFormattedString(&output[OUT_ROSSBYNUMBERNORM].cDescr,
+                    "Rossby Number in Units of the Solar Rossby Number");
+  output[OUT_ROSSBYNUMBERNORM].bNeg       = 0;
+  output[OUT_ROSSBYNUMBERNORM].iNum       = 1;
+  output[OUT_ROSSBYNUMBERNORM].iModuleBit = STELLAR;
+  fnWrite[OUT_ROSSBYNUMBERNORM]           = &WriteRossbyNumberNorm;
+
+  fvFormattedString(&output[OUT_WEAKMAGBRAKINGFACTOR].cName,
+                    "WeakMagBrakingFactor");
+  fvFormattedString(&output[OUT_WEAKMAGBRAKINGFACTOR].cDescr,
+                    "Weakened Magnetic Braking Suppression Factor");
+  output[OUT_WEAKMAGBRAKINGFACTOR].bNeg       = 0;
+  output[OUT_WEAKMAGBRAKINGFACTOR].iNum       = 1;
+  output[OUT_WEAKMAGBRAKINGFACTOR].iModuleBit = STELLAR;
+  fnWrite[OUT_WEAKMAGBRAKINGFACTOR]           = &WriteWeakMagBrakingFactor;
 
   fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cName, "DRotPerDtStellar");
   fvFormattedString(&output[OUT_DROTPERDTSTELLAR].cDescr,
@@ -2581,7 +3054,7 @@ double fdDEDtStellar(BODY *body, SYSTEM *system, int *iaBody) {
  * (2012); see eqn. (2.14) in Miles Timpe's Master's Thesis. Can also selected
  * Skumanich 1972 model or no model
  */
-double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
+double fdDJDtMagBrakingStandard(BODY *body, SYSTEM *system, int *iaBody) {
   double dDJDt = 0.0;
   double dOmegaCrit;
   double dTauCZ;
@@ -2590,18 +3063,6 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   double dFracBreak; // fraction of breakup spin rate
   double dbetaSq;    // "beta" factor for Breimann+21 torque, squared
   double dFmag;      // magnetic-activity function for Breimann+21 torque
-
-  // If using bRossbyCut, magnetic braking terminates when the rossby number
-  // exceeds 2.08 following the model of van Saders et al. (2018)
-  if (body[iaBody[0]].bRossbyCut) {
-    dRo = body[iaBody[0]].dRotPer /
-          fdCranmerSaar2011TauCZ(body[iaBody[0]].dTemperature);
-
-    // Rossby number exceeds threshold: cease magnetic braking
-    if (dRo > ROSSBYCRIT) {
-      return dTINY;
-    }
-  }
 
   // No magnetic braking
   if (body[iaBody[0]].iMagBrakingModel == STELLAR_DJDT_NONE) {
@@ -2723,6 +3184,25 @@ double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
   else {
     return dTINY;
   }
+}
+
+/*! Calculate dJ/dt due to magnetic braking, including any weakened magnetic
+ *  braking suppression. Returns a positive amount of lost angular momentum.
+ */
+double fdDJDtMagBrakingStellar(BODY *body, SYSTEM *system, int *iaBody) {
+  double dPsi, dDJDt;
+
+  dPsi = fdWeakMagBrakingFactor(body, iaBody[0]);
+  if (dPsi <= 0) {
+    return dTINY;
+  }
+
+  dDJDt = fdDJDtMagBrakingStandard(body, system, iaBody);
+  if (dDJDt <= dTINY) {
+    return dTINY;
+  }
+
+  return dPsi * dDJDt;
 }
 
 /*! Compute the change in rotation rate when the radius of gyration changes via
@@ -2942,6 +3422,75 @@ double fdCranmerSaar2011TauCZ(double Teff) {
   double tau =
         314.24 * exp(-(Teff / 1952.5) - pow((Teff / 6250.0), 18)) + 0.002;
   return tau * 86400.0;
+}
+
+/*! Rossby number, the ratio of the rotation period to the convective turnover
+ *  timescale. This is the absolute value on the Cranmer & Saar (2011) scale,
+ *  for which the solar value is STELLAR_ROSUN.
+ */
+double fdRossbyNumber(BODY *body, int iBody) {
+  return body[iBody].dRotPer / fdCranmerSaar2011TauCZ(body[iBody].dTemperature);
+}
+
+/*! Rossby number in units of the solar Rossby number. Literature values are
+ *  only comparable to VPLanet's in this form, because every author adopts a
+ *  different definition of the convective turnover timescale.
+ */
+double fdRossbyNumberNorm(BODY *body, int iBody) {
+  return fdRossbyNumber(body, iBody) / STELLAR_ROSUN;
+}
+
+/*! The weakened magnetic braking suppression factor, applied to both the wind
+ *  braking torque and the XUV luminosity. Returns 1 when no WMB model is
+ *  selected, so callers can multiply unconditionally.
+ */
+double fdWeakMagBrakingFactor(BODY *body, int iBody) {
+  double dRo, dArg;
+
+  if (body[iBody].iWeakMagBrakingModel == STELLAR_WMB_NONE) {
+    return 1.0;
+  }
+
+  dRo = fdRossbyNumberNorm(body, iBody);
+
+  /* van Saders et al. (2016, 2019): braking simply ceases above the
+     threshold. */
+  if (body[iBody].iWeakMagBrakingModel == STELLAR_WMB_VANSADERS) {
+    if (dRo > body[iBody].dRossbyCrit) {
+      return 0;
+    }
+    return 1.0;
+  }
+
+  /* Metcalfe et al. (2025): the global dynamo is a weakly nonlinear system in
+     the vicinity of a supercritical Hopf bifurcation, with dynamo number
+     D ~ Ro^-2 as the control parameter. Dynamo-driven observables therefore
+     scale as N*sqrt(Ro_crit - Ro), and the dynamo is not excited at all once
+     Ro exceeds Ro_crit. */
+  dArg = body[iBody].dRossbyCrit - dRo;
+  if (dArg <= 0) {
+    return 0;
+  }
+
+  return body[iBody].dWeakMagBrakingNorm *
+         pow(dArg, body[iBody].dWeakMagBrakingExp);
+}
+
+/*! XUV luminosity from the Ribas et al. (2005) saturated power law. Broken out
+ *  because the weakened magnetic braking floor is defined against it whichever
+ *  XUV model is actually in use.
+ */
+double fdLXUVRibas(BODY *body, int iBody) {
+  double dAge  = body[iBody].dAge / (1.e9 * YEARSEC);
+  double dTMin = body[iBody].dSatXUVTime / (1.e9 * YEARSEC);
+
+  /* No evolution at times earlier than dSatXUVTime */
+  if (dTMin <= 0 || dAge < dTMin) {
+    return body[iBody].dSatXUVFrac * body[iBody].dLuminosity;
+  }
+
+  return body[iBody].dSatXUVFrac * body[iBody].dLuminosity *
+         pow(dAge / dTMin, -body[iBody].dXUVBeta);
 }
 
 double fdSurfEnFluxStellar(BODY *body, SYSTEM *system, UPDATE *update,

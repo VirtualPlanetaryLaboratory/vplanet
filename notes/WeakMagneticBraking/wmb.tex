@@ -1,0 +1,379 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage[round,authoryear]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newcommand{\Rocrit}{\mathrm{Ro_{crit}}}
+\newcommand{\Rosun}{\mathrm{Ro_\odot}}
+\newcommand{\Msun}{M_\odot}
+
+\title{Weakened Magnetic Braking in a Coupled Rotation \\ and XUV Evolution Model}
+\author{Rory Barnes}
+\date{28 August 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent
+We have implemented the weakened magnetic braking (WMB) prescription of
+Metcalfe et al.\ (2025) in a rotation-plus-XUV evolution model for
+solar-type stars, applying the dynamo suppression factor simultaneously to
+the wind braking torque and to the XUV luminosity. Using standard stellar
+structure and torque prescriptions, the model without WMB reproduces the
+Rossby number that Metcalfe et al.\ predict for a solar model at the
+main-sequence turnoff, $\mathrm{Ro} \approx 1.8~\Rosun$. Adding WMB brings the
+turnoff Rossby number down to their predicted $\approx 1.1~\Rosun$, but only if
+the suppression factor is normalized to unity at small Rossby number. Applied
+with the published normalization constant $N = 0.354$ taken literally, the
+suppression reduces the torque by a factor of three from the zero-age main
+sequence onward; the star then spins down too slowly ever to approach
+$\Rocrit$, reaching only $\mathrm{Ro} = 0.85~\Rosun$ at 10~Gyr and arriving at
+the solar age with a rotation period of 14.9~d rather than 25.4~d. We
+recommend the normalized form and flag the choice for discussion.
+\end{abstract}
+
+\section{Purpose}
+
+Metcalfe et al.\ (2025) show that the wind braking torque of solar-type stars
+falls abruptly below standard predictions as the Rossby number approaches a
+critical value for dynamo excitation, and that the same transition appears in
+the large-scale magnetic field and in the X-ray luminosity. Their analysis is
+of a snapshot sample: each star contributes one measured torque at one measured
+Rossby number.
+
+This note asks what happens when that prescription is embedded in a
+time-dependent model and integrated for 10~Gyr. Two things motivate the
+exercise. First, the suppression is self-referential --- it depends on the
+Rossby number, which depends on the rotation period, which is set by the
+suppressed torque --- so its consequences over an evolutionary track are not
+obvious from the snapshot fit. Second, if the reduced X-ray luminosity reflects
+reduced coronal heating rather than an artifact of the mass-loss calibration,
+then WMB should also depress the XUV output that drives atmospheric escape from
+any orbiting planets, which is the science this is ultimately aimed at.
+
+\section{The model}
+
+We evolve a $1~\Msun$ star from an age of 5~Myr to 10~Gyr, starting from a
+rotation period of 1~d.
+
+\subsection{Structure}
+
+Stellar radius, luminosity, effective temperature, and radius of gyration come
+from the \citet{Baraffe15} evolutionary grid, interpolated in mass and age. The
+moment of inertia follows from the radius and radius of gyration, and its
+change with time contributes to the rotational evolution through angular
+momentum conservation, alongside the wind torque.
+
+\subsection{Rossby number}
+
+The convective turnover timescale is the \citet{CranmerSaar11} fit to effective
+temperature,
+%
+\begin{equation}
+  \tau_{\rm c}(T_{\rm eff}) = 314.24\,
+    \exp\!\left[-\frac{T_{\rm eff}}{1952.5~\mathrm{K}}
+      - \left(\frac{T_{\rm eff}}{6250~\mathrm{K}}\right)^{18}\right]
+    + 0.002~\mathrm{d},
+\end{equation}
+%
+and the Rossby number is $\mathrm{Ro} = P_{\rm rot}/\tau_{\rm c}$. On this
+scale the solar value is $\Rosun = 2.168$, adopting the solar rotation period
+used by \citet{Matt15}.
+
+All Rossby numbers in this note are quoted in units of $\Rosun$. This matters
+for comparison with Metcalfe et al., who infer $\tau_{\rm c}$ one pressure
+scale height above the convective boundary from their own model grids. Absolute
+Rossby numbers computed on different definitions of $\tau_{\rm c}$ are not
+interchangeable; only the ratio to the solar value is portable, and we use it
+throughout. The residual systematic is that the \emph{shape} of
+$\tau_{\rm c}(T_{\rm eff})$ differs between the two prescriptions. That
+difference cancels for the Sun but not at other masses, so the agreement
+reported below should not be assumed to hold across the full F--K range without
+a check.
+
+\subsection{Wind braking torque}
+
+The torque is the \citet{Matt15} prescription,
+%
+\begin{equation}
+  \mathcal{T} =
+  \begin{cases}
+    \mathcal{T}_0\, \chi^2 \left(\dfrac{\Omega}{\Omega_\odot}\right),
+      & \mathrm{Ro} \le \Rosun/\chi \quad \text{(saturated)},\\[2.2ex]
+    \mathcal{T}_0
+      \left(\dfrac{\tau_{\rm c}}{\tau_{{\rm c},\odot}}\right)^{2}
+      \left(\dfrac{\Omega}{\Omega_\odot}\right)^{3},
+      & \mathrm{Ro} > \Rosun/\chi \quad \text{(unsaturated)},
+  \end{cases}
+\end{equation}
+%
+with
+$\mathcal{T}_0 = 6.3\times10^{30}\,(R/R_\odot)^{3.1}(M/\Msun)^{1/2}$~erg
+and a saturation threshold $\chi = 10$.
+
+\subsection{XUV luminosity}
+
+The unsuppressed XUV luminosity follows the saturated power law of
+\citet{Ribas05},
+%
+\begin{equation}
+  L_{\rm XUV}^{\rm std}(t) =
+  \begin{cases}
+    f_{\rm sat}\, L_{\rm bol}, & t < t_{\rm sat},\\[1.2ex]
+    f_{\rm sat}\, L_{\rm bol} \left(t/t_{\rm sat}\right)^{-\beta},
+      & t \ge t_{\rm sat},
+  \end{cases}
+  \label{eq:ribas}
+\end{equation}
+%
+with $f_{\rm sat} = 10^{-3}$, $t_{\rm sat} = 0.1$~Gyr, and $\beta = 1.23$. Note
+that this is a broadband XUV luminosity, roughly three orders of magnitude
+above the solar X-ray luminosity; see \S\ref{sec:caveats}.
+
+\subsection{Weakened magnetic braking}
+\label{sec:wmb}
+
+\citet{Cameron17} proposed that the global solar dynamo behaves as a weakly
+nonlinear system in the vicinity of a supercritical Hopf bifurcation. The
+control parameter is the dynamo number $D \sim \mathrm{Ro}^{-2}$, and the
+system sustains a periodic solution only while $D$ exceeds a critical value.
+Near threshold the amplitude of a dynamo-driven observable scales as
+$(D - D_{\rm crit})^{1/2}$, which in Rossby space is
+$(\Rocrit - \mathrm{Ro})^{1/2}$. \citet{Metcalfe25} adopt this form to describe
+the onset of WMB and fit it to their sample. We write the suppression factor as
+%
+\begin{equation}
+  \Psi(x) =
+  \begin{cases}
+    N\,(\Rocrit - x)^{p}, & x < \Rocrit,\\[1.2ex]
+    0, & x \ge \Rocrit,
+  \end{cases}
+  \qquad x \equiv \mathrm{Ro}/\Rosun,
+  \label{eq:psi}
+\end{equation}
+%
+with $p = 1/2$ and, from the Metcalfe et al.\ iterative fit,
+$\Rocrit = 1.014 \pm 0.026$ and $N = 0.354 \pm 0.077$.
+
+Because Metcalfe et al.\ attribute the torque deficit to a decline in Poynting
+flux that starves coronal heating and wind acceleration alike, we apply the
+same factor to both channels:
+%
+\begin{equation}
+  \mathcal{T} \rightarrow \Psi\,\mathcal{T},
+  \qquad
+  L_{\rm XUV} \rightarrow
+    \max\!\left[\Psi^{\,n}\, L_{\rm XUV}^{\rm std},\;
+      f_{\rm floor}\, L_{\rm XUV}^{\rm Ribas}\right],
+  \label{eq:apply}
+\end{equation}
+%
+with $n = 1$. The floor, $f_{\rm floor} = 0.04$, represents the basal coronal
+emission that survives the collapse of the global dynamo: four stars in the
+Metcalfe et al.\ sample lie above $\Rocrit$ yet have X-ray detections between
+$10^{26}$ and $10^{27}$~erg~s$^{-1}$, and the paper itself notes that the solar
+chromospheric emission is dominated by an unstructured $\sim\!170$~G field that
+is largely unaffected when the $\sim\!1$~G dipole disappears. No floor is
+applied to the torque.
+
+For comparison we also run the earlier prescription of \citet{vanSaders16}, in
+which braking simply ceases above a threshold Rossby number,
+$\Psi = 1$ for $x \le 0.959$ and $\Psi = 0$ above it. The threshold in those
+units is slightly below solar, where the Metcalfe et al.\ value is slightly
+above.
+
+\section{Results}
+
+Figure~\ref{fig:rotation} shows the rotational evolution and
+Figure~\ref{fig:xuv} the XUV evolution, for the fiducial model and for the
+three WMB variants.
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.72\textwidth]{wmbRotation.pdf}
+  \caption{Rotation period of a $1~\Msun$ star. The fiducial model, with no
+    weakened magnetic braking, is the thick grey line; the WMB tracks coincide
+    with it until suppression sets in and are drawn on top of it. The solar
+    symbol marks $P_{\rm rot} = 25.4$~d at 4.57~Gyr. The literal $N = 0.354$
+    track departs from the fiducial immediately and never recovers.}
+  \label{fig:rotation}
+\end{figure}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.72\textwidth]{wmbXUV.pdf}
+  \caption{XUV luminosity for the same four models. The flat tails in the two
+    tracks that reach $\Rocrit$ are the basal floor of
+    Equation~\ref{eq:apply}. No solar point is plotted: the quantity here is a
+    broadband XUV luminosity, which is not directly comparable to the X-ray
+    luminosities of Metcalfe et al.\ (\S\ref{sec:caveats}).}
+  \label{fig:xuv}
+\end{figure}
+
+The fiducial model reaches $P_{\rm rot} = 29.4$~d at the solar age, about 15\%
+longer than the Sun's. Both the van Saders cutoff and the normalized Metcalfe
+suppression bring the star into better agreement, at 28.8~d and 24.1~d
+respectively. The literal $N = 0.354$ form gives 14.9~d, low by a factor of
+1.7.
+
+The XUV tracks separate later than the rotation tracks in the two threshold
+models, because the suppression is negligible until the star nears $\Rocrit$.
+Once it crosses, the XUV drops onto the basal floor within roughly a
+gigayear --- an order-of-magnitude decline concentrated in the last third of
+the main sequence, which is the feature most relevant to planetary atmospheric
+escape. The literal form instead depresses the XUV by a factor of three
+throughout, producing no late-time transition at all.
+
+\section{Why the suppression is renormalized}
+\label{sec:renorm}
+
+Equation~\ref{eq:psi} with the published constants gives
+$\Psi \rightarrow N\,\Rocrit^{\,p} = 0.357$ as $x \rightarrow 0$. Taken at face
+value, the torque and the XUV of even the most rapidly rotating stars are
+suppressed by nearly a factor of three --- in precisely the regime where
+Metcalfe et al.\ state that standard spin-down models reproduce the
+observations. This suggests that the vertical axis of their Figure~2 carries a
+normalization that absorbs $N$, and that $\Psi$ is intended as a departure from
+the standard model rather than a rescaling of it. We therefore also run a
+variant with
+%
+\begin{equation}
+  N_{\rm norm} = \Rocrit^{-p} = 0.9931,
+\end{equation}
+%
+which sets $\Psi(x\!=\!0) = 1$ exactly and leaves $\Rocrit$ and $p$ untouched.
+
+The evolutionary calculation discriminates sharply between the two choices,
+because Metcalfe et al.\ supply a prediction that a snapshot fit cannot test:
+a solar model with WMB should reach $\mathrm{Ro} \approx 1.1~\Rosun$ at the
+main-sequence turnoff, against $\approx 1.8~\Rosun$ for a standard spin-down
+model. Table~\ref{tab:results} collects the comparison and
+Figure~\ref{fig:rossby} shows the tracks.
+
+\begin{table}[htb]
+  \centering
+  \caption{Solar-analog diagnostics. Rossby numbers are in units of $\Rosun$.
+    Metcalfe et al.\ predict $\mathrm{Ro} \approx 1.1$ at the turnoff with WMB
+    and $\approx 1.8$ without.}
+  \label{tab:results}
+  \begin{tabular}{lccc}
+    \toprule
+    Model & $P_{\rm rot}$ at 4.57~Gyr & Ro at 10~Gyr & $\Psi$ at 4.57~Gyr \\
+    \midrule
+    Fiducial, no WMB           & 29.4~d & 1.80 & 1.00 \\
+    van Saders cutoff          & 28.8~d & 1.16 & 0.00 \\
+    Metcalfe, $N = 0.354$      & 14.9~d & 0.85 & 0.25 \\
+    Metcalfe, normalized       & 24.1~d & 1.08 & 0.45 \\
+    \midrule
+    Sun / prediction           & 25.4~d & 1.1 (WMB), 1.8 (std) & --- \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=0.66\textwidth]{wmbRossby.pdf}
+  \caption{Rossby number (top) and suppression factor (bottom). The dotted line
+    marks $\Rocrit$ and the solar symbol marks $\mathrm{Ro} = \Rosun$ at
+    4.57~Gyr. The fiducial model arrives at $1.80~\Rosun$ at 10~Gyr, matching
+    the standard-model prediction of Metcalfe et al.; the van Saders and
+    normalized Metcalfe models arrive at $1.16$ and $1.08$, matching their WMB
+    prediction. The literal $N = 0.354$ model reaches only $0.85$ and is still
+    spinning down.}
+  \label{fig:rossby}
+\end{figure}
+
+Three results follow. First, the fiducial model independently recovers
+$\mathrm{Ro} = 1.80$ at 10~Gyr, which is reassuring: two quite different
+stellar structure and torque prescriptions agree on the standard-model
+endpoint, so a discrepancy in the WMB runs is unlikely to be an artifact of our
+choice of ingredients. Second, both threshold models land near the predicted
+WMB value, at 1.16 and 1.08. Third, the literal normalization does not: it
+reaches only $\mathrm{Ro} = 0.85$, and its suppression factor at that point is
+still 0.145, so it is nowhere near the transition the model exists to describe.
+
+The failure is structural rather than a matter of tuning. Suppressing the
+torque threefold from the zero-age main sequence leaves the star rotating too
+rapidly, hence at too small a Rossby number, hence further from $\Rocrit$ than
+a standard model of the same age. The suppression prevents the star from ever
+reaching the regime in which the suppression is supposed to operate. No choice
+of $\Rocrit$ within the quoted uncertainty repairs this, because the problem
+originates at small $x$, where the fit is least constrained by the data and
+where the physical argument of \citet{Cameron17} says the dynamo should be
+comfortably supercritical and therefore unsuppressed.
+
+We therefore recommend the normalized form, and note that it is also the one
+that puts the star closest to the solar rotation period at the solar age.
+
+\section{Caveats}
+\label{sec:caveats}
+
+\paragraph{Bandpass.} Metcalfe et al.\ work in X-rays. The XUV luminosity here
+is the broadband quantity of Equation~\ref{eq:ribas}, with
+$L_{\rm XUV}/L_{\rm bol} = 10^{-3}$ at saturation against a present-day solar
+$L_{\rm X}/L_{\rm bol} \approx 5\times10^{-7}$. The suppression factor is
+dimensionless and multiplicative, so it transfers between bands without
+rescaling, but the assumption that the EUV is suppressed by the same factor as
+the X-rays is untested. If the EUV survives the dynamo collapse better than the
+X-rays do, the consequences for planetary atmospheric escape are substantially
+weaker than Figure~\ref{fig:xuv} implies.
+
+\paragraph{Baseline.} The standard model against which Metcalfe et al.\ fit
+$\Rocrit$ and $N$ is $L_{\rm X} \propto L_{\rm bol}/\mathrm{Ro}^{2}$. Our
+unsuppressed XUV is instead the age power law of Equation~\ref{eq:ribas}, so
+$\Psi$ multiplies a baseline different from the one it was calibrated against.
+The two are not wildly different for a solar-mass star, since Ro and age are
+themselves closely related along a track, but the substitution has not been
+tested.
+
+\paragraph{Torque floor.} We apply no floor to the torque, so above $\Rocrit$
+the star's rotation freezes entirely. The Metcalfe et al.\ sample shows torques
+20--70 times weaker than standard models rather than identically zero, so a
+small residual torque may be more faithful. This affects the late-time rotation
+periods in Figure~\ref{fig:rotation} but not the XUV, which is held up by its
+own floor.
+
+\paragraph{Exponent on the XUV.} We set $n = 1$ in
+Equation~\ref{eq:apply}, applying the same suppression to the XUV as to the
+torque. Since the torque depends on both the dipole field strength and the
+mass-loss rate, and the X-ray luminosity enters only through the latter, a
+value $n \ne 1$ is defensible; for dipole-dominated scalings anything between
+$0.7$ and $1.4$ fits the Metcalfe et al.\ sample about equally well
+($0.30$--$0.36$~dex scatter across that range). The choice matters at the
+factor-of-a-few level for the late-time XUV and barely at all for cumulative
+atmospheric escape, which is dominated by the saturated phase.
+
+\begin{thebibliography}{99}
+
+\bibitem[Baraffe et al.(2015)]{Baraffe15}
+  Baraffe, I., Homeier, D., Allard, F., \& Chabrier, G. 2015, A\&A, 577, A42
+
+\bibitem[Cameron \& Sch\"ussler(2017)]{Cameron17}
+  Cameron, R.~H., \& Sch\"ussler, M. 2017, ApJ, 843, 111
+
+\bibitem[Cranmer \& Saar(2011)]{CranmerSaar11}
+  Cranmer, S.~R., \& Saar, S.~H. 2011, ApJ, 741, 54
+
+\bibitem[Matt et al.(2015)]{Matt15}
+  Matt, S.~P., Brun, A.~S., Baraffe, I., Bouvier, J., \& Chabrier, G. 2015,
+  ApJL, 799, L23
+
+\bibitem[Metcalfe et al.(2025)]{Metcalfe25}
+  Metcalfe, T.~S., van Saders, J.~L., Pinsonneault, M.~H., et al. 2025, ApJL,
+  accepted, arXiv:2509.03717
+
+\bibitem[Ribas et al.(2005)]{Ribas05}
+  Ribas, I., Guinan, E.~F., G\"udel, M., \& Audard, M. 2005, ApJ, 622, 680
+
+\bibitem[van Saders et al.(2016)]{vanSaders16}
+  van Saders, J.~L., Ceillier, T., Metcalfe, T.~S., et al. 2016, Nature, 529,
+  181
+
+\end{thebibliography}
+
+\end{document}
